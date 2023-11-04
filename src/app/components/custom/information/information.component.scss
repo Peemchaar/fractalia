@@ -1,0 +1,43 @@
+.info-tittle{
+    color: #242B59;
+    font-size: 24px;
+    line-height: 30px;
+}
+
+.info-text{
+    font-family: RobotoMedium;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 24px;
+    text-align: left;
+    color: #242B59;
+}
+
+.icontext .info-text{
+    margin-bottom: 0px;
+}
+.info-col .icontext{
+    display: inline-flex;
+    align-items: flex-start;
+    width: 100%;
+}
+
+.icontext .icon-green-check::before{
+    margin: 0;
+    font-size: 24px;
+    color: #14BB43;
+}
+
+.icontext .icon-simple-circle-tick::before{
+    margin: 0;
+    font-size: 24px;
+    color: #14BB43;
+}
+
+@media (min-width: 992px){
+    .modal-body .info-col{
+        flex: 0 0 100% !important;
+        max-width: 100% !important;
+    }
+}

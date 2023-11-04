@@ -1,0 +1,133 @@
+<section id="header">
+    <app-service-header 
+        [serviceName] = "monitoredIdentitiesService.serviceName"
+        [serviceLongDesc] = "monitoredIdentitiesService.longDesc"
+        [serviceDesc] = "monitoredIdentitiesService.serviceDesc"
+        [serviceIcon] = "monitoredIdentitiesService.serviceIcon">
+    </app-service-header>
+</section>
+
+<section class="cards-services mr-3 ml-3 pl-1 mt-3">
+    <div class="container-fluid">
+        <hr>
+        <h3 class="ribbon blueribbon blueribbon2">{{'CYBERALARM.IDENTITIES.TEXT1' | translate}}
+            ({{monitoredIdentitiesService.identities.length}}/{{monitoredIdentitiesService.maxIdentitiesByUser}})</h3>
+
+        <div *ngIf="monitoredIdentitiesService.canAddIdentities" class="row w-100 justify-content-center">
+            <p>{{ 'CYBERALARM.IDENTITIES.WARNING' | translate }}</p>
+        </div>
+
+        <div class="row align-items-start justify-content-center">
+            <div class="col-lg-3 col-md-6 col-sm-6 col-xs-6">
+                <div class="card scard h-100">
+                    <button [disabled]="monitoredIdentitiesService.canAddIdentities" class=""
+                        onclick="$('#frmAddIdentity').show()">
+                        <div class="myicons-add-credential"></div>{{ 'CYBERALARM.IDENTITIES.ADD_IDENTITY' | translate }}
+                    </button>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-6 col-xs-6"
+                *ngFor="let monitoredIdentity of monitoredIdentitiesService.identities">
+                <div class="card h-100">
+                    <div class="creditcard-icon">
+                        <div class="creditcard-status css ok">
+                            <i title="Credencial protegida" class="fas fa-circle"></i>
+                        </div>
+                        <!--
+                        <div class="creditcard-status css ko">
+                            <i title="Credencial comprometida" class="fas fa-circle"></i>
+                        </div>
+                        -->
+                        <div class="myicons-credential"></div>
+                    </div>
+                    <h4>{{monitoredIdentity.identity}}</h4>
+                    <div class="o-buttons">
+                        <!--
+                        <a class="edit" href="" data-toggle="tooltip" data-placement="right" data-html="true" title="Editar credencial" data-original-title="<h6>Editar credencial</h6>">
+                            <div class="myicons-edit"></div>
+                        </a>
+                        -->
+                        <button title="Eliminar credencial" class="delete" onclick="$('#frmRemoveIdentity').show()"
+                            (click)="getSelectedIdentity(monitoredIdentity.identityId)">
+                            <div class="myicons-delete"></div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="forms">
+    <div id="frmAddIdentity" class="popup add-service" style="display: none;">
+        <div id="popup" class="">
+            <div class="popup-header sph">
+                <a id="CloseDeletePopup" class="cerrar" href="javascript:void(0);" onclick="$('#frmAddIdentity').hide()"
+                    (click)="reloadForm()">
+                    <div _ngcontent-oui-c3="" class="icon-close"></div>
+                </a>
+                <h2 class="text-left" [innerHTML]="monitoredIdentitiesService.serviceName"></h2>
+                <div class="{{monitoredIdentitiesService.serviceIcon}}"></div>
+            </div>
+            <form [formGroup]="addIdentityForm" (ngSubmit)="addIdentity()">
+                <div class="popup-body">
+                    <div class="row align-items-start">
+                        <div class="col-lg-12">
+                            <div class="greyback mb-3">
+                                <p class="text-left">{{'CYBERALARM.IDENTITIES.ADD_FORM.TEXT1' | translate}}</p>
+                                <div class="form-group">
+                                    <input type="text" formControlName="identity" class="form-control" name="identity"
+                                        maxlength="120" placeholder="{{'CYBERALARM.IDENTITIES.ADD_FORM.EMAIL' | translate}}">
+                                    <div *ngIf="(inputIdentity.invalid && inputIdentity.touched) || inputIdentity.dirty">
+                                        <div *ngIf="inputIdentity.errors?.required" class="text-danger">{{
+                                            'CYBERALARM.IDENTITIES.ADD_FORM.VALIDATION_EMAIL1' | translate }}</div>
+                                        <div *ngIf="inputIdentity.errors?.validEmail" class="text-danger">{{
+                                            'CYBERALARM.IDENTITIES.ADD_FORM.VALIDATION_EMAIL2' | translate }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="popup-footer text-left">
+                    <div class="text-left" style="font-size: 80%; color:#dc3545;" *ngIf="showMessage">
+                    <div>{{errorMessage}}</div>
+                    </div>
+                    <button type="submit" [disabled]="inputIdentity.invalid || loading" class="btn btn-primary">
+                        <nz-spinner *ngIf="loading">loading</nz-spinner>
+                        <div *ngIf="!loading">
+                            {{ 'CYBERALARM.IDENTITIES.ADD_FORM.ACTIVATION_BUTTON' | translate }}
+                        </div>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div id="frmRemoveIdentity" class="popup add-service" style="display: none;">
+        <div id="popup" class="">
+            <div class="popup-header sph">
+                <a id="CloseDeletePopup" class="cerrar" href="javascript:void(0);"
+                    onclick="$('#frmRemoveIdentity').hide()">
+                    <div _ngcontent-oui-c3="" class="icon-close"></div>
+                </a>
+                <h2 class="text-left">{{ 'CYBERALARM.IDENTITIES.REMOVE_FORM.TEXT1' | translate }}</h2>
+            </div>
+            <form (ngSubmit)="deleteIdentity()">
+                <div class="popup-body">
+                    <div class="row align-items-start">
+                        <div class="col-lg-12">
+                            <p class="text-left mb-4">{{'CYBERALARM.IDENTITIES.REMOVE_FORM.SURE1' | translate}}
+                                <span>{{this.selectedIdentity.identity}}</span>? {{'CYBERALARM.IDENTITIES.REMOVE_FORM.SURE2' | translate}}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="popup-footer text-left">
+                    <button type="submit" [disabled]="loading" class="btn btn-primary w-25">{{
+                        'CYBERALARM.IDENTITIES.REMOVE_FORM.DELETE_BUTTON' | translate }}</button>
+                    <a class="btn mx-3" href="javascript:void(0)"
+                        onclick="$('#frmRemoveIdentity').hide()">{{'CANCEL' | translate}}</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>

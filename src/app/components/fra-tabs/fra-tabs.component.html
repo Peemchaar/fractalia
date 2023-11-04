@@ -1,0 +1,35 @@
+<div class="top-tabs__container" *ngIf="tabTemplate == notificationTemplate">
+  <ul class="top-tabs__nav">
+    <li
+      class="top-tabs__item"
+      [ngClass]="{ active: tab.active }"
+      *ngFor="let tab of tabs"
+      (click)="selectTab(tab)"
+    >
+      <span>{{ tab.label }}  <span class="noti-active" *ngIf="tab.showNotificationAsNoReaded"  [style.background-color]="tab.backgroundColor ? tab.backgroundColor : ''" ></span></span>
+
+      <span class="line"></span>
+    </li>
+  </ul>
+  <div class="delete-all-notification roboto"
+    *ngIf="showDeleteAllNotification"
+    (click)="onDeleteAllNotification()">
+    {{'NOTIFICATIONS.DELETE_ALL' | translate}}
+  </div>
+</div>
+
+
+<div class="nav-category" *ngIf="tabTemplate == serviceTemplate">
+  <div class="categorybtns"  *ngFor="let tab of tabs; let i = index">
+    <button
+      class="category"
+      (click)="selectTab(tab)"
+      [ngClass]="{ categorySelected: tab.active, all : i == 0 }"
+      >
+      <div class="{{tab.icon}}"></div>
+      <div class="categoryname">{{tab.name}}</div>
+    </button>
+  </div>
+</div>
+
+<ng-content></ng-content>

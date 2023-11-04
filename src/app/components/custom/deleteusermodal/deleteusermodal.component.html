@@ -1,0 +1,37 @@
+<div id="DeleteUser" class="popup" style="">
+    <div id="popup" class="">
+        <div class="popup-header sph">
+            <a id="CloseDeletePopup" class="cerrar" href="javascript:void(0);" (click)="activeModal.dismiss('Cancel')">
+                <div _ngcontent-oui-c3="" class="icon-close"></div>
+            </a>
+            <h2 class="text-left">{{'DELETE_USER' | translate}}</h2>
+        </div>
+
+        <form id="form_delete_navegacion_dispositivo" class="dil" action="/es/protecciones" method="post" enctype="multipart/form-data">
+            <input type="hidden" name="_csrf-frontend" value="bv8myJmK99P76IjluJuJZLTSzzCbG2_fx1789J1HNlMNtVGn672HsbTapazZ0bEjg7W8AuJPCumOFquA0T9sHQ==">        <div class="error-summary" style="display:none"><ul></ul></div>        
+        
+            <div class="popup-body">
+                <p class="text-left mb-4">{{'ARE_SURE_DELETE_USER' | translate}} <span id="DeleteNavegacionUsuario">{{usuario}}</span>? {{'ARE_SURE_DELETE_USER2' | translate}}</p>
+            </div>
+
+            <div class="popup-footer text-left">
+                <div class="form-group field-formdeletenavegaciondispositivo-id_usuario required">
+
+                    <input type="hidden" id="formdeletenavegaciondispositivo-id_usuario" class="form-control" name="FormDeleteNavegacionDispositivo[id_usuario]" value="19">
+                    
+                    <div class="help-block"></div>
+                </div> 
+
+                <div class="form-group field-formdeletenavegaciondispositivo-id_dispositivo required">
+                    
+                    <input type="hidden" id="formdeletenavegaciondispositivo-id_dispositivo" class="form-control" name="FormDeleteNavegacionDispositivo[id_dispositivo]" value="2">
+                    
+                    <div class="help-block"></div>
+                </div>  
+
+                <button type="submit" class="btn btn-primary w-25" (click)="activeModal.dismiss('OK')">{{'DELETE' | translate}}</button>             
+                <a id="popup-delete" class="btn mx-3" href="javascript:void(0)" (click)="activeModal.dismiss('Cancel')">{{'CANCEL' | translate}}</a>
+            </div>
+        </form>
+    </div>
+</div>

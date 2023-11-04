@@ -1,0 +1,72 @@
+<section class="loginBox" *ngIf="!redirecting">
+  <div class="container-fluid pl-0 px-0">
+    <div class="row vh-100 no-gutters">
+      <div class="col-lg-4 col-md-5 d-flex flex-column auth-bg-section loginText"
+        [ngStyle]="{'background-image':partnerService.backgroundImage}">
+        <div class="header">
+          <img class="logo" alt="logo" src="{{partnerService.partner.logotipo}}">
+          <h3>{{partnerService.partner.name}}</h3>
+        </div>
+        <div class="body">
+
+          <h5>{{partnerService.partner.loginTitle}}</h5>
+          <p>{{partnerService.partner.loginSubtitle}}</p>
+        </div>
+      </div>
+      <div class="col-lg-8 col-md-7 d-flex flex-column justify-content-center vh-100 loginBox">
+        <div class="auth-form-section loginForm">
+          <form class="form-signin" [formGroup]="registerCodeForm" (ngSubmit)="registerCode()">
+            <h5>{{"COMP_SIGNUP.REGISTER"|translate}}</h5>
+            <p class="pG">{{"COMP_SIGNUP.REGISTER_CODE"| translate: { identifier: partnerService.partner.uniqueIdentifier } }}</p>
+            <div class="form-group">
+              <input [class.is-invalid]="(inputRegisterCode.invalid && inputRegisterCode.touched)"
+                [class.is-valid]="(inputRegisterCode.valid)" formControlName="code" type="text" class="form-control"
+                placeholder="{{userPlaceholder}}" required>
+            </div>
+            <div class="form-group">
+              <input [class.is-invalid]="(inputRegisterEmail.invalid && inputRegisterEmail.touched)"
+                [class.is-valid]="(inputRegisterEmail.valid)" formControlName="email" type="email" class="form-control"
+                placeholder="Email" required>
+            </div>
+            <div class="form-group">
+              <button type="submit" [disabled]="inputRegisterCode.invalid || inputRegisterEmail.invalid || loading"
+                class="btn btn-primary">
+                <nz-spinner *ngIf="loading">loading</nz-spinner>
+                <div *ngIf="!loading">{{"COMP_SIGNUP.REGISTER"|translate}}</div>
+              </button>
+            </div>
+          </form>
+
+          <div class="loginFooter">
+            <div *ngIf="partnerService.partner.loginType !== 6">
+              <hr>
+              <p>{{"COMP_SIGNUP.OK_REGISTER"|translate}}</p>
+              <a (click)="goLoginPage()" class="btn btn-outline-secondary">{{
+                'ACCEDER' | translate }}</a>
+            </div>
+            <div *ngIf="partnerService.partner.includePhone || partnerService.partner.includeWhatsapp || partnerService.partner.includeEmail" class="linkstlflogin" >
+              <hr>
+              <p class="pQ" *ngIf="((partnerService.partner.includePhone && partnerService.partner.phone) && ((partnerService.partner.includeWhatsapp && partnerService.partner.whatsapp) || (partnerService.partner.includeEmail && partnerService.partner.email)))" >{{"COMP_LANDING.TEXT1"|translate}}</p>
+              <p class="pQ" *ngIf="((partnerService.partner.includePhone && partnerService.partner.phone) && (!(partnerService.partner.includeWhatsapp && partnerService.partner.whatsapp) && !(partnerService.partner.includeEmail && partnerService.partner.email)))" >{{"COMP_LANDING.TEXT_CALL"|translate}}</p>
+              <p class="pQ" *ngIf="(!(partnerService.partner.includePhone && partnerService.partner.phone) && ((partnerService.partner.includeWhatsapp && partnerService.partner.whatsapp) || (partnerService.partner.includeEmail && partnerService.partner.email)))" >{{"COMP_LANDING.TEXT_WRITE"|translate}}</p>
+              <p class="linkslogin tlf">
+                <span *ngIf="partnerService.partner.includePhone && partnerService.partner.phone">
+                  <a class="" href="tel:{{partnerService.partner.phone}}"><div class="icon-phone"></div> {{partnerService.partner.phone}}</a>
+                </span>
+                <span *ngIf="partnerService.partner.includeWhatsapp && partnerService.partner.whatsapp">
+                  <a class="" href="https://api.whatsapp.com/send?phone={{partnerService.partner.whatsapp}}" target="_blank"><div class="icon-whatsapp"></div> {{partnerService.partner.whatsapp}}</a>
+                </span>
+                <span tooltip="{{ 'SEND_EMAIL' | translate }}" title="{{ 'SEND_EMAIL' | translate }}" class="cemail"
+                  *ngIf="partnerService.partner.includeEmail && partnerService.partner.email">
+                  <a class="" href="mailto:{{partnerService.partner.email}}">
+                    <div class="icon-envelope"></div> {{ 'SEND_EMAIL' | translate }}
+                  </a>
+                </span>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

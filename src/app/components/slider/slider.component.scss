@@ -1,0 +1,125 @@
+
+/* slider*/
+
+:host{
+  width: 100%;
+  height: 100%;
+}
+
+.slider-content {
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+  list-style: none;
+  padding: 0;
+  z-index: 1;
+  border-radius: 8px;
+}
+
+.slider-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  display: flex;
+  transition-property: transform;
+  box-sizing: content-box;
+}
+
+.slider-item {
+text-align: center;
+font-size: 18px;
+background: #fff;
+display: -webkit-box;
+display: -ms-flexbox;
+display: -webkit-flex;
+display: flex;
+-webkit-box-pack: center;
+-ms-flex-pack: center;
+-webkit-justify-content: center;
+justify-content: center;
+-webkit-box-align: center;
+-ms-flex-align: center;
+-webkit-align-items: center;
+align-items: center;
+flex-shrink: 0;
+width: 100%;
+height: 100%;
+position: relative;
+transition-property: transform;
+min-height: 300px;
+}
+
+
+
+.fra-carousel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #fff;
+  border-top: 2px solid #ECF1F8;
+  padding: 18px 0px;
+}
+
+.fra-carousel-next {
+  cursor: pointer;
+  color: #666A73;
+  transform: rotate(180deg);
+  margin-left: 20px
+}
+
+.fra-carousel-prev {
+  color: #666A73;
+  cursor: pointer;
+  margin-right: 20px;
+}
+
+.ul-carousel{
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0 !important;
+  padding-left: 0 !important;
+  .active {
+      background: #FFFFFF;
+      pointer-events: none;
+  }
+}
+
+.fra-carousel-item  {
+  cursor: pointer;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #BCC4D4;
+  margin-left: 5px;
+  margin-right: 5px;
+
+  &.fra-carousel-active {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: #666A73;
+
+  }
+
+
+  &:hover {
+      // @extend .b-gray2;
+  }
+
+  &:active {
+      // @extend .b-light-blue2, .c-light-blue2;
+  }
+
+  &.disabled {
+      pointer-events: none;
+      // @extend .bg-gray6, .c-gray4;
+  }
+
+
+}

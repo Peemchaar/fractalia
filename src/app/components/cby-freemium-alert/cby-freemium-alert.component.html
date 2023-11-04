@@ -1,0 +1,39 @@
+
+
+<div id="popup" >
+
+
+  <div class="popup-header">
+    <div class="d-flex align-items-center justify-content-end">
+      <div class="icon-close fs-18 c-secondary cursor" data-dismiss="modal"  (click)="activeModal.dismiss(false)"></div>
+    </div>
+  </div>
+
+
+  <div class="d-flex justify-content-center flex-column mb-3 ">
+    <div class="icon-illustration-info fa-7x mb-3 neutral-black" ></div>
+
+
+
+    <p class="m-bold fs-20 neutral-black">
+      {{'CYBERSCORING.FREE_MODAL_TITLE' | translate}}
+    </p>
+
+    <p class="regular neutral-black mobile-text-justify">
+      {{'CYBERSCORING.FREE_MODAL_DESC1' | translate}}
+    </p>
+
+
+    <p class="regular neutral-black mobile-text-justify">
+      {{'CYBERSCORING.FREE_MODAL_DESC2' | translate}}
+    </p>
+  </div>
+
+
+
+  <div class="d-flex justify-content-end render-btn">
+    <button (click)="activeModal.dismiss(false)" class="btn btn-primary">{{'COMP_USER.SUPPORT_NOTIFICATION.CLOSE' | translate}}</button>
+  </div>
+
+</div>
+

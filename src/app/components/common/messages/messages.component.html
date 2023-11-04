@@ -1,0 +1,13 @@
+<div *ngIf="messageService.messages.length" class="message" [ngStyle]="messageService.user.roleId === 4 ? {'margin-bottom':'12vh'} : {}" [@fadeInOut]>
+  <div *ngFor="let message of messageService.messages; let i = index;" [@fadeInOut]> 
+    <div class="cardd" *ngIf="message.state == 'ok'" style="background: #14bd44cc;">
+      <span>{{message.text}}</span>
+    </div>
+    <div class="cardd" *ngIf="message.state == 'error'" style="background: #ff0101cc;">
+      <span>{{message.text}}</span>
+    </div>
+    <div class="cardd" *ngIf="message.state == 'info'" style="background: #14bd44cc;">
+      <span>{{message.text}}</span>
+    </div>
+  </div>
+</div>

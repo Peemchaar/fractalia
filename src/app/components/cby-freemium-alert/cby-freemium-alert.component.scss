@@ -1,0 +1,38 @@
+
+
+@media (max-width: 550px){
+  #popup{
+    width: 90% !important;
+    min-height: auto !important;
+    margin: 6% auto !important;
+    border-radius: 10px !important;
+  }
+
+  .mobile-text-justify {
+    text-align: justify;
+  }
+}
+
+
+@media (max-width: 480px){
+  #popup{
+    width: 90% !important;
+    min-height: auto !important;
+    margin: 6% auto !important;
+    border-radius: 10px !important;
+    height: auto !important;
+  }
+
+  .mobile-text-justify {
+    text-align: justify;
+  }
+}
+
+
+
+
+
+
+
+
+

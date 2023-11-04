@@ -1,0 +1,153 @@
+<section id="header">
+  <div class="container-fluid">
+    <ul class="navbar-nav float-left mr-auto ml-3 pl-1">
+      <li class="nav-item">
+        <small>&nbsp;</small>
+      </li>
+      <li class="nav-item">
+        <h4 [innerHTML]="licenseService.serviceName"></h4>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<section id="servicestitles" class="mr-3 ml-3 pl-1">
+  <div class="container-fluid">
+    <br /><br /><br />
+    <a class="bback" href="javascript:history.back()">
+      <div class="myicons-arrow"></div>{{ 'ATRAS' | translate }}
+    </a>
+    <br /><br />
+    <div class="service-title" [innerHTML]="licenseService.serviceDesc"></div>
+    <br />
+    <button class="collapse-btn" data-toggle="collapse" data-target="#description-service">
+      <div class="myicons-info"></div> {{ 'MAS_INFO_SERVICIO' | translate }}
+    </button>
+    <div id="description-service" class="collapse">
+      <div>
+        <span [innerHTML]="licenseService.longDesc"></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="dashboard-page mr-3 ml-3 pl-1 mt-3">
+  <div class="container-fluid">
+      <div class="card">
+          <div class="container-fluid">
+              <div class="row">
+                  <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 pt-4 pb-4 text-center">
+                      <h1 class="title mb-4 text-center">1. {{'ANTIVIRUS.DOWNLOAD' | translate}}</h1>
+                      <a href="https://download.bitdefender.com/windows/installer/es-es/bitdefender_tsecurity.exe"
+                          target="_blank">
+                          <button class="btn btn-outline-primary mr-2 mb-4" href="agentData.download|safe: 'resourceUrl'">
+                              <span>
+                                  <div class="myicons-windowsos"></div>
+                              </span>
+                              <div class="hidden-box">Windows</div>
+                          </button>
+                      </a>
+                      <a href="https://download.bitdefender.com/mac/av/es/bitdefender_antivirus_for_mac.dmg" target="_blank">
+                          <button class="btn btn-outline-primary mr-2 mb-4" href="agentData.download|safe: 'resourceUrl'">
+                              <span>
+                                  <div class="myicons-macos"></div>
+                              </span>
+                              <div class="hidden-box">MAC</div>
+                          </button>
+                      </a>
+                      <br/>
+                      <a href="https://play.google.com/store/apps/details?id=com.bitdefender.security" target="_blank">
+                          <button class="btn btn-outline-primary mr-2 mb-4" href="agentData.download|safe: 'resourceUrl'">
+                              <span>
+                                  <div class="myicons-androidos"></div>
+                              </span>
+                              <div class="hidden-box">Android</div>
+                          </button>
+
+                      </a>
+                      <a href="https://apps.apple.com/es/app/bitdefender-mobile-security/id1255893012" target="_blank">
+                          <button class="btn btn-outline-primary mr-2 mb-4" href="agentData.download|safe: 'resourceUrl'">
+                              <span>
+                                  <div class="myicons-ios"></div>
+                              </span>
+                              <div class="hidden-box">iPhone</div>
+                          </button>
+
+                      </a>
+                  </div>
+                  <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 pt-4 pb-4">
+                      <div class="text-center" *ngIf="licence === ''">
+                          <h1 class="title mb-4 text-center">2. {{'ANTIVIRUS.SOLICITAR' | translate}}</h1>
+                          <img src="{{staticContentUrl+'img/art/bitdefender-logo.png'}}" width="150" heigth="" alt="Bitdefender" />
+                          <div class="scard greycard">
+                              <br/>
+                              <button [disabled]="loading"
+                                      class="btn btn-primary"
+                                      (click)="setUserLicence()">
+                                  <nz-spinner *ngIf="loading"></nz-spinner>
+                                  <div *ngIf="!loading">{{'ANTIVIRUS.SOLICITAR_BUTTON' | translate}}</div>
+                              </button>
+                              <br/><br/>
+                          </div>
+                      </div>
+                      <div class="text-center" *ngIf="licence !== ''">
+                          <h1 class="title mb-4 text-center">2. {{'ANTIVIRUS.SOLICITAR_TEXT1' | translate}}</h1>
+                          <img src="{{staticContentUrl+'img/art/bitdefender-logo.png'}}" width="150" heigth="" alt="Bitdefender" />
+                      </div>
+                      <div class="text-center" *ngIf="licence !== ''" class="scard greycard">
+                          <p class="text-center">{{'ANTIVIRUS.LICENSE' | translate}}</p>
+                          <div class="input-group">
+                              <input readonly type="text" class="form-control" id="" [value]="licence">
+                          </div>
+                      </div>
+
+                  </div>
+                  
+              </div>
+          </div>
+      </div>
+  </div>
+</section>
+
+<div id="divPopupLicence" class="popup add-service" style="display: none;">
+  <div id="popup">
+    <div class="popup-header sph">
+      <a id="divPopupLicence" class="cerrar" href="javascript:void(0);" onclick="$('#divPopupLicence').hide()">
+        <div _ngcontent-oui-c3="" class="icon-close"></div>
+      </a>
+      <h2 class="text-left"><span [innerHtml]="licenseService.serviceName"></span> {{'COMP_LICENCE.POP.ACTIVATED' | translate}}</h2>
+      <div class="{{licenseService.serviceIcon}}"></div>
+    </div>
+    <div class="popup-body">
+      <div class="greyback mb-3">
+        <h6 class="text-center">{{'COMP_LICENCE.POP.SUBTITLE' | translate}}</h6>
+        <p class="text-center orangetext">{{'COMP_LICENCE.POP.DOWNLOAD_APP_TEXT1' | translate}} {{'COMP_LICENCE.POP.DOWNLOAD_APP_TEXT2' |
+          translate}}.</p>
+          <div class="form-group continput">
+            <p class="text-center mb-0">{{'ANTIVIRUS.LICENSE' | translate}}</p>
+            <div class="input-group code">
+              <input readonly type="text" class="form-control" id="" [value]="licence">
+            </div>
+          </div>
+      </div>
+      <div *ngIf="this.licenseService.services != null  && this.licenseService.services.length>0">
+        <p class="text-center">{{'COMP_LICENCE.POP.TEXT2' | translate}}</p>
+        <div class="row more mb-4">
+          <div class="col-lg-6 col-md-6 col-sm-12" *ngFor="let item of this.licenseService.services">
+            <div class="{{item.icon}}"></div>
+            <h4>{{item.service}}</h4>
+          </div>
+        </div>
+      </div>
+      <hr>
+      <h5 class="text-left">{{'COMP_LICENCE.POP.TEXT1' | translate}}</h5>
+      <p class="text-left">{{'COMP_LICENCE.POP.TEXT3' | translate}}</p>
+    </div>
+    <div class="popup-footer text-left">
+      <button class="btn btn-primary w-25" onclick="$('#divPopupLicence').hide()">{{'COMP_LICENCE.POP.BUTTON_ACEPT' |
+        translate}}</button>
+    </div>
+
+  </div>
+
+  <br/><br/><br/>

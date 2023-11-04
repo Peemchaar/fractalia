@@ -1,0 +1,374 @@
+<!-- Estado inicial para meter el primer dispositivo -->
+<!--
+<div class="row h-100">
+    <div class="col-xl-3 col-lg-2 col-md-1 col-sm-1 col-1 pt-4 mb-2">
+
+    </div>
+    <div class="col-xl-6 col-lg-8 col-md-10 col-sm-10 col-10 pt-4 mb-2">
+        <div class="cg-icon text-center d-block mx-auto mb-3">
+            <div class="icon-antivirus"></div>
+        </div>
+        <h6 class="text-center">{{'CYBERALARM.NAVEGACIONSEGURA.TEXT2' | translate}}</h6>
+        <p class="text-center">{{'CYBERALARM.NAVEGACIONSEGURA.TEXT3' | translate}}</p>
+        <div class="d-flex justify-content-center mt-4 mb-2">
+            <form class="form-inline fism">
+                <button type="submit" class="btn btn-primary w-auto mb-2"
+                    onclick="$('#frmAddDevice').show()">{{'CYBERALARM.NAVEGACIONSEGURA.ADD_DEVICE'
+                    | translate}}</button>
+            </form>
+        </div>
+    </div>
+    <div class="col-xl-3 col-lg-2 col-md-1 col-sm-1 col-1 pt-4 mb-2">
+
+    </div>
+</div>
+-->
+<div class="row h-100" *ngIf="!ciberalarmaService.hasUserCiberalarma">
+    <div class="col-xl-3 col-lg-2 col-md-1 col-sm-1 col-1 pt-4 mb-2">
+
+    </div>
+    <div class="col-xl-6 col-lg-8 col-md-10 col-sm-10 col-10 pt-4 mb-2">
+        <div class="cg-icon text-center d-block mx-auto mb-3">
+            <div class="icon-navegacion-segura"></div>
+        </div>
+        <h6 class="text-center">{{'CYBERALARM.NAVEGACIONSEGURA.TEXT2' | translate}}</h6>
+        <p class="text-center">{{'CYBERALARM.NAVEGACIONSEGURA.TEXT3' | translate}}</p>
+        <div class="d-flex justify-content-center mt-4 mb-2">
+            <form class="form-inline fism" (ngSubmit)="createUser()">
+                <button type="submit" [disabled]="loadingCreate" class="btn btn-primary w-auto mb-2">
+                    <nz-spinner *ngIf="loadingCreate">loading</nz-spinner>
+                    <div *ngIf="!loadingCreate">{{'CYBERALARM.NAVEGACIONSEGURA.ACTIVATE' | translate}}</div>
+                </button>
+                <!-- <button type="submit" class="btn btn-primary w-auto mb-2"
+                    onclick="createUser()">{{'CYBERALARM.NAVEGACIONSEGURA.ACTIVATE'
+                    | translate}}</button> -->
+            </form>
+        </div>
+    </div>
+    <div class="col-xl-3 col-lg-2 col-md-1 col-sm-1 col-1 pt-4 mb-2">
+
+    </div>
+</div>
+
+<div class="h-100 row grid-divider" *ngIf="ciberalarmaService.hasUserCiberalarma">
+    <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-xs-12 pt-4 pb-4">
+        <div class="w-75 d-block mx-auto">
+            <span class="title d-block text-center mb-4">{{'CYBERALARM.NAVEGACIONSEGURA.TEXT5' |
+                translate}}</span>
+            <h3 class="d-block text-center mb-5">{{getNumDevicesNavigation()}}</h3>
+            <!-- <span class="title d-block text-center mb-4">{{'CYBERALARM.NAVEGACIONSEGURA.TEXT6' |
+                translate}}</span>
+            <h3 class="d-block text-center">1</h3> -->
+            <button class="btn btn-primary mt-4" data-toggle="modal" data-target="#estadisticas" *ngIf="ciberalarmaService.ciberalarmaNavigationStats.blocks > 0">
+                <div class="icon-monitoring"></div>
+                {{'CYBERALARM.NAVEGACIONSEGURA.ESTADISTICAS' | translate}}  
+            </button>
+        </div>
+    </div>
+    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12 col-12 pt-3 pb-4">
+        <div class="row align-items-start cards-services pr-3 pl-3">
+            <ng-container *ngFor="let device of ciberalarmaService.navDevices; let m = index">
+                <div class="col-xl-4 col-lg-6 col-md-4 col-sm-4 col-xs-6 col-6 mb-1 p-1 align-self-stretch">
+                    <div class="card p-2 h-100 status" [ngClass]="{'standby' : (device.lastSeen == null), 'ok': (device.lastSeen != null && calculateDiff(device.lastSeen) < 5),'ko': (device.lastSeen != null && calculateDiff(device.lastSeen) >= 5)}">
+                        <!-- 'status ko' para que aparezca en rojo como incidencia -->
+                        <!-- 'status standby' para que aparezca en naranja como pendiente de activación -->
+                        <div class="card-body p-0">
+                            <p>{{'CYBERALARM.NAVEGACIONSEGURA.NAME' | translate}}: <span class="card-data">{{device.name}}</span></p>
+                            <p>{{'CYBERALARM.NAVEGACIONSEGURA.SO' | translate}}: <span class="card-data">{{device.so}}</span></p>
+                            <p>{{'CYBERALARM.NAVEGACIONSEGURA.CODE' | translate}}: <span class="card-data">{{device.code}}</span></p>
+                            <ng-container *ngIf="!device.installed">
+                                <!-- <p>{{'CYBERALARM.NAVEGACIONSEGURA.STATUS' | translate}}: <span class="card-data">{{'CYBERALARM.NAVEGACIONSEGURA.STATUS_NOT_ACTIVE' | translate}}</span></p> -->
+                                <p *ngIf="device.so == 'android'"><a class="a-underline" href="https://play.google.com/store/apps/details?id=com.vpn.ciberalarma&hl=es&gl=US" target="_blank">{{'CYBERALARM.NAVEGACIONSEGURA.DOWNLOAD_ANDROID' | translate}}</a></p>
+                                <p *ngIf="device.so == 'ios'"><a class="a-underline" href="https://apps.apple.com/es/app/ciberalarma-navegaci%C3%B3n-segura/id1400113000" target="_blank">{{'CYBERALARM.NAVEGACIONSEGURA.DOWNLOAD_IOS' | translate}}</a></p>
+                                <p *ngIf="device.so == 'windows'"><a class="a-underline" href="https://cache.somosvirtualcare.com/instaladores/ciber/CiberalarmaNavegacion.exe" target="_blank">{{'CYBERALARM.NAVEGACIONSEGURA.DOWNLOAD_WINDOWS' | translate}}</a></p>
+                                <p *ngIf="device.so == 'mac'"><a class="a-underline" href="https://cache.somosvirtualcare.com/instaladores/ciber/CiberalarmaNavegacion.dmg" target="_blank">{{'CYBERALARM.NAVEGACIONSEGURA.DOWNLOAD_MAC' | translate}}</a></p>
+                            </ng-container>
+                            <ng-container *ngIf="device.installed">
+                                <p *ngIf="device.lastSeen == null || calculateDiff(device.lastSeen) < 5">{{'CYBERALARM.NAVEGACIONSEGURA.STATUS' | translate}}: <span class="card-data">{{'CYBERALARM.NAVEGACIONSEGURA.STATUS_ACTIVE' | translate}}</span></p>
+                                <p *ngIf="device.lastSeen != null && calculateDiff(device.lastSeen) >= 5" title="{{'CYBERALARM.NAVEGACIONSEGURA.STATUS_LONG_TIME_INFO' | translate}} {{(device.lastSeen | date:'yyyy-MM-dd')}}">{{'CYBERALARM.NAVEGACIONSEGURA.STATUS' | translate}}: <span class="card-data">{{'CYBERALARM.NAVEGACIONSEGURA.STATUS_LONG_TIME' | translate}} {{calculateDiff(device.lastSeen)}} {{'CYBERALARM.NAVEGACIONSEGURA.STATUS_LONG_TIME_DAYS' | translate}}</span></p>
+                            </ng-container>
+                        </div>
+                        <div class="card-footer mt-3 p-0">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="creditcard-icon">
+                                    <div class="creditcard-status standby" *ngIf="device.lastSeen == null">
+                                        <div class="icon-shield-status" title="{{'CYBERALARM.NAVEGACIONSEGURA.STANDBY' | translate}}"></div>
+                                    </div>
+                                    <div class="creditcard-status ok" *ngIf="device.lastSeen != null && calculateDiff(device.lastSeen) < 5">
+                                        <div class="icon-shield-status" title="{{'CYBERALARM.NAVEGACIONSEGURA.PROTEGIDO' | translate}}"></div>
+                                    </div>
+                                    <div class="creditcard-status ko" *ngIf="device.lastSeen != null && calculateDiff(device.lastSeen) >= 5">
+                                        <i title="{{'CYBERALARM.NAVEGACIONSEGURA.NOPROTEGIDO' | translate}}" class="fas fa-circle"></i>
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-center">
+                                    <button title="{{'CYBERALARM.NAVEGACIONSEGURA.REMOVE_FORM.TEXT1' | translate}}" class="delete mb-0" (click)="openDeleteModal(device.deviceId)" title="{{'CYBERALARM.NAVEGACIONSEGURA.REMOVE_FORM.TEXT1' | translate}}" style="margin-right: -4px !important;">
+                                        <div class="icon-delete-circle"></div>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+            <div class="col-xl-4 col-lg-6 col-md-4 col-sm-4 col-xs-6 col-6 mb-1 p-1 align-self-stretch" *ngIf="ciberalarmaService.navDevices.length < ciberalarmaService.navMaxLicenses">
+                <div class="card scard h-100">
+                    <button class="add-plus h-100" data-toggle="modal" data-target="#frmAddDevice">
+                        <div class="icon-plus"></div>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-xs-12 pt-4 pb-4">
+        <div class="w-75 d-flex justify-content-center align-items-center text-center mx-auto">
+            <div>
+                <div class="iconback icon-add-plus-hand mr-4 mt-4"></div>
+                <span class="subtitle2 text-center">{{'CYBERALARM.NAVEGACIONSEGURA.TEXT7' |
+                    translate}}</span>
+                <button class="btn btn-primary mt-4" data-toggle="modal" data-target="#frmConfigurateDevice" *ngIf="ciberalarmaService.navDevices.length > 0">
+                    <div class="icon-configuration"></div>
+                    {{'CYBERALARM.NAVEGACIONSEGURA.EDITAR_CONFIGURACION' | translate}}  
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<section class="forms">
+    <div class="modal fade add-service" tabindex="-1" role="dialog" aria-hidden="true" id="frmAddDevice">     
+        <div class="modal-dialog" role="document">
+            <div class="modal-content" style="min-height: 400px; max-width: 700px;">
+   
+                <div class="popup-header sph">
+                    <a id="CloseDeletePopup" class="cerrar" aria-label="Close" data-dismiss="modal" >
+                        <div _ngcontent-oui-c3="" class="icon-close" data-dismiss="modal" ></div>
+                    </a>
+                    <h2 class="text-left" [innerHTML]="serviceName"></h2>
+                    <div class="{{serviceIcon}}"></div>
+                </div>
+                <form (ngSubmit)="newNavigationDevice()">
+                    <div class="popup-body">
+                        <div class="row align-items-start">
+                            <div class="col-lg-12">
+                                <div class="greyback mb-3">
+                                    <p class="text-left">{{'CYBERALARM.NAVEGACIONSEGURA.TEXT1' | translate}}</p>
+                                    <div class="row align-items-start">
+                                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 m-0">
+                                            <div class="form-group">
+                                                <select class="form-control" [(ngModel)]="ciberalarmaNewNavigation.deviceId" name="newNavigationDeviceId" #newNavigationDeviceId
+                                                (change)="onChangeDevice(newNavigationDeviceId.value)" required>
+                                                    <option value=-1>{{'CYBERALARM.NAVEGACIONSEGURA.ADD_FORM.NEW_DEVICE' | translate}} </option>
+                                                    <ng-container *ngFor="let device of ciberalarmaService.devices">
+                                                        <option *ngIf="!device.navegationServiceLicence" value="{{device.deviceId}}">{{device.name}} ({{device.so}})</option>
+                                                    </ng-container>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 m-0" *ngIf="ciberalarmaNewNavigation.deviceId == -1">
+                                            <div class="form-group">
+                                                <select class="form-control" [(ngModel)]="ciberalarmaNewNavigation.so" name="newNavigationSo" (change)="errorSo=false" required>
+                                                    <option value>{{'CYBERALARM.NAVEGACIONSEGURA.ADD_FORM.SO' | translate}} 
+                                                    </option>
+                                                    <option value="android">Android</option>
+                                                    <option value="ios">iPhone</option>
+                                                    <option value="windows">Windows</option>
+                                                    <option value="mac">MAC</option>
+                                                </select>
+                                            </div>
+                                            <div *ngIf="errorSo">
+                                                <div class="loginError d-inline-flex align-items-center">
+                                                    <div class="icon-exclamation-tri"></div>
+                                                    {{'CYBERALARM.NAVEGACIONSEGURA.ADD_FORM.VALIDATION_SO1' | translate }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12" *ngIf="ciberalarmaNewNavigation.deviceId == -1">
+                                            <div class="form-group">
+                                                <input type="text" class="form-control" name="name" [(ngModel)]="ciberalarmaNewNavigation.name"
+                                                    maxlength="40" placeholder="{{'CYBERALARM.NAVEGACIONSEGURA.NAME' | translate}}" (change)="errorName=false" required>
+                                                <div *ngIf="errorName">
+                                                    <div class="loginError d-inline-flex align-items-center">
+                                                        <div class="icon-exclamation-tri"></div>
+                                                        {{'CYBERALARM.NAVEGACIONSEGURA.ADD_FORM.VALIDATION_NAME1' | translate }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                            <div class="form-group">
+                                                <input type="email" class="form-control" name="email" [(ngModel)]="ciberalarmaNewNavigation.email" 
+                                                    placeholder="{{'CYBERALARM.NAVEGACIONSEGURA.EMAIL' | translate}}" (change)="errorEmail=false" required>
+                                                <small class="subtitle text-left d-flex mt-2"><div class="icon-exclam-circle"></div> {{'CYBERALARM.NAVEGACIONSEGURA.ADD_FORM.TEXT1' | translate }}</small>
+                                                <div *ngIf="errorEmail">
+                                                    <div class="loginError d-inline-flex align-items-center">
+                                                        <div class="icon-exclamation-tri"></div>
+                                                        {{'CYBERALARM.NAVEGACIONSEGURA.ADD_FORM.VALIDATION_EMAIL1' | translate }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="popup-footer text-left" style="padding-bottom: 21px;">
+                        <button type="submit" [disabled]="loadingNew" class="btn btn-primary">
+                            <nz-spinner *ngIf="loadingNew">loading</nz-spinner>
+                            <div *ngIf="!loadingNew"> {{ 'CYBERALARM.NAVEGACIONSEGURA.ADD_FORM.ACTIVATION_BUTTON' | translate }}
+                            </div>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="add-service modal fade" id="frmRemoveDevice" tabindex="-1" role="dialog" >
+        <div class="modal-dialog" role="document">
+            <div class="modal-content" style="min-height: 400px; max-width: 700px;">
+                <div class="popup-header sph">
+                    <a id="CloseDeletePopup" class="cerrar" href="javascript:void(0);" aria-label="Close" data-dismiss="modal">
+                        <div _ngcontent-oui-c3="" class="icon-close"></div>
+                    </a>
+                    <h2 class="text-left">{{ 'CYBERALARM.NAVEGACIONSEGURA.REMOVE_FORM.TEXT1' | translate }}</h2>
+                </div>
+                <form (ngSubmit)="deleteNavigationDevice()">
+                    <div class="popup-body">
+                        <div class="row align-items-start">
+                            <div class="col-lg-12">
+                                <p class="text-left mb-4">{{'CYBERALARM.NAVEGACIONSEGURA.REMOVE_FORM.SURE1' | translate}}
+                                    <span>{{deleteDeviceName}}</span>? {{'CYBERALARM.NAVEGACIONSEGURA.REMOVE_FORM.SURE2' |
+                                    translate}}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="popup-footer text-left">
+                        <button type="submit" [disabled]="loadingDelete" class="btn btn-primary w-25">
+                            <nz-spinner *ngIf="loadingDelete">loading</nz-spinner>
+                            <div *ngIf="!loadingDelete"> {{'CYBERALARM.NAVEGACIONSEGURA.REMOVE_FORM.DELETE_BUTTON' | translate}}
+                            </div>
+                        </button>
+                        <a class="btn mx-3" href="javascript:void(0)" aria-label="Close" data-dismiss="modal">{{'CANCEL' |
+                            translate}}</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="add-service modal fade" id="frmConfigurateDevice" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content" style="min-height: 400px; max-width: 700px;">
+                <div class="popup-header sph">
+                    <a id="CloseDeletePopup" class="cerrar" href="javascript:void(0);" aria-label="Close" data-dismiss="modal" >
+                        <div _ngcontent-oui-c3="" class="icon-close" data-dismiss="modal"></div>
+                    </a>
+                    <h2 class="text-left" [innerHTML]="serviceName"></h2>
+                    <div class="{{serviceIcon}}"></div>
+                </div>
+                <div class="popup-body des">
+                    <div class="div">
+                        <p>{{ 'CYBERALARM.NAVEGACIONSEGURA.CONFIGURACION_DESCRIPCION' | translate }}</p>
+                        <form (ngSubmit)="updateNavigationConfig()">
+                            <div class="form-group">
+                                <div class="custom-control custom-switch mt-1 mb-1">
+                                    <input type="checkbox" class="custom-control-input" id="securityConfig" name="securityConfig" [(ngModel)]="ciberalarmaService.ciberalarmaNavigationConfig.securityConfig">
+                                    <label class="custom-control-label title" for="securityConfig">{{ 'CYBERALARM.NAVEGACIONSEGURA.CONFIGURACION_SEGURIDAD' | translate }}</label>
+                                </div>
+                                <p class="mb-2">{{ 'CYBERALARM.NAVEGACIONSEGURA.DESCRIP_CONFIGURACION_SEGURIDAD' | translate }}</p>
+                            </div>
+                            <hr class="mt-1 mb-3">
+                            <div class="form-group">
+                                <div class="custom-control custom-switch mt-1 mb-1">
+                                    <input type="checkbox" class="custom-control-input" id="adviceConfig" name="adviceConfig" [(ngModel)]="ciberalarmaService.ciberalarmaNavigationConfig.adviceConfig">
+                                    <label class="custom-control-label title" for="adviceConfig">{{ 'CYBERALARM.NAVEGACIONSEGURA.CONFIGURACION_PUBLICIDAD' | translate }}</label>
+                                </div>
+                                <p class="mb-2">{{ 'CYBERALARM.NAVEGACIONSEGURA.DESCRIP_CONFIGURACION_PUBLICIDAD' | translate }}</p>
+                            </div>
+                            <hr class="mt-1 mb-3">
+                            <div class="form-group">
+                                <div class="custom-control custom-switch mt-1 mb-1">
+                                    <input type="checkbox" class="custom-control-input" id="adultConfig" name="adultConfig" [(ngModel)]="ciberalarmaService.ciberalarmaNavigationConfig.adultConfig">
+                                    <label class="custom-control-label title" for="adultConfig">{{ 'CYBERALARM.NAVEGACIONSEGURA.CONFIGURACION_ADULTOS' | translate }}</label>
+                                </div>
+                                <p class="mb-2">{{ 'CYBERALARM.NAVEGACIONSEGURA.DESCRIP_CONFIGURACION_ADULTOS' | translate }}</p>
+                            </div>
+                            <hr class="mt-1 mb-3">
+                            <div class="form-group">
+                                <div class="custom-control custom-switch mt-1 mb-1">
+                                    <input type="checkbox" class="custom-control-input" id="timeWastersConfig" name="timeWastersConfig" [(ngModel)]="ciberalarmaService.ciberalarmaNavigationConfig.timeWastersConfig">
+                                    <label class="custom-control-label title" for="timeWastersConfig">{{ 'CYBERALARM.NAVEGACIONSEGURA.CONFIGURACION_LADRON_TIEMPO' | translate }}</label>
+                                </div>
+                                <p class="mb-2">{{ 'CYBERALARM.NAVEGACIONSEGURA.DESCRIP_CONFIGURACION_LADRON_TIEMPO' | translate }}</p>
+                            </div>
+                            <div class="form-group">
+                                <button type="submit" [disabled]="loading" class="btn btn-primary w-auto text-left d-block">
+                                    <nz-spinner *ngIf="loading">loading</nz-spinner>
+                                    <div *ngIf="!loading"> {{ 'CYBERALARM.NAVEGACIONSEGURA.ADD_FORM.CONFIGURATION_BUTTON' | translate }}
+                                    </div>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="popup-footer text-left">  
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="estadisticas" class="add-service modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content" style="min-height: 400px; max-width: 700px;">
+                <div class="popup-header sph">
+                    <a id="CloseDeletePopup" class="cerrar" href="javascript:void(0);" aria-label="Close" data-dismiss="modal" >
+                        <div _ngcontent-oui-c3="" class="icon-close" data-dismiss="modal"></div>
+                    </a>
+                    <h2 class="text-left" [innerHTML]="serviceName"></h2>
+                    <div class="{{serviceIcon}}"></div>
+                </div>
+                <div class="popup-body des">
+                    <div class="div">
+                        <!-- <p class="text-center subtitle">{{ 'CYBERALARM.NAVEGACIONSEGURA.STATS_LAST_7' | translate }}</p> -->
+                        <div class="row w-100 mx-auto">
+                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                <!--<div class="icon-web-bloq"></div>-->
+                                <div class="w-75 d-block mx-auto">
+                                    <span class="title d-block text-center mb-4">{{ 'CYBERALARM.NAVEGACIONSEGURA.STATS_LAST_7' | translate }}</span>
+                                </div>
+                            </div>
+                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                <!--<div class="icon-web-bloq"></div>-->
+                                <div class="w-75 d-block mx-auto">
+                                    <span class="title d-block text-center mb-4">{{'CYBERALARM.NAVEGACIONSEGURA.LOCKED' |
+                                        translate}}</span>
+                                    <h3 class="d-block text-center mb-5">{{ciberalarmaService.ciberalarmaNavigationStats.blocks}}</h3>
+                                </div>
+                            </div>
+                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                <!--<div class="icon-publi-bloq"></div>-->
+                                <div class="w-75 d-block mx-auto">
+                                    <span class="title d-block text-center mb-4">{{'CYBERALARM.NAVEGACIONSEGURA.BLOCKED_ADVERTISING' |
+                                        translate}}</span>
+                                    <h3 class="d-block text-center mb-5">{{ciberalarmaService.ciberalarmaNavigationStats.adsBlocked}} <span class="small">(± {{ciberalarmaService.ciberalarmaNavigationStats.adsBlocked*0.2 | number}}MB)</span></h3>
+                                </div>
+                            </div>
+                        </div>
+                        <span class="title d-block text-center mb-4">{{'CYBERALARM.NAVEGACIONSEGURA.INTERNET_USE' |
+                            translate}}</span>
+                        <canvas class="w-100" baseChart [datasets]="barChartData"
+                            [labels]="barChartLabels"
+                            [options]="barChartOptions"
+                            [legend]="barChartLegend"
+                            [chartType]="barChartType">
+                        </canvas>  
+                    </div>
+                    <div class="popup-footer text-left">
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

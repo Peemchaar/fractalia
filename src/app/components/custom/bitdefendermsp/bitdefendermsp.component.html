@@ -1,0 +1,822 @@
+<section *ngIf="serviceCard">
+  <div class="card-header">
+    <div class="icontext">
+      <div class="icon-antivirus neutral-black"></div>
+      <h4 [innerHTML]="bitdefendermspService.serviceName" class="neutral-black custom-h4"></h4>
+    </div>
+
+    <button class="simplebtnheader cyber-mt8"
+      (click)="open(bitdefendermspService.serviceName, bitdefendermspService.longDesc, bitdefendermspService.icon)">
+      <div class="icon-info main-disabled"></div>
+    </button>
+  </div>
+  <div *ngIf="globalLoading">
+      <div class="app-loading">
+          <div class="logo">
+              <img src="{{partnerService.preloaderImage}}" width="100" height="100">
+          </div>
+      </div>
+  </div>
+  <div class="card-body mb-4 mt-4 pr-0 pl-0 mt-0" *ngIf="!globalLoading">
+    <div class="h-100 row mr-0 ml-0 justify-content-center align-items-center" >
+      <!-- ACTIVATION SECTION -->
+      <section *ngIf="state === 0 ">
+        <div class="icon-antivirus mb-2 mt-4 mx-auto main-primary cyber-main-icon">
+        </div>
+        <div class="col-sm-12 mb-1">
+            <h2 class="text-center neutral-black cyb-body-title">
+                {{bitdefendermspService.serviceName}}
+            </h2>
+        </div>
+        <div class="col-sm-12 mb-4 pr-0 pl-0 align-items-center">
+            <p class="text-center cyb-body-text">
+                {{'COMP_BITDEFENDERMSP.TEXT8' | translate}}
+            </p>
+        </div>
+        <div class="col-sm-12 mb-3 cyb-body-button">
+            <button class="btn btn-primary text-uppercase" 
+              (click)="setUserLicenceMSP()">
+                <nz-spinner *ngIf="loading"></nz-spinner>
+                <div *ngIf="!loading" class="text-uppercase">
+                  {{'COMP_BITDEFENDERMSP.BUTTON_SOLICITAR'| translate}}
+                </div>
+            </button>
+        </div>
+      </section>
+      <section class="activation-step-full-body" *ngIf="state >= 1">
+        <div class="row pl-0 pr-0 justify-content-between activation-lines">
+          <div class="col-6 activation-service-conection finalized"></div>
+          <div class="col-6 activation-service-conection" [ngClass]="(state >= 2) ? 'finalized' : ''"></div>
+        </div>
+        <!-- MOBILE SECTION -->
+        <div class="row pl-0 pr-0 mb-5 justify-content-between activation-service-multisteps text-center" *ngIf="mobile || tablet">
+          <div class="col-4 pl-0 d-flex justify-content-start flex-column" >
+            <img class="mobile-step animated bounceIn" src="{{staticContentUrl+'img/completed-circle.png'}}">
+            <h4 class="multistep-name neutral-black fs-16 mini mt-3 text-center">
+              {{'WIZARD.BMS_STEP1_MOBILE' | translate}}
+            </h4>
+          </div>
+          <div class="col-4 d-flex justify-content-start flex-column" >
+            <img class="mobile-step" src="{{staticContentUrl+'img/circle-2.png'}}"
+            *ngIf="state < 2">
+            <img class="mobile-step animated bounceIn" src="{{staticContentUrl+'img/completed-circle.png'}}"
+            *ngIf="state >= 2">
+            <h4 class="multistep-name neutral-black fs-16 mini mt-3 text-center">
+              {{'WIZARD.BMS_STEP2_MOBILE' | translate}}
+            </h4>
+          </div>
+          <div class="col-4 pr-0 d-flex justify-content-start flex-column" >
+            <img class="mobile-step" src="{{staticContentUrl+'img/circle-3.png'}}"
+            *ngIf="state < 3">
+            <h4 class="multistep-name neutral-black fs-16 mini mt-3 text-center">
+              {{'WIZARD.BMS_STEP3_MOBILE' | translate}}
+            </h4>
+          </div>
+        </div>
+        <!-- -->
+        <div class="row pl-0 pr-0 justify-content-between activation-service-multisteps text-center">
+          <div class="col-lg-4 col-md-12 col-sm-12 d-flex justify-content-start flex-column" *ngIf="!mobile && !tablet">
+            <img class="multistep-step animated bounceIn" src="{{staticContentUrl+'img/completed-circle.png'}}">
+            <h4 class="multistep-name neutral-black fs-16 mt-3 text-center">
+              {{'WIZARD.BMS_STEP1_TITLE' | translate}}
+            </h4>
+            <p class="multistep-desc mt-2 text-center">
+              {{'WIZARD.BMS_STEP1_TEXT' | translate}}
+            </p>
+          </div>
+          <div class="col-lg-4 col-md-12 col-sm-12 d-flex justify-content-start flex-column" *ngIf="(!mobile && !tablet) || state == 1">
+            <img class="multistep-step" src="{{staticContentUrl+'img/password-circle.png'}}"
+            *ngIf="state < 2">
+            
+            <img class="multistep-step animated bounceIn" src="{{staticContentUrl+'img/completed-circle.png'}}"
+            *ngIf="state >= 2"> 
+            <h4 class="multistep-name neutral-black fs-16 mt-3 text-center" *ngIf="!isSSO">
+              {{'WIZARD.BMS_STEP2_TITLE' | translate}}
+            </h4>
+            <h4 class="multistep-name neutral-black fs-16 mt-3 text-center" *ngIf="isSSO">
+              {{'WIZARD.BMS_STEP2_TITLE_SSO' | translate}}
+            </h4>
+            <p class="multistep-desc mt-2 text-center" *ngIf="!isSSO" [innerHTML]="'WIZARD.BMS_STEP2_TEXT' | translate" ></p>
+            <p class="multistep-desc mt-2 text-center" *ngIf="isSSO" [innerHTML]="'WIZARD.BMS_STEP2_TEXT_SSO' | translate: { partnerName: user.partnerName}" ></p>
+            <section *ngIf="state == 1">
+              <div class="multistep-btns mt-2">
+                <button
+                  class="btn btn-primary activation-service-btn"
+                  *ngIf="!isSSO"
+                  (click)="openBMSTab()">
+                  <nz-spinner *ngIf="loading"></nz-spinner>
+                  <div *ngIf="!loading" class="text-uppercase">
+                    {{'WIZARD.BTNS.PASSWORD' | translate}}
+                  </div>
+                </button>
+                <button
+                  class="btn btn-primary activation-service-btn"
+                  *ngIf="isSSO"
+                  (click)="openBMSPage()">
+                  <nz-spinner *ngIf="loading"></nz-spinner>
+                  <div *ngIf="!loading" class="text-uppercase">
+                    {{'WIZARD.BTNS.ACCOUNT' | translate}}
+                  </div>
+                </button>
+              </div>
+              <div class="multistep-btns mt-2">
+                <button
+                  class="btn btn-outline-secondary activation-service-btn"
+                  [ngClass]="(loading)? 'focus' : ''"
+                  (click)="checkLicence(partnerSuiteId, 2)">
+                  <nz-spinner *ngIf="loading"></nz-spinner>
+                  <div *ngIf="!loading" class="text-uppercase">
+                    {{'WIZARD.BTNS.TEST' | translate}}
+                  </div>
+                </button>
+              </div>
+            </section>
+            
+          </div>
+          <div class="col-lg-4 col-md-12 col-sm-12 d-flex justify-content-start flex-column" *ngIf="(!mobile && !tablet) || state == 2">
+            <img class="multistep-step" src="{{staticContentUrl+'img/download-circle.png'}}">
+            <h4 class="multistep-name neutral-black fs-16 mt-3 text-center"
+            [ngClass]="(state < 2) ? 'inactive' : ''">
+              {{'WIZARD.BMS_STEP3_TITLE' | translate}}
+            </h4>
+            <p class="multistep-desc  mt-2 text-center" 
+              [innerHTML]="'WIZARD.BMS_STEP3_TEXT1' | translate" 
+              [ngClass]="(state < 2) ? 'inactive' : ''">
+            </p>
+            <div class="multistep-desc d-flex mb-2 justify-content-center">
+              <div class="icon-exclamation main-secondary step-icon"></div>
+              <p class="text-center ml-2 mb-2 main-secondary text-uppercase step-help" 
+                [innerHTML]="'WIZARD.HELP' | translate" 
+                [ngClass]="(state < 2) ? 'inactive' : ''"
+                (click)='openBmsHelpModal()'>
+              </p>
+            </div>
+            <p class="multistep-desc text-center" 
+              [innerHTML]="'WIZARD.BMS_STEP3_TEXT2' | translate" 
+              [ngClass]="(state < 2) ? 'inactive' : ''">
+            </p>
+            <section *ngIf="state == 2">
+              <div class="multistep-btns mt-2">
+                <button
+                  class="btn btn-primary activation-service-btn"
+                  (click)="loadBitdefenderPopup()">
+                  <nz-spinner *ngIf="loading"></nz-spinner>
+                  <div *ngIf="!loading" class="text-uppercase">
+                    {{'WIZARD.BTNS.DOWNLOAD_MSP' | translate}}
+                  </div>
+                </button>
+              </div>
+              <div class="multistep-btns mt-2">
+                <button
+                  class="btn btn-outline-secondary activation-service-btn"
+                  [ngClass]="(loading)? 'focus' : ''"
+                  data-toggle="modal" data-target="#infoRegister">
+                  <nz-spinner *ngIf="loading"></nz-spinner>
+                  <div *ngIf="!loading" class="text-uppercase">
+                    {{'WIZARD.BTNS.CONTINUE' | translate}}
+                  </div>
+                </button>
+              </div>
+            </section>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+</section>
+
+
+
+<section id="header" *ngIf="!serviceCard">
+  <app-service-header 
+    [serviceName] = "licenseService.serviceName"
+    [serviceLongDesc] = "licenseService.longDesc"
+    [serviceDesc] = "licenseService.serviceDesc"
+    [serviceIcon] = "licenseService.serviceIcon">
+  </app-service-header>
+</section>
+<section *ngIf="!serviceCard">
+  <section *ngIf="!isSSO;else divSSO" class="mr-3 ml-3 pl-1 mt-3">
+    <div class="container-fluid">
+      <hr>
+      <br/>
+      <div class="card">
+        <div class="container-fluid">
+          <div class="mb-4" *ngIf="state==0">
+            <ul class="responsive steps">
+              <li>
+                <div class="steps-header text-center">
+                  <div class="steps-icons">
+                    <h2>1</h2>
+                  </div>
+                  <h3 class="text-center">{{'COMP_BITDEFENDERMSP.PASO1R' | translate}}</h3>
+                </div>
+              </li>
+              <li>
+                <div class="steps-header text-center">
+                  <div class="steps-icons">
+                    <h2>2</h2>
+                  </div>
+                  <h3 class="text-center">{{'COMP_BITDEFENDERMSP.PASO2R' | translate}}</h3>
+                </div>
+              </li>
+              <li>
+                <div class="steps-header text-center">
+                  <div class="steps-icons">
+                    <h2>3</h2>
+                  </div>
+                  <h3 class="text-center">{{'COMP_BITDEFENDERMSP.PASO3R' | translate}}</h3>
+                </div>
+              </li>
+            </ul>
+            <ul class="steps">
+              <li class="actived">
+                <div class="steps-header text-center">
+                  <div class="steps-icons">
+                    <div class="icon-active"></div>
+                  </div>
+                  <h3 class="text-center">{{'COMP_BITDEFENDERMSP.PASO1' | translate}}</h3>
+                </div>
+                <div class="steps-body text-center">
+                  <p class="text-center">{{'COMP_BITDEFENDERMSP.TEXT1' | translate}}</p>
+                  <button [disabled]="loading" class="btn btn-primary" (click)="setUserLicenceMSP()">
+                    <nz-spinner *ngIf="loading"></nz-spinner>
+                    <div *ngIf="!loading">{{'COMP_BITDEFENDERMSP.BUTTON_SOLICITAR' | translate}}</div>
+                  </button>
+                </div>
+              </li>
+              <li>
+                <div class="steps-header text-center">
+                  <div class="steps-icons">
+                    <div class="icon-password"></div>
+                  </div>
+                  <h3 class="text-center">{{'COMP_BITDEFENDERMSP.PASO2' | translate}}</h3>
+                </div>
+                <div class="steps-body text-center">
+                  <p class="text-center">{{'COMP_BITDEFENDERMSP.TEXT2' | translate}}</p>
+                </div>
+              </li>
+              <li>
+                <div class="steps-header text-center">
+                  <div class="steps-icons">
+                    <div class="icon-download2"></div>
+                  </div>
+                  <h3 class="text-center">{{'COMP_BITDEFENDERMSP.PASO3' | translate}}</h3>
+                </div>
+                <div class="steps-body text-center">
+                  <p class="text-center">{{'COMP_BITDEFENDERMSP.TEXT3' | translate}}</p>
+                </div>
+              </li>
+            </ul>
+          </div>
+  
+          <div class="mb-4" *ngIf="state==1">
+            <div>
+              <ul id="" class="responsive steps">
+                <li>
+                  <div class="steps-header text-center">
+                    <div class="steps-icons done">
+                      <div class="icon-tick-round"></div>
+                    </div>
+                    <h3 class="text-center">{{'COMP_BITDEFENDERMSP.PASO1R' | translate}}</h3>
+                  </div>
+                </li>
+                <li>
+                  <div class="steps-header text-center">
+                    <div class="steps-icons">
+                      <h2>2</h2>
+                    </div>
+                    <h3 class="text-center">{{'COMP_BITDEFENDERMSP.PASO2R' | translate}}</h3>
+                  </div>
+                </li>
+                <li class="active">
+                  <div class="steps-header text-center">
+                    <div class="steps-icons">
+                      <h2>3</h2>
+                    </div>
+                    <h3 class="text-center">{{'COMP_BITDEFENDERMSP.PASO3R' | translate}}</h3>
+                  </div>
+                </li>
+              </ul>
+              <ul id="" class="steps">
+                <li>
+                  <div class="steps-header text-center">
+                    <div class="steps-icons done">
+                      <div class="icon-tick-round"></div>
+                    </div>
+                    <h3 class="text-center">{{'COMP_BITDEFENDERMSP.PASO1' | translate}}</h3>
+                  </div>
+                  <div class="steps-body text-center">
+                    <p class="text-center">{{'COMP_BITDEFENDERMSP.TEXT1' | translate}}</p>
+                  </div>
+                </li>
+                <li class="actived">
+                  <div class="steps-header text-center">
+                    <div class="steps-icons">
+                      <div class="icon-password"></div>
+                    </div>
+                    <h3 class="text-center">{{'COMP_BITDEFENDERMSP.PASO2' | translate}}</h3>
+                  </div>
+                  <div class="steps-body text-center">
+                    <p class="text-center">{{'COMP_BITDEFENDERMSP.TEXT2' | translate}}</p>
+                    <a class="btn btn-primary" [href]="enrol_url" target="_blank">{{'COMP_BITDEFENDERMSP.BUTTON_CREDENCIALES' | translate}}</a>
+                    <p class="text-center mt-5">{{'COMP_BITDEFENDERMSP.UPDATE_SERVICE' | translate}}</p>
+                    <button class="btn btn-outline-primary" (click)="checkLicence(partnerSuiteId)">{{'COMP_BITDEFENDERMSP.BUTTON_RECARGAR' | translate}}</button>
+                  </div>
+                </li>
+                <li>
+                  <div class="steps-header text-center">
+                    <div class="steps-icons">
+                      <div class="icon-download2"></div>
+                    </div>
+                    <h3 class="text-center">{{'COMP_BITDEFENDERMSP.PASO3' | translate}}</h3>
+                  </div>
+                  <div class="steps-body text-center">
+                    <p class="text-center">{{'COMP_BITDEFENDERMSP.TEXT3' | translate}}</p>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+  
+          <div class="mb-4" *ngIf="state==2">
+            <ul  class="responsive steps">
+              <li>
+                <div class="steps-header text-center">
+                  <div class="steps-icons done">
+                    <div class="icon-tick-round"></div>
+                  </div>
+                  <h3 class="text-center">{{'COMP_BITDEFENDERMSP.PASO1R' | translate}}</h3>
+                </div>
+              </li>
+              <li>
+                <div class="steps-header text-center">
+                  <div class="steps-icons done">
+                    <div class="icon-tick-round"></div>
+                  </div>
+                  <h3 class="text-center">{{'COMP_BITDEFENDERMSP.PASO2R' | translate}}</h3>
+                </div>
+              </li>
+              <li>
+                <div class="steps-header text-center">
+                  <div class="steps-icons">
+                    <div class="icon-download2"></div>
+                  </div>
+                  <h3 class="text-center">{{'COMP_BITDEFENDERMSP.PASO3R' | translate}}</h3>
+                </div>
+              </li>
+            </ul>
+            <ul class="steps">
+            <li>
+              <div class="steps-header text-center">
+                <div class="steps-icons done">
+                  <div class="icon-tick-round"></div>
+                </div>
+                <h3 class="text-center">{{'COMP_BITDEFENDERMSP.PASO1' | translate}}</h3>
+              </div>
+              <div class="steps-body text-center">
+                <p class="text-center">{{'COMP_BITDEFENDERMSP.TEXT1' | translate}}</p>
+              </div>
+            </li>
+            <li>
+              <div class="steps-header text-center">
+                <div class="steps-icons done">
+                  <div class="icon-tick-round"></div>
+                </div>
+                <h3 class="text-center">{{'COMP_BITDEFENDERMSP.PASO2' | translate}}</h3>
+              </div>
+              <div class="steps-body text-center">
+                <p class="text-center">{{'COMP_BITDEFENDERMSP.TEXT2' | translate}}</p>
+              </div>
+            </li>
+            <li class="actived">
+              <div class="steps-header text-center">
+                <div class="steps-icons">
+                  <div class="icon-download2"></div>
+                </div>
+                <h3 class="text-center">{{'COMP_BITDEFENDERMSP.PASO3' | translate}}</h3>
+              </div>
+              <div class="steps-body text-center">
+                <p class="text-center">{{'COMP_BITDEFENDERMSP.TEXT3' | translate : { name : partnerService.partner.name } }} </p>
+              </div>
+              <div class="steps-body text-center">
+                <button class="btn btn-secondary" style="color: #fff;background: #1e117b;border-color: #1e117b;border: 2px solid #1e117b;white-space: normal;
+                line-height: 1.2;padding: 12px;" (click)="loadBitdefenderPopup(licenseService.serviceId, licenseService.code)">
+                  <div class="icon-shield"></div> {{'INSTALAR'
+                  | translate}}
+                </button>
+                <p class="text-center">
+                  {{'COMP_BITDEFENDERMSP.TEXT_CLICK' | translate}}
+                  <a [href]="bitdefendermspService.access_central_url" target="_blank">{{'COMP_BITDEFENDERMSP.HERE' | translate}}</a>
+                </p>
+              </div>
+            </li>
+            </ul>
+          </div>
+  
+  
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <ng-template #divSSO class="mr-3 ml-3 pl-1 mt-3">
+    <div class="container-fluid">
+      <hr>
+      <br/>
+      <div class="card">
+        <div class="container-fluid">
+          <div class="mb-4" *ngIf="state==0">
+            <ul class="steps">
+              <li class="actived" id="step1">
+                <div class="steps-header text-center">
+                  <div class="steps-icons">
+                    <div class="icon-active"></div>
+                  </div>
+                  <h3 class="text-center">{{'COMP_BITDEFENDERMSP.PASO1' | translate}}</h3>
+                </div>
+                <div class="steps-body text-center">
+                  <p class="text-center">{{'COMP_BITDEFENDERMSP.TEXT1' | translate}}</p>
+                  <button [disabled]="loading" class="btn btn-primary" (click)="setUserLicenceMSP()">
+                    <nz-spinner *ngIf="loading"></nz-spinner>
+                    <div *ngIf="!loading">{{'COMP_BITDEFENDERMSP.BUTTON_SOLICITAR' | translate}}</div>
+                  </button>
+                </div>
+              </li>
+              <li id="step2">
+                <div class="steps-header text-center">
+                  <div class="steps-icons">
+                    <div class="icon-download2"></div>
+                  </div>
+                  <h3 class="text-center">{{'COMP_BITDEFENDERMSP.PASO4' | translate}}</h3>
+                </div>
+                <div class="steps-body text-center">
+                  <p class="text-center">{{'COMP_BITDEFENDERMSP.TEXT3' | translate}}</p>
+                </div>
+              </li>
+            </ul>
+          </div>
+          <div class="mb-4" *ngIf="state==2">
+            <ul class="responsive steps sso">
+              <li>
+                <div class="steps-header text-center">
+                  <div class="steps-icons done">
+                    <div class="icon-tick-round"></div>
+                  </div>
+                  <h3 class="text-center">{{'COMP_BITDEFENDERMSP.PASO1_SSO_RESPONSIVE' | translate}}</h3>
+                </div>
+              </li>
+              <li>
+                <div class="steps-header text-center">
+                  <div class="steps-icons">
+                    <div class="icon-download2"></div>
+                  </div>
+                  <h3 class="text-center">{{'COMP_BITDEFENDERMSP.PASO2_SSO_RESPONSIVE' | translate}}</h3>
+                </div>
+              </li>
+            </ul>
+            <ul class="steps">
+              <li>
+                <div class="steps-header text-center">
+                  <div class="steps-icons done">
+                    <div class="icon-tick-round"></div>
+                  </div>
+                  <h3 class="text-center">{{'COMP_BITDEFENDERMSP.PASO1' | translate}}</h3>
+                </div>
+                <div class="steps-body text-center">
+                  <p class="text-center">{{'COMP_BITDEFENDERMSP.TEXT1' | translate}}</p>
+                </div>
+              </li>
+              <li class="actived">
+                <div class="steps-header text-center">
+                  <div class="steps-icons">
+                    <div class="icon-download2"></div>
+                  </div>
+                  <h3 class="text-center">{{'COMP_BITDEFENDERMSP.PASO2_SSO' | translate}}</h3>
+                </div>
+                <div class="steps-body text-center">
+                  <p class="text-center">{{'COMP_BITDEFENDERMSP.TEXT3_SOO' | translate : { name : partnerService.partner.name } }} </p>
+                </div>
+                <div class="steps-body text-center">
+                  <button class="btn btn-secondary" style="color: #fff;background: #1e117b;border-color: #1e117b;border: 2px solid #1e117b;white-space: normal;
+                  line-height: 1.2;padding: 12px;" (click)="loadBitdefenderPopup(licenseService.serviceId, licenseService.code)">
+                    <div class="icon-shield"></div> {{'INSTALAR'
+                    | translate}}
+                  </button>
+                  <p class="text-center">
+                    {{'COMP_BITDEFENDERMSP.TEXT_CLICK' | translate}}
+                    <a [href]="bitdefendermspService.access_central_url" target="_blank">{{'COMP_BITDEFENDERMSP.HERE' | translate}}</a>
+                  </p>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+  
+  
+  <section *ngIf="state==3" class="dashboard-page">
+    <div class="container-fluid">
+      <div class="card">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12">
+              <div class="row">
+                <div class="col-lg-3 col-md-12 col-sm-12" style="font-size:3em;">
+                  <div class="{{licenseService.serviceIcon}}"></div>
+                </div>
+                <div class="col-lg-9 col-md-12 col-sm-12">
+                  <div class="mt-4">{{'COMP_BITDEFENDERMSP.PROTECTION_DEVICES' | translate}}</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12 text-center">
+              <button class="btn btn-secondary mt-4" style="color: #fff;background: #1e117b;border-color: #1e117b;
+              border: 2px solid #1e117b;white-space: normal;line-height: 1.2;padding: 12px;"
+              (click)="loadBitdefenderPopup(licenseService.serviceId, licenseService.code)">
+                  <div class="icon-shield"></div> {{'INSTALAR'
+                  | translate}}
+              </button>
+              <p class="text-center">
+                {{'COMP_BITDEFENDERMSP.TEXT_CLICK' | translate}}
+                <a [href]="bitdefendermspService.access_central_url" target="_blank">{{'COMP_BITDEFENDERMSP.HERE' | translate}}</a>
+              </p>
+            </div>
+          </div>
+            <div class="row grid-divider">
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12">
+                    <div class=" mb-4">
+                        <div class="card-header">
+                            <h1 class="title mb-4 text-center">
+                              {{'CYBERSECURITY.PROTECTION.PROTECTED_DEVICES' | translate}}
+                              {{this.deviceInstall}}&nbsp;
+                              {{'CYBERSECURITY.PROTECTION.OF' | translate}}&nbsp;
+                              {{this.deviceTotal}}
+                            </h1>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-12 col-xl-7 col-lg-7 col-md-8 col-sm-6 col-xs-12 mb-4 d-flex flex-column justify-content-center">
+                                    <div class="canvasservices">
+                                        <div class="numbercanvas text-center">
+                                            <h5 class="text-center mb-0">{{this.deviceInstall}}/{{this.deviceTotal}}</h5>
+                                            <span class="subtitle text-center">Inst.</span>
+                                        </div>
+                                        <div class="doughnut">
+                                            <canvas baseChart
+                                            [data]="doughnutChartData"
+                                            [labels]="chartLabels"
+                                            [colors]="doughnutColors"
+                                            [chartType]="chartType"
+                                            [options]="{cutoutPercentage: 75}"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-xl-5 col-lg-5 col-md-4 col-sm-6 col-xs-12 mb-4 d-flex flex-column justify-content-center">
+                                    <div class="datos w-75 d-block mx-auto">
+                                        <h1 class="title mb-4 text-left">Dispositivos</h1>
+                                        <div class="dg mb-2">
+                                            <div class="led red">
+                                                <i class="fas fa-circle"></i>
+                                            </div>
+                                            <!-- <span>{{'CYBERSECURITY.PROTECTION.TALL_RISK' | translate}}</span> -->
+                                            <!-- <h4 class="">{{protectionService.data.unresolved}}</h4> -->
+                                            <span>{{'CYBERSECURITY.PROTECTION.PENDING' | translate}}</span>
+                                            <h4 class="">{{this.deviceTotal-this.deviceInstall}}</h4>
+                                        </div>
+                                        <div class="dg mb-2">
+                                            <div class="led green">
+                                                <i class="fas fa-circle"></i>
+                                            </div>
+                                            <!-- <span>{{'CYBERSECURITY.PROTECTION.LOW_RISK' | translate}}</span> -->
+                                            <!-- <h4 class="">{{protectionService.data.resolved}}</h4> -->
+                                            <span>{{'CYBERSECURITY.PROTECTION.INSTALL' | translate}}</span>
+                                            <h4 class="">{{this.deviceInstall}}</h4>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                          <div class="row">
+                              <div class="col-12 col-xl-7 col-lg-7 col-md-8 col-sm-6 col-xs-12 mb-4 d-flex flex-column justify-content-center">
+                                  <div class="canvasservices">
+                                      <div class="numbercanvas text-center">
+                                          <h2 class="text-center mb-0">{{this.deviceInstall}}</h2>
+                                          <span class="subtitle text-center">{{'CYBERSECURITY.PROTECTION.TOTAL_PROTECTED_DEVICES' | translate}}</span>
+                                      </div>
+                                      <div class="doughnut">
+                                        <canvas baseChart [data]="bitdefendermspService.doughnutChartData"
+                                        [labels]="bitdefendermspService.chartLabels" [colors]="bitdefendermspService.doughnutColors"
+                                        [chartType]="bitdefendermspService.chartType"
+                                        [options]="{cutoutPercentage: 75}"></canvas>
+                                      </div>
+                                  </div>
+                              </div>
+                              <div class="col-12 col-xl-5 col-lg-5 col-md-4 col-sm-6 col-xs-12 mb-4 d-flex flex-column justify-content-center">
+                                  <div class="datos w-75 d-block mx-auto">
+                                      <h1 class="title mb-4 text-left">{{'CYBERSECURITY.PROTECTION.RISK' | translate}}</h1>
+                                      <div class="dg mb-2">
+                                          <div class="led red">
+                                              <i class="fas fa-circle"></i>
+                                          </div>
+                                          <span>{{'CYBERSECURITY.PROTECTION.TALL_RISK' | translate}}</span>
+                                          <h4 class="">{{bitdefendermspService.devicesRisk.length}}</h4>
+                                      </div>
+                                      <div class="dg mb-2">
+                                          <div class="led green">
+                                              <i class="fas fa-circle"></i>
+                                          </div>
+                                          <span>{{'CYBERSECURITY.PROTECTION.LOW_RISK' | translate}}</span>
+                                          <h4 class="">{{bitdefendermspService.nDeviceInstall-bitdefendermspService.devicesRisk.length}}</h4>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+  
+                    </div>
+                </div>
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12">
+                    <div class=" mb-4">
+                        <div class="card-header">
+                            <h1 class="title mb-4 text-center">{{'CYBERSECURITY.PROTECTION.DAYS_WITHOUT_ANALYZING' | translate}}</h1>
+                        </div>
+                        <canvas baseChart [datasets]="barChartData"
+                            [labels]="barChartLabels"
+                            [options]="barChartOptions"
+                            [legend]="barChartLegend"
+                            [chartType]="barChartType">
+                        </canvas>
+  
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 mb-4">
+                    <hr class="mt-0">
+                </div>
+                <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12 col-xs-12 mb-4">
+  
+                </div>
+                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 mb-4">
+                    <div class="">
+                        <h1 class="title mb-4 text-center">{{'CYBERSECURITY.PROTECTION.VULNERABILITY_SCAN' | translate}}</h1>
+                        <div class="datos d-block w-75 mx-auto">
+                            <div class="dg mb-2">
+                                <div class="led red">
+                                    <i class="fas fa-circle"></i>
+                                </div>
+                                <span>{{'CYBERSECURITY.PROTECTION.DEVICES_ANALYZED' | translate}}</span>
+                                <h4 class="">{{bitdefendermspService.nDeviceAnalitics}}</h4>
+                            </div>
+                            <div class="dg mb-2">
+                                <div class="led orange">
+                                    <i class="fas fa-circle"></i>
+                                </div>
+                                <span>{{'CYBERSECURITY.PROTECTION.FILES_AT_RISK' | translate}}</span>
+                                <h4 class="">{{bitdefendermspService.sumFilesUnresolved}}</h4>
+                            </div>
+                            <div class="dg mb-2">
+                                <div class="led green">
+                                    <i class="fas fa-circle"></i>
+                                </div>
+                                <span>{{'CYBERSECURITY.PROTECTION.VULNERABILITIES' | translate}}</span>
+                                <h4 class="">{{bitdefendermspService.sumRisk}}</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12 col-xs-12 mb-4">
+  
+                </div>
+            </div>
+        </div>
+      </div>
+  
+      <div class="devices-list">
+        <br />
+        <hr>
+        <h4 class="title">{{'CYBERSECURITY.PROTECTION.DEVICES' | translate}}</h4>
+        <div class="row">
+            <div *ngFor="let device of bitdefendermspService.bitdefenderResponse.devices; let j = index"
+                class="col-xl-4 col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                <div class="card">
+                    <div class="card-header">
+                        <!-- <div *ngIf="device.type == 'windows' || device.osName == 'osx'" class="myicons-computer"> -->
+                        <div class="myicons-computer"></div>
+                        <h2> {{device.displayName}}</h2>
+                        <div class="so">
+                            <div class="myicons-computer"></div>
+                            <h3> {{device.os}}</h3>
+                        </div>
+                        <!-- <div *ngIf="device.unresolved === 0 && device.date !== null && device.hour !== null"
+                            class="led green">
+                            <i class="fas fa-circle"></i>
+                        </div>
+                        <div *ngIf="device.unresolved !== 0 || (device.date === null && device.hour === null)"
+                            class="led red">
+                            <i class="fas fa-circle"></i>
+                        </div> -->
+                    </div>
+                    <div class="card-body">
+                        <div class="myicons-user"></div>
+                        <h2> {{device.displayName}}</h2>
+                        <p *ngIf="device.tasks !== null">
+                            {{'CYBERSECURITY.PROTECTION.LAST_ANALYSIS_PERFORMED_ON' | translate}}
+                            <font>{{(device.lastScan+ 'Z').toLocaleString() | date: 'dd/MM/yyyy HH:mm:ss'}}</font>
+                        </p>
+                        <p *ngIf="device.tasks == null">
+                            {{'CYBERSECURITY.PROTECTION.ANALYSIS_NOT_PERMORMED_ON' | translate}}<br><br></p>
+                    </div>
+                    <div class="card-footer">
+                        <a class="" data-toggle="collapse" [href]="'#collapse2'+j" role="button"
+                            aria-expanded="false" aria-controls="collapseExample">
+                            <div class="myicons-arrow-down"></div>
+                        </a>
+                        <div class="collapse" [id]="'collapse2'+j">
+                            <h4 class="title">{{'CYBERSECURITY.PROTECTION.DETAILS' | translate}}</h4>
+                            <div class="row no-gutters datos">
+                                <div class="col-4 col-xl-4 col-lg-4 col-md-4 col-sm-4 col-xs-4 mb-4">
+                                    <h4 class="">{{device.scanned}}</h4>
+                                    <div class="led purple">
+                                        <i class="fas fa-circle"></i>
+                                    </div>
+                                    <span>{{'CYBERSECURITY.PROTECTION.ANALYZED' | translate}}</span>
+                                </div>
+                                <div class="col-4 col-xl-4 col-lg-4 col-md-4 col-sm-4 col-xs-4 mb-4">
+                                    <h4 class="">{{device.resolved}}</h4>
+                                    <div class="led green">
+                                        <i class="fas fa-circle"></i>
+                                    </div>
+                                    <span>{{'CYBERSECURITY.PROTECTION.RESOLVED' | translate}}</span>
+                                </div>
+                                <div class="col-4 col-xl-4 col-lg-4 col-md-4 col-sm-4 col-xs-4 mb-4">
+                                    <h4 class="">{{device.unresolved}}</h4>
+                                    <div class="led red">
+                                        <i class="fas fa-circle"></i>
+                                    </div>
+                                    <span>{{'CYBERSECURITY.PROTECTION.NOT_RESOLVED' | translate}}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="table-responsive">
+  
+        </div>
+      </div>
+  
+    </div>
+  </section>
+</section>
+
+<!-- <input #openInfoRegister class="infoRegister" name="favicon" type="file" data-toggle="modal" data-target="#infoRegister"> -->
+
+<div class="modal fade add-service pr-1 pl-1" tabindex="-1" role="dialog" aria-hidden="true" id="infoRegister">
+  <div class="modal-dialog" role="document">
+      <div class="modal-content" style="min-height: 512px; max-width: 482px;">
+        <div class="new-modal-header row ml-4">
+          <div class="col-sm-12 col-12 d-flex justify-content-end">
+            <button type="button" id="closeModal" class="new-close col-sm-1 col-1 pr-0" aria-label="Close" data-dismiss="modal">
+              <div class="icon-close" data-dismiss="modal"></div>
+            </button>
+          </div>
+        </div>
+
+        <section class="row mt-2 mr-4 ml-4 mb-4">
+          <div class="col-sm-12 col-12 pl-0 pr-0 d-flex justify-content-center">
+            <img class="new-modal-img unplug" src="{{staticContentUrl+'img/icon_info.png'}}">
+          </div>
+          <div class="col-sm-12 col-12 pl-0 pr-0 mb-2 d-flex justify-content-center">
+            <h4 class="wizard-modal-title fs-20 lh-24 neutral-black">{{bitdefendermspService.serviceName}}</h4>
+          </div>
+          <div class="col-sm-12 col-12 pl-0 pr-0 d-flex justify-content-center">
+            <p class="wizard-modal-text neutral-black fs-16 lh-19 roboto-b">
+              {{'WIZARD.BMS_TEXT2' | translate}}
+            </p>
+          </div>
+          <div class="col-sm-12 col-12 pl-0 pr-0 d-flex justify-content-center">
+            <p class="wizard-modal-text neutral-black fs-16 lh-19">
+              {{'WIZARD.BMS_TEXT3' | translate}}
+            </p>
+          </div>
+          <div class="col-sm-12 col-12 pl-0 pr-0 wizard-modal-btns d-flex">
+            <button
+              class="btn btn-primary wizard-modal-btn"
+              data-dismiss="modal">
+              <div class="text-uppercase">
+                {{'WIZARD.BTNS.CLOSE' | translate}}
+              </div>
+            </button>
+          </div>
+        </section>
+      </div>
+  </div>
+</div>
+

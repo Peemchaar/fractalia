@@ -1,0 +1,303 @@
+<section *ngIf="serviceCard">
+  <div class="card-header">
+    <div class="icontext">
+      <div class="icon-copia-seguridad neutral-black"></div>
+      <h4 [innerHTML]="backupService.serviceName" class="neutral-black custom-h4"></h4>
+    </div>
+
+    <button class="simplebtnheader cyber-mt8"
+      (click)="open(backupService.serviceName, backupService.longDesc, backupService.icon)">
+      <div class="icon-info main-disabled"></div>
+    </button>
+  </div>
+  <div *ngIf="globalLoading">
+      <div class="app-loading">
+          <div class="logo">
+              <img src="{{partnerService.preloaderImage}}" width="100" height="100">
+          </div>
+      </div>
+  </div>
+  <div class="card-body mb-4 mt-4 pr-0 pl-0 mt-0" *ngIf="!globalLoading">
+    <div class="h-100 row mr-0 ml-0 justify-content-center align-items-center" >
+      <!-- ACTIVATION SECTION -->
+      <section *ngIf="!backupService.hasActivated">
+        <div class="icon-copia-seguridad mb-2 mt-4 mx-auto main-primary cyber-main-icon">
+        </div>
+        <div class="col-sm-12 mb-1">
+            <h2 class="text-center neutral-black cyb-body-title">
+                {{backupService.serviceName}}
+            </h2>
+        </div>
+        <div class="col-sm-12 mb-4 pr-0 pl-0 align-items-center">
+            <p class="text-center cyb-body-text">
+              {{'BACKUP.SOLICITAR1' | translate}}
+            </p>
+        </div>
+        <div class="col-sm-12 mb-3 cyb-body-button">
+            <button class="btn btn-primary text-uppercase" 
+              (click)="requestBackupService()">
+                <nz-spinner *ngIf="loading"></nz-spinner>
+                <div *ngIf="!loading" class="text-uppercase">
+                  {{'BACKUP.SOLICITAR_BUTTON' | translate}}
+                </div>
+            </button>
+        </div>
+      </section>
+      <section class="activation-step-full-body" *ngIf="backupService.hasActivated">
+        <div class="row pl-0 pr-0 justify-content-between activation-lines">
+          <div class="col-6 activation-service-conection finalized"></div>
+          <div class="col-6 activation-service-conection" [ngClass]="(backupService.hasActivated && backupService.hasPassword) ? 'finalized' : ''"></div>
+        </div>
+        <!-- MOBILE SECTION -->
+        <div class="row pl-0 pr-0 mb-5 justify-content-between activation-service-multisteps text-center" *ngIf="mobile || tablet">
+          <div class="col-4 pl-0 d-flex justify-content-start flex-column" >
+            <img class="mobile-step animated bounceIn" src="{{staticContentUrl+'img/completed-circle.png'}}">
+            <h4 class="multistep-name neutral-black fs-16 mini mt-3 text-center">
+              {{'WIZARD.BMS_STEP1_MOBILE' | translate}}
+            </h4>
+          </div>
+          <div class="col-4 d-flex justify-content-start flex-column" >
+            <img class="mobile-step" src="{{staticContentUrl+'img/circle-2.png'}}"
+            *ngIf="!backupService.hasPassword">
+            <img class="mobile-step animated bounceIn" src="{{staticContentUrl+'img/completed-circle.png'}}"
+            *ngIf="backupService.hasPassword">
+            <h4 class="multistep-name neutral-black fs-16 mini mt-3 text-center">
+              {{'WIZARD.BMS_STEP2_MOBILE' | translate}}
+            </h4>
+          </div>
+          <div class="col-4 pr-0 d-flex justify-content-start flex-column" >
+            <img class="mobile-step" src="{{staticContentUrl+'img/circle-3.png'}}">
+            <h4 class="multistep-name neutral-black fs-16 mini mt-3 text-center">
+              {{'WIZARD.BMS_STEP3_MOBILE' | translate}}
+            </h4>
+          </div>
+        </div>
+        <!-- -->
+        <div class="row pl-0 pr-0 justify-content-between activation-service-multisteps text-center">
+          <div class="col-lg-4 col-md-12 col-sm-12 d-flex justify-content-start flex-column" *ngIf="!mobile && !tablet">
+            <img class="multistep-step animated bounceIn" src="{{staticContentUrl+'img/completed-circle.png'}}">
+            <h4 class="multistep-name neutral-black fs-16 mt-3 text-center">
+              {{'WIZARD.BMS_STEP1_TITLE' | translate}}
+            </h4>
+            <p class="multistep-desc mt-2 text-center">
+              {{'WIZARD.ACRO_STEP1.1' | translate}}
+            </p>
+            <p class="multistep-desc mt-2 text-center">
+              {{'WIZARD.ACRO_STEP1.2' | translate}}
+            </p>
+          </div>
+          <div class="col-lg-4 col-md-12 col-sm-12 d-flex justify-content-start flex-column" *ngIf="(!mobile && !tablet) || (backupService.hasActivated && !backupService.hasPassword)">
+            <img class="multistep-step" src="{{staticContentUrl+'img/password-circle.png'}}"
+            *ngIf="!backupService.hasPassword">
+            
+            <img class="multistep-step animated bounceIn" src="{{staticContentUrl+'img/completed-circle.png'}}"
+            *ngIf="backupService.hasPassword"> 
+            <h4 class="multistep-name neutral-black fs-16 mt-3 text-center">
+              {{'WIZARD.BMS_STEP2_TITLE' | translate}}
+            </h4>
+            <p class="multistep-desc mt-2 text-center" [innerHTML]="'WIZARD.ACRO_STEP2' | translate" ></p>
+            
+            <section *ngIf="backupService.hasActivated && !backupService.hasPassword">
+
+              <div class="multistep-btns mt-2">
+                <button
+                    class="btn btn-outline-secondary activation-service-btn"
+                    [ngClass]="(loading)? 'focus' : ''"
+                    (click)="validateAcronis('password')">
+                    <nz-spinner *ngIf="loading"></nz-spinner>
+                    <div *ngIf="!loading" class="text-uppercase">
+                      {{'WIZARD.BTNS.TEST' | translate}}
+                    </div>
+                </button>
+              </div>
+            </section>
+            
+          </div>
+          <div class="col-lg-4 col-md-12 col-sm-12 d-flex justify-content-start flex-column" *ngIf="(!mobile && !tablet) || (backupService.hasActivated && !backupService.hasPassword)">
+            <img class="multistep-step" src="{{staticContentUrl+'img/download-circle.png'}}">
+            <h4 class="multistep-name neutral-black fs-16 mt-3 text-center"
+            [ngClass]="(!backupService.hasPassword) ? 'inactive' : ''">
+              {{'WIZARD.ACRO_STEP3_TITLE' | translate}}
+            </h4>
+            <p class="multistep-desc  mt-2 text-center" 
+              [innerHTML]="'WIZARD.ACRO_STEP3_TEXT1' | translate" 
+              [ngClass]="(!backupService.hasPassword) ? 'inactive' : ''">
+            </p>
+            <div class="multistep-desc d-flex mb-2 justify-content-center">
+              <div class="icon-more-info main-secondary step-icon"
+                  [ngClass]="(!backupService.hasPassword) ? 'inactive' : ''"
+                  (click)='openAcronisHelpModal()'>
+              </div>
+              <p class="text-center ml-2 mb-2 main-secondary text-uppercase step-help" 
+                [innerHTML]="'WIZARD.HELP' | translate" 
+                [ngClass]="(!backupService.hasPassword) ? 'inactive' : ''"
+                (click)='openAcronisHelpModal()'>
+              </p>
+            </div>
+            <p class="multistep-desc text-center" 
+              [innerHTML]="'WIZARD.ACRO_STEP3_TEXT2' | translate" 
+              [ngClass]="(!backupService.hasPassword) ? 'inactive' : ''">
+            </p>
+            <section *ngIf="backupService.hasPassword">
+              <div class="multistep-btns mt-2">
+                <button
+                  class="btn btn-primary activation-service-btn"
+                  (click)="downloadCAC()">
+                  <nz-spinner *ngIf="loading"></nz-spinner>
+                  <div *ngIf="!loading" class="text-uppercase">
+                    {{'WIZARD.BTNS.DOWNLOAD_CAC' | translate}}
+                  </div>
+                </button>
+              </div>
+              <div class="multistep-btns mt-2">
+                <button
+                  class="btn btn-outline-secondary activation-service-btn"
+                  [ngClass]="(loading)? 'focus' : ''"
+                  (click)="validateAcronis('download')">
+                  <nz-spinner *ngIf="loading"></nz-spinner>
+                  <div *ngIf="!loading" class="text-uppercase">
+                    {{'WIZARD.BTNS.CONTINUE' | translate}}
+                  </div>
+                </button>
+                <button type="button" id="openRegisterModal" class="hidden" data-toggle="modal" data-target="#acronisRegister">
+                </button>
+              </div>
+            </section>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</section>
+
+
+<div class="modal fade add-service pr-1 pl-1" tabindex="-1" role="dialog" aria-hidden="true" id="acronisRegister">
+  <div class="modal-dialog" role="document">
+      <div class="modal-content" style="min-height: 512px; max-width: 482px;">
+        <div class="new-modal-header row ml-4">
+          <div class="col-sm-12 col-12 d-flex justify-content-end">
+            <button type="button" id="closeRegisterModal" class="new-close col-sm-1 col-1 pr-0" aria-label="Close" data-dismiss="modal">
+              <div class="icon-close" data-dismiss="modal"></div>
+            </button>
+          </div>
+        </div>
+
+        <section class="row mt-2 mr-4 ml-4 mb-4">
+          <div class="col-sm-12 col-12 pl-0 pr-0 d-flex justify-content-center">
+            <img class="new-modal-img unplug" src="{{staticContentUrl+'img/icon_info.png'}}">
+          </div>
+          <div class="col-sm-12 col-12 pl-0 pr-0 mb-2 d-flex justify-content-center">
+            <h4 class="wizard-modal-title fs-20 lh-24 neutral-black">{{backupService.serviceName}}</h4>
+          </div>
+          <div class="col-sm-12 col-12 pl-0 pr-0 d-flex justify-content-center">
+            <p class="wizard-modal-text neutral-black fs-16 lh-19 roboto-b">
+              {{'WIZARD.ACRO_TEXT2' | translate}}
+            </p>
+          </div>
+          <div class="col-sm-12 col-12 pl-0 pr-0 d-flex justify-content-center">
+            <p class="wizard-modal-text neutral-black fs-16 lh-19">
+              {{'WIZARD.ACRO_TEXT3' | translate}}
+            </p>
+          </div>
+          <div class="col-sm-12 col-12 pl-0 pr-0 wizard-modal-btns d-flex">
+            <button
+              class="btn btn-primary wizard-modal-btn"
+              data-dismiss="modal">
+              <div class="text-uppercase">
+                {{'WIZARD.BTNS.CLOSE' | translate}}
+              </div>
+            </button>
+          </div>
+        </section>
+      </div>
+  </div>
+</div>
+
+
+
+
+<!-- <section>
+  <section id="header">
+    <div class="container-fluid">
+      <ul class="navbar-nav float-left mr-auto ml-3 pl-1">
+        <li class="nav-item">
+          <small>&nbsp;</small>
+        </li>
+        <li class="nav-item">
+          <h4 [innerHTML]="backupService.serviceName"></h4>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="servicestitles" class="mr-3 ml-3 pl-1">
+    <div class="container-fluid">
+      <br /><br /><br />
+      <a class="bback" href="javascript:history.back()">
+        <div class="myicons-arrow"></div>{{ 'ATRAS' | translate }}
+      </a>
+      <br /><br />
+      <div class="service-title" [innerHTML]="backupService.serviceDesc"></div>
+      <br />
+      <button class="collapse-btn" data-toggle="collapse" data-target="#description-service">
+        <div class="myicons-info"></div> {{ 'MAS_INFO_SERVICIO' | translate }}
+      </button>
+      <div id="description-service" class="collapse">
+        <div>
+          <span [innerHTML]="backupService.longDesc"></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="dashboard-page mr-3 ml-3 pl-1 mt-3">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="container-fluid">
+                <div class="row grid-divider justify-content-center">
+                    <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 d-flex pt-4 justify-content-center align-items-center">
+                        <div *ngIf="!userService.currentUserValue.hasAcronisRequested" class="mb-4">
+                            <h1 class="title text-center">{{'CYBERSECURITY.BACKUP.ACTIVATION' | translate}}</h1>
+                            <p>{{'BACKUP.SOLICITAR1' | translate}}</p>
+                            <button style="white-space: normal;" class="btn btn-primary"
+                                (click)="requestBackupService()" [disabled]="loading">
+                                    <nz-spinner *ngIf="loading"></nz-spinner>
+                                    <div *ngIf="!loading">{{'BACKUP.SOLICITAR_BUTTON' | translate}}</div></button>
+                            <br/> <br/> 
+                            <p>{{'BACKUP.SOLICITAR' | translate}} <strong>{{userService.currentUserValue.email}}</strong>.</p>
+                            <br/>
+                            <br/>
+                        </div>
+                        <div class="d-flex align-items-center mb-4"
+                            *ngIf="userService.currentUserValue.hasAcronisRequested && !userService.currentUserValue.acronisProvisionDate">
+                            <p>{{'BACKUP.TEXT2' | translate}} 
+                                <br/><br/> 
+                                {{'BACKUP.TEXT4' | translate}}</p>
+                        </div>
+                        <div class="justify-content-center mb-4" *ngIf="userService.currentUserValue.hasAcronisRequested &&
+                        userService.currentUserValue.acronisProvisionDate">
+                            <div class="align-items-center">
+                                <h3 style="margin-bottom: 5px;">{{'BACKUP.SOLICITAR_TEXT' | translate}}</h3>
+                                <h4>{{'BACKUP.SOLICITAR_TEXT2' | translate}}</h4>
+                                <br/>
+                                <a href="https://eu-cloud.acronis.com/login" target="_blank" style="white-space: normal; line-height: 1.2;"
+                                    class="btn btn-primary">{{'BACKUP.SOLICITAR_BUTTON3' | translate}}
+                                    {{'BACKUP.SOLICITAR_BUTTON2' | translate}}</a>
+                                <br/><br/><br/>
+                                <p>{{'BACKUP.TEXT3' | translate}}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 pt-4 align-items-center">
+                        <div class="text-center">
+                            <img src="{{staticContentUrl+'img/art/acronis_cloud_backup_logo.png'}}" width="150" heigth="" alt="Backup" />
+                            <div class="iconback icon-back-devices"></div>
+                        </div>                        
+                    </div>                    
+                </div>
+            </div>
+        </div>
+    </div>
+  </section>
+</section>
+ -->

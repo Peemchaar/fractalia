@@ -1,0 +1,23 @@
+.cyb-mobile {
+  display: none;
+}
+
+
+.cyb-web {
+  display: flex;
+}
+
+
+@media only screen and (max-width: 992px)  {
+
+  .cyb-mobile {
+    display: block;
+  }
+
+  .cyb-web {
+    display: none;
+  }
+
+
+}
+

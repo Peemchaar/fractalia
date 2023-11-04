@@ -1,0 +1,31 @@
+<div class="container-fluid">
+    <ul class="navbar-nav float-left mr-auto ml-3 pl-1">
+        <li class="nav-item">
+            <small>&nbsp;</small>
+        </li>
+        <li class="nav-item">
+            <h4 class="service-name">
+                {{serviceName}}
+            </h4>
+        </li>
+    </ul>
+</div>
+<div class="mr-3 ml-3 pl-1">
+    <div class="container-fluid">
+        <div class="row mx-0 w-100">
+            <div class="col-7 mb-3 pl-0 text-left">
+                <div class="service-title" [innerHTML]="serviceDesc"></div>
+            </div>
+            <div class="col-7 pl-0 text-left">
+                <button class="header-btn collapse-btn fs-14 bold pl-0 lh-16 text-uppercase main-secondary" (click)="open()">
+                    <div class="icon-info header-info mr-2"></div> {{ 'KNOW_MORE' | translate }}
+                </button>
+            </div>
+            <div class="col-5 pr-0 text-right">
+                <a class="bback fs-14 bold lh-16 text-uppercase main-secondary" href="javascript:history.back()">
+                    <div class="icon-left-big-arrow fs-16 main-secondary"></div>{{ 'ATRAS' | translate }}
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

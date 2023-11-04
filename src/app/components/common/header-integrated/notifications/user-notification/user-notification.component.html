@@ -1,0 +1,46 @@
+
+<div class="notif-container" >
+  <ng-container *ngIf="notifications.length > 0; else dontHaveNotifications">
+
+    <div class="mb-4" *ngFor="let dateNotifications of notifications" [ngSwitch]="dateNotifications.notificationDate">
+      <div class="d-flex justify-content-center align-items-end r-regular">
+        <span  *ngSwitchCase="(currentDate | date:'yyyy-MM-dd')"> {{'NOTIFICATIONS.TODAY' | translate}}</span>
+        <span *ngSwitchCase="(yesterdayDate | date:'yyyy-MM-dd')"> {{'NOTIFICATIONS.YESTERDAY' | translate}}</span>
+        <span  *ngSwitchDefault> {{ dateNotifications.notificationDate  | date:'dd/MM/yyyy'}}</span>
+      </div>
+      <hr class="hr-color">
+      <div class="d-flex align-items-center mb-4"  *ngFor="let notification of dateNotifications.notifications">
+        <div class="section--icon flex-column alerta">
+          <div class="alerta-icon">
+            <div class="{{notification.categoryIcon}}"></div> <span>{{notification.categoryName}}</span>
+          </div>
+        </div>
+        <div class="section--text">
+          <div id="hora" class="ml-2"> {{(notification.notificationDate.toString()+'Z').toLocaleString() | date: 'HH:mm'}}</div>
+          <div class="background-alert">
+            <p class="body-font d-flex text-align-justify">
+                <i class="{{notification.serviceIcon}}"></i>
+                <span [innerHtml]="notification.serviceName"></span>
+              </p>
+              <p [innerHTML]="notification.description" style="word-wrap: break-word">
+              </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </ng-container>
+
+
+    <ng-template #dontHaveNotifications>
+      <div class="no-alerta">
+        <div class="none-notification icon-bell mb-2">
+          <p class="regular">{{'COMP_USER.SUPPORT_NOTIFICATION.NO_NOTIFICATIONS_YET' | translate}}</p>
+        </div>
+      </div>
+    </ng-template>
+
+</div>
+
+
+

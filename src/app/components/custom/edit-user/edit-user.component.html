@@ -1,0 +1,168 @@
+<div *ngIf="loading_page">
+  <div class="app-loading">
+      <div class="logo">
+          <img src="{{partnerService.preloaderImage}}" width="100" height="100">
+      </div>
+  </div>
+</div>
+
+<section id="header">
+  <div class="container-fluid m767">
+    <ul class="navbar-nav float-left mr-auto ml-3 pl-1">
+      <li class="nav-item">
+        <small>&nbsp;</small>
+      </li>
+      <li class="nav-item">
+        <h4>{{'EDIT_USER' | translate}}</h4>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<section class="ml-3 pl-1">
+  <div class="container-fluid m767 pr-4">
+    <br/><br/><br/>
+    <a class="d-flex position-absolute mt-3" href="javascript:history.back()">
+      <div class="icon-left-big-arrow mr-2"></div> {{ 'ATRAS' | translate }}</a>
+    <br/><br/><br/>
+    <div class="row align-items-start">
+      <div class="col-lg-12" [ngStyle]="{'margin':!this.userService.currentUserValue.inJira ? '0 auto': ''}">
+        <p>{{'DATOS_PERSONALES' | translate}}</p>
+        <div class="card">
+          <div class="container-fluid pr-4 pl-4">
+            <form (ngSubmit)="onSubmit()" class="pform formdatauser">
+              <div class="row align-items-start">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                  <div class="picture-container" *ngIf="partnerService.partner.hasFullProfile">
+                    <div class="upload-wrapper">
+                      <div class="">
+                        <div class="photo">
+                          <input #profileImage name="favicon" type="file" (change)="onUploadImagen($event)"
+                            [disabled]="isActivo" accept="image/x-png,image/jpeg,image/gif,image/x-icon" style="display:none;">
+                          <button type="button" class="btn bback" (click)="profileImage.click()">
+                            <img [src]=sanitizer.bypassSecurityTrustUrl(image) width="84" height="84" /></button>
+                        </div>
+                        <div class="text">
+                          <p class="title">{{'IMAGEN_PERFIL' | translate}}</p>
+                          <p class="subtitle">{{'CAMBIAR_IMAGEN_PERFIL' | translate}}</p>
+                        </div>
+                      </div>
+                      <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel"
+                        aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title" id="modalLabel">{{'CUT_PROFILE_IMAGE_USER' | translate}}
+                              </h5>
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>
+                            <div class="modal-body">
+                              <div class="img-container">
+                                <img id="image" src="">
+                              </div>
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-default" data-dismiss="modal">{{'CANCEL' |
+                                translate}}</button>
+                              <button type="button" class="btn btn-primary" id="crop">{{'OK' | translate}}</button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12" [ngClass]="!partnerService.partner.hasFullProfile ? 'no-photo' : ''">
+                  <div class="form-group">
+                    <input [disabled]="isActivo" type="text" required class="form-control" name="name"
+                      [(ngModel)]="user.name" #name="ngModel" maxlength="100" placeholder="{{'NOMBRE' | translate}}*">
+                  </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12" [ngClass]="!partnerService.partner.hasFullProfile ? 'no-photo' : ''">
+                  <div class="form-group">
+                    <input [attr.disabled]="isActivo ? '' : null" type="text" required class="form-control"
+                      name="surname" [(ngModel)]="user.surname" #surname="ngModel" maxlength="100" placeholder="{{'APELLIDOS' | translate}}">
+                  </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12" *ngIf="isShowEmail">
+                  <div class="form-group">
+                    <input [disabled]="emailDisabled" type="email" required class="form-control" name="email"
+                      [(ngModel)]="user.email" #email="ngModel" maxlength="100" placeholder="{{'EMAIL' | translate}}*">
+                  </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12" *ngIf="isShowEid">
+                  <div class="form-group">
+                    <input type="text" required class="form-control" name="eid" [(ngModel)]="user.eid"
+                      [disabled]="isActivo" #eid="ngModel" maxlength="100" placeholder="{{'EID' | translate: { identifier: partnerService.partner.uniqueIdentifier } }}*">
+                  </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12" *ngIf="partnerService.partner.hasFullProfile">
+                  <div class="form-group">
+                    <input [disabled]="isActivo" type="text" required class="form-control" name="phone"
+                      [(ngModel)]="user.phone" #phone="ngModel" maxlength="20" placeholder="{{'TELEFONO' | translate}}">
+                  </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12" *ngIf="partnerService.partner.hasFullProfile">
+                  <div class="form-group">
+                    <input [disabled]="isActivo" type="text" required class="form-control" name="adress"
+                      [(ngModel)]="user.adress" #adress="ngModel" maxlength="100" placeholder="{{'DIRECCION' | translate}}">
+                  </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12" *ngIf="partnerService.partner.hasFullProfile">
+                  <div class="form-group">
+                    <input [disabled]="isActivo" type="text" required class="form-control" name="postalcode"
+                      [(ngModel)]="user.postalcode" #postalcode="ngModel" maxlength="10" placeholder="{{'CODIGO_POSTAL' | translate}}">
+                  </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12" *ngIf="partnerService.partner.hasFullProfile">
+                  <div class="form-group">
+                    <input [disabled]="isActivo" type="text" required class="form-control" name="city"
+                      [(ngModel)]="user.city" #city="ngModel" maxlength="50" placeholder="{{'CIUDAD' | translate}}">
+                  </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                  <div class="form-group">
+                    <select required class="form-control" name="country" [(ngModel)]="user.countryCode" [disabled]="isActivo">
+                      <option [value]="null" disabled [hidden]="user.countryCode">{{'PAIS' | translate}}</option>
+                      <option *ngFor="let country of partnerService.countries;" [value]="country.code">
+                        {{country.name}}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-xl-12 mb-4 mt-2">
+                  <div style="font-size: 80%; color:#dc3545;" *ngIf="updateError">
+                    <div>{{'ERROR_GUARDAR_DATOS' | translate}}</div>
+                  </div>
+                  <div class="errormen">
+                    <div *ngIf="showMessage" class="loginError d-inline-flex align-items-center">
+                      <div class="icon-exclamation-tri"></div> {{message}}
+                    </div>
+                  </div>
+                  <br>
+                  <div class="btnform">
+                    <div class="row">
+                      <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mt-2 order-lg-12">
+                        <p class="requiredtext text-right float-left float-lg-right mt-2"><font>*</font> {{'CAMPOS_OBLIGATORIOS' | translate}}</p>
+                      </div>
+                      <div class="col-xl-8 col-lg-8 col-md-12 col-sm-12 mt-2">
+                        <button class="btn btn-primary" [disabled]="loading" *ngIf="!isActivo">
+                          <nz-spinner *ngIf="loading"></nz-spinner>
+                          <div *ngIf="!loading">{{'GUARDAR' | translate}}</div>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<br/><br/><br/><br/>

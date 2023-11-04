@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+	<meta charset="UTF-8"><meta content="width=device-width, initial-scale=1" name="viewport" />
+	<style>
+		body {
+			background-color: white;
+			background: url("{{loginImage}}") no-repeat center center fixed;
+			text-align: center;
+			margin: 0 auto;
+			width: 100%;
+    		background-size: cover;
+		}
+
+		h4 {
+			font-family: verdana;
+			font-size: 18px;
+			color: #333;
+		}
+
+		p {
+			font-family: verdana;
+			font-size: 13px;
+			color: #999;
+		}
+
+		hr {
+			border-top: 1px solid #eee;
+		}
+
+		.loginBox {
+			background: rgba(255, 255, 255, .9);
+			margin: 0 auto;
+			width: 100% !important;
+			max-width: 400px;
+			min-width: 280px;
+			height: auto;
+			min-height: 380px;
+			border-radius: 0 !important;
+			height: 100vh;
+			display: flex;
+			-webkit-box-pack: center;
+			justify-content: center;
+			-webkit-box-align: center;
+			align-items: center;
+			text-align: center;
+		}
+
+		.loginBody {
+			padding: 0 20px 20px 20px;
+			width: 300px;
+			display: block;
+			margin: 0 auto;
+		}
+		
+	</style>
+	<link rel="icon" id="favicon" type="image/x-icon" href="{{faviconImage}}">
+</head>
+
+<body>
+	<section>
+		<div class="loginBox">
+			<div class="loginBody">
+				<img width="20%" height="20%"
+					src="data:image/svg+xml;utf8;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgMCAwIDQ4IDQ4IiB2aWV3Qm94PSIwIDAgNDggNDgiPjxwYXRoIGQ9Ik0yNCwzYzguMiwwLDE2LDMuMiwyMS44LDlsMS40LTEuNEM0MSw0LjQsMzIuOCwxLDI0LDFDMTUuMiwxLDcsNC40LDAuOCwxMC42TDIuMiwxMkM4LDYuMiwxNS44LDMsMjQsM3oiLz48cGF0aCBkPSJNNDMuMSwxNC43QzM4LDkuNiwzMS4yLDYuOCwyNCw2LjhTMTAsOS42LDQuOSwxNC43bDEuNCwxLjRjNC43LTQuNywxMS03LjMsMTcuNy03LjNjNi43LDAsMTMsMi42LDE3LjcsNy4zTDQzLjEsMTQuN3oiLz48cGF0aCBkPSJNMzksMTguOGMtNC00LTkuNC02LjItMTUtNi4ycy0xMSwyLjItMTUsNi4ybDEuNCwxLjRjMy42LTMuNiw4LjUtNS42LDEzLjYtNS42czEwLDIsMTMuNiw1LjZMMzksMTguOHoiLz48cGF0aCBkPSJNMzQuOSwyMi45QzMyLDIwLDI4LjEsMTguNCwyNCwxOC40cy04LDEuNi0xMC45LDQuNWwxLjQsMS40YzIuNS0yLjUsNS45LTMuOSw5LjUtMy45czcsMS40LDkuNSwzLjlMMzQuOSwyMi45eiIvPjxwYXRoIGQ9Ik0zMC44IDI3Yy0xLjgtMS44LTQuMy0yLjgtNi44LTIuOHMtNSAxLTYuOCAyLjhsMS40IDEuNGMxLjQtMS41IDMuNC0yLjIgNS40LTIuMnM0IC44IDUuNCAyLjJMMzAuOCAyN3pNMjEuMiAzMS4xYy0uNy43LTEuMSAxLjctMS4xIDIuOCAwIDEuMS40IDIgMS4xIDIuOC43LjcgMS43IDEuMSAyLjggMS4xIDEuMSAwIDItLjQgMi44LTEuMS43LS43IDEuMS0xLjcgMS4xLTIuOCAwLTEuMS0uNC0yLTEuMS0yLjgtLjctLjctMS43LTEuMS0yLjgtMS4xQzIyLjkgMjkuOSAyMiAzMC4zIDIxLjIgMzEuMXpNMjUuOSAzMy44YzAgLjUtLjIgMS0uNiAxLjMtLjcuNy0xLjkuNy0yLjcgMC0uNC0uNC0uNi0uOC0uNi0xLjMgMC0uNS4yLTEgLjYtMS4zLjQtLjQuOC0uNiAxLjMtLjYuNSAwIDEgLjIgMS4zLjZDMjUuNyAzMi45IDI1LjkgMzMuMyAyNS45IDMzLjh6Ii8+PHJlY3Qgd2lkdGg9IjIiIGhlaWdodD0iMTIuMSIgeD0iMzguMyIgeT0iMzAuOSIvPjxyZWN0IHdpZHRoPSIyIiBoZWlnaHQ9IjIuNCIgeD0iMzguMyIgeT0iNDQuNiIvPjwvc3ZnPg=="></img>
+				<h4 id="header">{{headerText}}</h4>
+				<p id="paragraph">{{paragraphText}}</p>
+				<br />
+				<br />
+			</div>
+		</div>
+	</section>
+</body>
+
+</html>

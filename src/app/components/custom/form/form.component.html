@@ -1,0 +1,33 @@
+<section id="header">
+  <div class="container-fluid">
+      <ul class="navbar-nav float-left mr-auto ml-3 pl-1">
+          <li class="nav-item">
+          <small>&nbsp;</small>
+          </li>
+          <li class="nav-item">
+          <h4 [innerHTML]="formService.serviceName"></h4>
+          </li>
+      </ul>
+  </div>
+</section>
+
+<section class="">
+  <div class="container-fluid">
+    <br/><br/><br/>
+    <a class="bback" href="javascript:history.back()"> <div class="myicons-arrow"></div>{{ 'ATRAS' | translate }}</a>
+    <br/><br/>
+    <div *ngFor="let field of fields">
+        <div class="form-row">
+            <div class="col">
+              <div class="form-group">
+                <label for="">{{field.name}}</label>
+                <input type="text" class="form-control" placeholder="{{field.value}}">
+              </div>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="payLoad" class="form-row">
+      <strong>Saved the following values</strong><br>{{payLoad}}
+    </div>
+  </div>
+</section>

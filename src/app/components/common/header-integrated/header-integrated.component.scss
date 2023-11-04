@@ -1,0 +1,134 @@
+.button-notification {
+  width: 48px;
+  height: 48px;
+  border-radius: 50% !important;
+  background-color: #fff;
+  border: 1px solid #fff;
+}
+
+/**/
+
+.r-regular {
+  font-family: 'RobotoRegular';
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 14.06px;
+  color: #666A73;
+}
+
+.roboto{
+  font-family: 'RobotoRegular';
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 16.41px;
+  color: #666A73;
+  cursor: pointer;
+}
+
+.r-bold {
+  font-family: 'RobotoBold';
+  font-weight: 700;
+  font-size: 12px;
+  line-height: 14px;
+}
+
+.c-black {
+  color: #333;
+}
+
+.body-font{
+  font-family: 'RobotoRegular';
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 16.41px;
+  color: #34383F;
+}
+
+.background-alert{
+  background-color: #ECF1F8;
+  padding: 12px;
+  border-radius: 8px;
+}
+.hr-color{
+  border-bottom: 2px solid #ECF1F8;
+  margin-top: 0.5rem;
+  margin-bottom: 2rem;
+  width: calc(100% - 10px);
+}
+
+.text-align-justify{
+  text-align: justify
+}
+
+
+.blueNote{
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background-color: #36B3ED;
+  position: absolute;
+  top: 18px;
+  right: 30px;
+}
+
+.header-right ul li .navbar-collapse {
+  min-height: 80vh;
+}
+
+#download-pwa [class*=icon-] {
+  font-size: 20px !important;
+}
+
+#icons-right {
+  display: flex !important;
+  flex-direction: row !important;
+  margin-top: 2rem;
+  margin-right: 10px;
+}
+
+#notification {
+  right: 2% !important;
+  position: relative;
+  background: #fff;
+  box-shadow: 5px 5px 25px rgb(0 0 0 / 30%);
+  border-radius: 8px;
+  margin-top: 0.5rem;
+  width: 600px;
+}
+
+.noti-bell{
+  position: relative;
+  width: 16px !important;
+  height: 16px;
+  background: #36B3ED;
+  margin-left: -12px;
+  border-radius: 50%;
+}
+
+@media only screen and (max-width: 767px) {
+  #notification {
+    margin-top:12px;
+    position: fixed !important;
+    width: 95%;
+  }
+
+  .header-right ul li .navbar-collapse {
+    margin: 5% auto;
+    left: 0;
+    right: 0;
+  }
+
+  button#download-pwa {
+    visibility: hidden;
+  }
+
+  #button-noti {
+    visibility: hidden;
+  }
+}
+
+@media (max-width:767px) {
+  #activation-container{
+    display: none;
+  }
+}

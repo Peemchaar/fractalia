@@ -1,0 +1,119 @@
+<div class="new-modal-header row">
+  <h4 *ngIf="!success"  class="new-modal-title col-sm-11 pl-0 pr-0" [innerHTML]="formService.serviceName+':'"></h4>
+  <h4 *ngIf="success"  class="new-modal-title col-sm-11 pl-0 pr-0"></h4>   
+  <button type="button" class="new-close col-sm-1" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
+    <div class="icon-close"></div>
+  </button>
+  <div class="form-group col-lg-12 col-md-12 col-sm-12 pl-0 pr-0" *ngIf="!success">
+    <label>*&nbsp;{{'CAMPOS_OBLIGATORIOS' | translate}}</label>
+  </div>
+</div>
+
+
+<section class="row mr-5 ml-5 mt-2 mb-3">
+  <form class="col-sm-12 pl-0 pr-0" (ngSubmit)="onSubmit()" *ngIf="!success">
+
+    <div class="form-group col-md-12 col-sm-12 pl-0 pr-0 no-padding-responsive">
+      <label class="modal-form-label" for="">{{ 'NOMBRE' | translate }}&nbsp;*</label>
+      <div class="input-group">
+        <input type="text" required class="form-control new-input" name="name" [(ngModel)]="data.Name" #name="ngModel"
+        [readonly]="true"
+        [ngClass]="{ 'is-invalid': name.invalid && (name.dirty || name.touched) }"
+        maxlength="100">
+      </div>
+    </div>
+
+    <div class="form-group col-md-12 col-sm-12 pl-0 pr-0 no-padding-responsive">
+      <label class="modal-form-label" for="">{{ 'EMAIL' | translate }}&nbsp;*</label>
+      <div class="input-group">
+        <input type="text" required class="form-control new-input" name="email" [(ngModel)]="data.Email" #email="ngModel"
+        [readonly]="true"
+        [ngClass]="{ 'is-invalid': email.invalid && (email.dirty || email.touched) }"
+        maxlength="100">
+      </div>
+    </div>
+
+    <div class="form-group col-md-12 col-sm-12 pl-0 pr-0 no-padding-responsive">
+      <label class="modal-form-label" for="">{{ 'TELEFONO' | translate }}&nbsp;*</label>
+      <div class="input-group">
+        <input type="text" required class="form-control new-input" name="phone" [(ngModel)]="data.Phone" #phone="ngModel"
+        [readonly]="true"
+        [ngClass]="{ 'is-invalid': phone.invalid && (phone.dirty || phone.touched) }"
+        maxlength="100">
+      </div>
+    </div>
+
+    <div class="form-group col-md-12 col-sm-12 pl-0 pr-0 no-padding-responsive">
+      <label class="modal-form-label" for="">Servicio relacionado&nbsp;*</label>
+      <div class="input-group">
+        <select required class="form-control new-input" name="service" #service="ngModel" [(ngModel)]="data.ServiceId" >
+          <option *ngFor="let serv of services" [value]="serv.id">
+            {{serv.name}}
+          </option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group col-md-12 col-sm-12 pl-0 pr-0 no-padding-responsive">
+      <label class="modal-form-label" for="">Detalle de la consulta</label>
+      <div class="input-group">
+        <textarea 
+          class="form-control new-input" name="details" [(ngModel)]="data.Message" #details="ngModel"
+          rows="4">
+        </textarea>
+      </div>
+    </div>
+
+    <div class="form-group col-md-12 col-sm-12 pl-0 pr-0 no-padding-responsive">
+      <label class="modal-form-label" for="">Adjuntar archivos</label>
+      <div class="custom-file new-custom-file">
+        <input type="file" class="custom-file-input new-input" name="file"
+          (change)="onChangeFile($event)"
+          #file id="file"
+          accept="image/x-png,image/jpeg,application/pdf"
+          style="display:none;">
+
+        <button type="button" class="btn file-btn" (click)="file.click()">Seleccionar archivo
+        </button>
+        <input type="text" class="form-control new-file-input" name="fileName" [(ngModel)]="fileName"
+        [readonly]="true">
+      </div>
+    </div>
+
+    <div class="form-group digital-group col-lg-12 pl-0 pr-0 d-flex justify-content-end ">
+      <button type="submit" 
+        [disabled]="name.invalid || email.invalid || phone.invalid || service.invalid || loading" 
+        class="btn btn-primary mt-3"
+        >
+        <nz-spinner *ngIf="loading"></nz-spinner>
+        <div *ngIf="!loading" class="text-uppercase">
+         {{'ENVIAR' | translate}}</div>
+      </button>
+    </div>
+  </form>
+
+  <section *ngIf="success">
+    <div class="col-sm-12 pl-0 pr-0 d-flex justify-content-center"> 
+      <img class="new-modal-img" src="{{staticContentUrl+'img/check-circle-outline.png'}}">
+    </div>
+    <div class="col-sm-12 pl-0 pr-0">
+      <p class="new-modal-title-alt">
+        Formulario enviado con éxito
+      </p>
+      <p class="new-modal-text">
+        Tan pronto como sea posible uno de nuestros expertos
+        se pondrá en contacto contigo para resolver cualquier tipo de duda o incidencia relacionada con tu servicio.
+      </p>
+    </div>
+    <div class="form-group digital-group col-lg-12 pl-0 pr-0 d-flex justify-content-end">
+      <button
+        class="btn btn-primary mt-84"
+        (click)="activeModal.dismiss('Cross click')">
+        <nz-spinner *ngIf="loading"></nz-spinner>
+        <div class="text-uppercase">
+        Finalizar
+        </div>
+      </button>
+    </div>
+  </section>
+</section>

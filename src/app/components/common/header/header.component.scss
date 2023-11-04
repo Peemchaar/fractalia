@@ -1,0 +1,84 @@
+
+.frac-navbar {
+  background-color: #FFF;
+  padding: 20px 10px;
+}
+
+.noti-bell-header {
+  position: relative;
+  width: 8px !important;
+  height: 8px;
+  background: #36B3ED;
+  margin-left: -12px;
+  border-radius: 50%;
+}
+
+.noti-icon-mobile {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 36px;
+  width: 36px !important;
+  border: 1px solid  #ECF1F8;
+  background-color: #ECF1F8;
+  border-radius: 50%;
+  visibility: hidden;
+  cursor: pointer;
+}
+
+.pwa-icon{
+  font-size: 20px;
+  padding: 2px;
+  color: #fff;
+  background: #00b1ea;
+  border-radius: 10px;
+  margin-right: 8px;
+  cursor: pointer;
+}
+
+.light-logo {
+  width: 160px;
+}
+
+.cursor {
+  cursor: pointer;
+}
+
+.icon-menu  {
+  visibility: hidden;
+}
+@media only screen and (max-width: 992px) {
+  .light-logo {
+    width: 120px;
+  }
+}
+@media only screen and (max-width: 767px) {
+  .frac-navbar {
+    width: 100%;
+  }
+
+  .noti-icon-mobile {
+    visibility: visible;
+  }
+
+  .icon-menu  {
+    visibility: visible;
+  }
+
+  .light-logo {
+    width: 120px;
+  }
+
+  .header-right ul li {
+    max-width: 100% !important;
+    text-align: center;
+    vertical-align: middle;
+  }
+
+  #notificacion {
+    width: 391px;
+    margin-top:12px;
+  }
+}
+
+

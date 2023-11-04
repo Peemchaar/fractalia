@@ -1,0 +1,16 @@
+<div class="modal-header">
+    <button type="button" class="close" aria-label="Close" (click)="close()">
+        <div class="icon-close"></div>
+    </button>
+    <h4 class="modal-title" [innerHTML]="name"></h4>   
+    <!--<p class="modal-subtitle">Categoría</p>-->
+    <div class="icon">
+        <div class="{{icon}}"></div>
+    </div>
+</div>
+
+<div class="modal-body">
+    <div class="sscard w-100 mb-2">
+        <app-chat-form [name]="chatService.serviceName"></app-chat-form>
+    </div>
+</div>

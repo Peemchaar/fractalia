@@ -1,0 +1,75 @@
+<!--
+<div *ngIf="partnerService.partner.includeFooter && partnerService.partner.footerHtml!=''"
+  [innerHTML]="partnerService.partner.footerHtml | safe :'html'">
+</div>
+<footer *ngIf="!partnerService.partner.includeFooter">
+    <div class="container legal">
+        <div class="row">
+            <div class="col-lg-6 col-md-4 col-sm-12">
+                <p>{{partnerService.partner.name}} © 2021</p>
+                <p class="links">
+                    <a routerLink="/terms" >{{termLink}}</a>
+                </p>
+            </div>
+            <div class="col-lg-6 col-md-8 col-sm-12">
+                <img class="poweredby" src="./assets/img/brand/powered_fractalia.png" width="200" height="40" alt="Powered by Fractalia" />
+            </div>
+        </div>
+    </div>
+</footer>
+-->
+
+<footer>
+    <div class="container-fluid m767">
+        <div id="suitefooter" class="ml-3 mr-3">
+            <div class="row">
+                
+                <div class="col-xl-5 col-ll-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 order-xl-12 text-center text-xl-right mb-4 mb-xl-0 d-flex flex-column justify-content-center">
+                    <div *ngIf="partnerService.partner.includePhone || partnerService.partner.includeWhatsapp || partnerService.partner.includeEmail || partnerService.partner.includeCallMeBack || partnerService.partner.includeC2C" class="linkstlflogin" >
+                        <p class="links">
+                            <!-- <span class="dbm pl-0">
+                                <p class="">{{ 'PLATFORM_SUPPORT' | translate }}:</p>
+                            </span> -->
+                            <span class="numb" *ngIf="partnerService.partner.includePhone && partnerService.partner.phone">
+                                <a class="" href="tel:{{partnerService.partner.phone}}"><div class="icon-phone" style="color: #666A73;"></div> </a>
+                            </span>
+                            <span class="numb" *ngIf="partnerService.partner.includeWhatsapp && partnerService.partner.whatsapp">
+                                <a class="" href="https://api.whatsapp.com/send?phone={{partnerService.partner.whatsapp}}" target="_blank"><div class="icon-whatsapp" style="color: #666A73;"></div></a>
+                            </span>
+                            <span class="sdn"></span>
+                            <span tooltip="{{ 'CALL_ME_BACK' | translate }}" title="{{ 'CALL_ME_BACK' | translate }}" class="numb" *ngIf="this.partnerService.partner!=null && this.partnerService.partner.includeCallMeBack">
+                                <a class="" (click)="abrirCMB()">
+                                    <div class="icon-call-me-back"  style="color: #666A73;"></div>
+                                </a>
+                            </span>
+                            <span tooltip="{{ 'CLICK2CALL' | translate }}" title="{{ 'CLICK2CALL' | translate }}" class="numb" *ngIf="this.partnerService.partner!=null && this.partnerService.partner.includeC2C">
+                                <a class="" (click)="abrirC2C()">
+                                    <div class="icon-click-to-call "   style="color: #666A73;"></div>
+                                </a>
+                            </span>
+                            <span tooltip="{{ 'SEND_EMAIL' | translate }}" title="{{ 'SEND_EMAIL' | translate }}" class="numb envelope"  *ngIf="partnerService.partner.includeEmail && partnerService.partner.email">
+                                <a class="color-icon" href="mailto:{{partnerService.partner.email}}"><div class="icon-small-envelope" style="color: #666A73;"></div></a>
+                            </span>
+                        </p>
+                    </div>
+                </div>
+                <div class="col-xl-5 col-ll-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 text-center text-xl-left mb-5 mb-xl-0 d-flex flex-column justify-content-center">
+                    <p class="linkslogin tlf legals">
+                        <span class="pl-0">
+                            <a class="" href="#/terms">{{ 'TERMINOS_Y_CONDICIONES' | translate }}</a>
+                        </span>
+                        <span>
+                            <a class="" href="#/policyCookies">{{ 'POLITICA_COOKIES' | translate }}</a>
+                        </span>
+                        <span class="cpp">
+                            <a class="" href="#/policyPrivacy">{{ 'POLITICA_PRIVACIDAD' | translate }}</a>
+                        </span>
+                    </p>
+                </div>
+                <div class="col-xl-2 col-ll-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 order-xl-2 text-center d-flex flex-column justify-content-center">
+                    <p class="poweredby">Powered by Fractalia</p>
+                </div>
+            </div>
+        </div>
+      </div>
+</footer>

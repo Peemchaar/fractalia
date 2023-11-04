@@ -1,0 +1,674 @@
+<section class="activation-container row" *ngIf="!globalLoading">
+  <div class="h-100 col-lg-4 col-md-12 col-sm-12 steps-card animated fadeInLeft" >
+    <div class="h-100 card auto-activation-card">
+      <div class="card-logo pr-0 pl-0 pt-0 pb-0 mb-4">
+        <a>
+          <b class="logo">
+            <img src="{{partnerService.partner.logotipo}}" alt="homepage" class="light-logo" />
+          </b>
+        </a>
+      </div>
+      <div class="card-header pr-0 pl-0 pt-0 pb-0">
+        <h2 class="auto-activation-name animated fadeInLeft" *ngIf="resumed">
+          {{'WIZARD.SALUDO2' | translate: { userName: user.name} }}
+        </h2>
+        <h2 class="auto-activation-name animated fadeInLeft" *ngIf="!resumed && currentStep == 1">
+          {{'WIZARD.SALUDO1' | translate: { userName: user.name} }}
+        </h2>
+        <h2 class="auto-activation-name animated fadeInLeft" *ngIf="!resumed && currentStep == totalSteps">
+          {{'WIZARD.SALUDO5' | translate}}
+        </h2>
+
+        <h2 class="auto-activation-name" *ngIf="!resumed && currentStep == (totalSteps-1)">
+          {{'WIZARD.SALUDO4' | translate}}
+        </h2>
+
+        <h2 class="auto-activation-name" *ngIf="!resumed && currentStep >= 2 && currentStep < (totalSteps-1)">
+          {{'WIZARD.SALUDO3' | translate}}
+        </h2>
+
+        <label class="progress-label animated fadeInLeft">
+          {{actualProgress}} {{'WIZARD.PROGRESS' | translate}}
+        </label>
+        
+        <div class="mb-4 w-100 animated fadeInLeft">
+          <div class="progress custom-progress">
+            <div 
+            role="progressbar"
+            class="progress-bar"
+            aria-valuemin="5"
+            aria-valuemax="100"
+            [style.width]="actualProgress">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-body pr-0 pl-0">
+
+        <section *ngFor="let step of stepsData">
+          <div class="col-sm-12 pl-0 pr-0 mb-3 d-flex justify-content-between animated fadeInLeft" *ngIf="!mobile || currentService == step.serviceCode">
+            <div class="icon-robo-identidad activation-step-icon" *ngIf="step.serviceCode == 'CII'"></div>
+            <div class="icon-e-learning activation-step-icon" *ngIf="step.serviceCode == 'ELE'"></div>
+            <div class="icon-attack-simulator activation-step-icon" *ngIf="step.serviceCode == 'ATS'"></div>
+            <div class="icon-antivirus activation-step-icon" *ngIf="step.serviceCode == 'BMS'"></div>
+            <div class="icon-antivirus activation-step-icon" *ngIf="step.serviceCode == 'GRA'"></div>
+            <div class="icon-copia-seguridad activation-step-icon" *ngIf="step.serviceCode == 'CAC'"></div>
+
+            <span class="activation-step-name text-left mx-2">{{step.serviceName}}</span>
+            <img class="activation-step-progress" src="{{staticContentUrl+'img/circular-bar/circle-0.png'}}" *ngIf="step.currentStep == 0">
+            <img class="activation-step-progress" src="{{staticContentUrl+'img/circular-bar/circle-30.png'}}" *ngIf="step.currentStep == 1 && step.totalSteps == 3">
+            <img class="activation-step-progress" src="{{staticContentUrl+'img/circular-bar/circle-50.png'}}" *ngIf="step.currentStep == 1 && step.totalSteps == 2">
+            <img class="activation-step-progress" src="{{staticContentUrl+'img/circular-bar/circle-60.png'}}" *ngIf="step.currentStep == 2 && step.totalSteps == 3">
+            <div class="icon-tick-round activation-step-success animated fadeInLeft" *ngIf="step.finalized == true && !installableService(step.serviceCode)"></div>
+            <div class="icon-tick-round activation-step-warning animated fadeInLeft" *ngIf="installableService(step.serviceCode)"></div>
+          </div>
+        </section>  
+      </div>
+      <div class="card-footer pr-0 pl-0 pt-0 pb-0">
+  
+      </div>
+    </div>
+  </div>
+  <div class="h-100 col-lg-8 col-md-12 col-sm-12 service-card" *ngIf="advancing"></div>
+  <div class="h-100 col-lg-8 col-md-12 col-sm-12 service-card animated fadeInLeft" *ngIf="!advancing">
+    <div class="card auto-activation-card">
+      <div class="card-header d-flex justify-content-between pr-0 pl-0 pt-0 pb-0">
+        <span class="activation-steps">{{'WIZARD.STEPS_COUNT' | translate: { currentStep: currentStep, totalSteps: totalSteps} }} </span>
+        <button type="button" class="new-close pr-0" aria-label="Close" data-toggle="modal"
+          data-target="#stopWizardModal" *ngIf="currentStep < totalSteps">
+          <div class="icon-close "  data-toggle="modal"  data-target="#GeoTack"></div>
+        </button>
+      </div>
+      <div class="card-body pr-0 pl-0">
+
+        <section class="mt-4 activation-step-body" *ngIf="resumed && pendingInstall">
+          <div class="col-sm-12 pl-0 pr-0 mb-3 d-flex justify-content-between flex-column">
+            <h2 class="activation-service-title animated fadeInLeft">
+              {{'WIZARD.RESUME_INSTALL_TITLE' | translate}}
+            </h2>
+            <p class="activation-service-text mt-3 animated fadeInLeft"
+              [innerHTML]="'WIZARD.RESUME_INSTALL_TEXT1' | translate">
+            </p>
+            <p class="activation-service-text mt-3 mb-4 animated fadeInLeft">
+              {{'WIZARD.RESUME_INSTALL_TEXT2' | translate}}
+            </p>
+            <button
+              class="btn btn-primary activation-service-btn animated fadeInLeft"
+              (click)="closeResumed()">
+              <nz-spinner *ngIf="loading"></nz-spinner>
+              <div *ngIf="!loading" class="text-uppercase">
+                {{'WIZARD.BTNS.CONTINUE' | translate}}
+              </div>
+            </button>
+          </div>
+        </section>
+
+        <section class="mt-4 activation-step-body" *ngIf="resumed && !pendingInstall">
+          <div class="col-sm-12 pl-0 pr-0 mb-3 d-flex justify-content-between flex-column">
+            <h2 class="activation-service-title animated fadeInLeft">
+              {{'WIZARD.RESUME_TITLE' | translate}}
+            </h2>
+            <p class="activation-service-text mt-3 mb-4 animated fadeInLeft">
+              {{'WIZARD.RESUME_TEXT' | translate}}
+            </p>
+            <button
+              class="btn btn-primary activation-service-btn animated fadeInLeft"
+              (click)="closeResumed()">
+              <nz-spinner *ngIf="loading"></nz-spinner>
+              <div *ngIf="!loading" class="text-uppercase">
+                {{'WIZARD.BTNS.CONTINUE' | translate}}
+              </div>
+            </button>
+          </div>
+        </section>
+
+        <section class="mt-4 activation-step-body" *ngIf="!resumed && currentStep == 1">
+          <div class="col-sm-12 pl-0 pr-0 mb-3 d-flex justify-content-between flex-column">
+            <h2 class="activation-service-title animated fadeInLeft">
+              {{'WIZARD.START_TITLE' | translate}}
+            </h2>
+            <p class="activation-service-text mt-3 mb-4 animated fadeInLeft">
+              {{'WIZARD.START_TEXT' | translate}}
+            </p>
+            <button
+              class="btn btn-primary activation-service-btn animated fadeInLeft"
+              (click)="submitStep()">
+              <nz-spinner *ngIf="loading"></nz-spinner>
+              <div *ngIf="!loading" class="text-uppercase">
+                {{'WIZARD.BTNS.START' | translate}}
+              </div>
+            </button>
+          </div>
+        </section>
+        
+
+        <section class="mt-4 activation-step-body" *ngIf="!resumed && currentStep == totalSteps">
+          <div class="col-sm-12 pl-0 pr-0 mb-3 d-flex justify-content-between flex-column">
+            <img class="activation-service-central-img-success mb-4" src="{{staticContentUrl+'img/check-circle-outline.png'}}">
+            <h2 class="activation-service-title animated fadeInLeft">
+              {{'WIZARD.COMPLETED_TITLE' | translate}}
+            </h2>
+            <div class="steps-info activation-service-text text-left mt-3 mb-4 animated fadeInLeft" *ngIf="!mobile">
+              <div class="col-sm-12 pl-0 pr-0 mb-3 d-flex justify-content-between">
+                <div class="icon-tick-round activation-step-success"></div>
+                <span class="activation-step-name text-left mx-1">{{'WIZARD.COMPLETED_ACTIVATED_SERVICES' | translate}}</span>
+              </div>
+              <div class="col-sm-12 pl-0 pr-0 mb-0 d-flex justify-content-between">
+                <div class="icon-tick-round activation-step-success color-waiting"></div>
+                <span class="activation-step-name text-left mx-1">{{'WIZARD.COMPLETED_PENDING_SERVICES' | translate}}</span>
+              </div>
+            </div>
+            <p class="activation-service-text mt-3 mb-4 animated fadeInLeft" [innerHTML]="'WIZARD.COMPLETED_TEXT' | translate">
+            </p>
+            <button
+              class="btn btn-primary activation-service-btn animated fadeInLeft"
+              (click)="finishWizard()">
+              <nz-spinner *ngIf="loading"></nz-spinner>
+              <div *ngIf="!loading" class="text-uppercase">
+                {{'WIZARD.BTNS.COMPLETED' | translate}}
+              </div>
+            </button>
+          </div>
+        </section>
+
+        <section class="mt-4 activation-step-body" *ngIf="!resumed && currentStep >= 2 && currentStep < totalSteps && stepsData[currentIndex].serviceCode != 'BMS' && stepsData[currentIndex].serviceCode != 'GRA' && stepsData[currentIndex].serviceCode != 'CAC'" >
+          <div class="col-sm-12 pl-0 pr-0 mb-3 d-flex justify-content-between flex-column" >
+            <img class="activation-service-central-img mb-4" src="{{staticContentUrl+'img/secure_icon.png'}}">
+            <h2 class="activation-service-title">
+              {{stepsData[currentIndex].serviceName}}
+            </h2>
+            <p class="activation-service-text mt-3 mb-4" 
+              *ngIf="stepsData[currentIndex].serviceCode == 'CII'" 
+              [innerHTML]="'WIZARD.CII_TEXT' | translate" >
+            </p>
+            <p class="activation-service-text mt-3 mb-4" 
+              *ngIf="stepsData[currentIndex].serviceCode == 'ELE'"
+              [innerHTML]="'WIZARD.ELE_TEXT' | translate" >
+            </p>
+            <p class="activation-service-text mt-3 mb-4" 
+              *ngIf="stepsData[currentIndex].serviceCode == 'ATS'"
+              [innerHTML]="'WIZARD.ATS_TEXT' | translate" >
+            </p>
+            <button
+              class="btn btn-primary activation-service-btn"
+              (click)="submitStep()">
+              <nz-spinner *ngIf="loading"></nz-spinner>
+              <div *ngIf="!loading" class="text-uppercase">
+                {{'WIZARD.BTNS.CONTINUE' | translate}}
+              </div>
+            </button>
+          </div>
+        </section>
+
+        <!-- BMS section -->
+        <section class="activation-step-body" *ngIf="!resumed && currentStep >= 2 && currentStep < totalSteps && stepsData[currentIndex].serviceCode == 'BMS' && (currentService == 'BMS' || bitdefendermspService.clientDownloaded == true)" >
+          <div class="col-sm-12 pl-0 pr-0 mb-3 d-flex justify-content-between flex-column" >
+            <img class="activation-service-central-img mb-4" src="{{staticContentUrl+'img/secure_icon_warning.png'}}" *ngIf="bitdefendermspService.clientDownloaded == true && currentService != 'BMS' && !bmsGreen">
+            <img class="activation-service-central-img mb-4" src="{{staticContentUrl+'img/secure_icon.png'}}" *ngIf="bitdefendermspService.clientDownloaded == true && currentService != 'BMS' && bmsGreen">
+
+            <h2 class="activation-service-title">
+              {{stepsData[currentIndex].serviceName}}
+            </h2>
+            <p class="activation-service-text" *ngIf="bitdefendermspService.clientDownloaded == false && currentService == 'BMS'">
+              {{'WIZARD.BMS_TEXT' | translate}}
+            </p>
+            <p class="activation-service-text fs-16 lh-19 roboto-b" 
+              *ngIf="bitdefendermspService.clientDownloaded == true && currentService != 'BMS'">
+              {{'WIZARD.BMS_TEXT2' | translate}}
+            </p>
+            <p class="activation-service-text fs-16 lh-19" *ngIf="bitdefendermspService.clientDownloaded == true && currentService != 'BMS'">
+              {{'WIZARD.BMS_TEXT3' | translate}}
+            </p>
+            <button
+              class="btn btn-primary activation-service-btn"
+              (click)="submitStep()"
+              *ngIf="currentService != 'BMS' && bitdefendermspService.clientDownloaded == true">
+              <nz-spinner *ngIf="loading"></nz-spinner>
+              <div *ngIf="!loading" class="text-uppercase">
+                {{'WIZARD.BTNS.CONTINUE' | translate}}
+              </div>
+            </button>
+          </div>
+        </section>
+        <section class="activation-step-full-body" *ngIf="!resumed && currentStep >= 2 && currentStep < totalSteps && stepsData[currentIndex].serviceCode == 'BMS' && currentService == 'BMS' && bitdefendermspService.clientDownloaded == false">
+          <div class="row pl-0 pr-0 justify-content-between activation-lines">
+            <div class="col-6 activation-service-conection finalized"></div>
+            <div class="col-6 activation-service-conection" [ngClass]="(stepsData[currentIndex].currentStep >= 2) ? 'finalized' : ''"></div>
+          </div>
+
+          <div class="row pl-0 pr-0 mb-5 justify-content-between activation-service-multisteps text-center" *ngIf="mobile || tablet">
+            <div class="col-4 pl-0 d-flex justify-content-start flex-column" >
+              <img class="mobile-step animated bounceIn" src="{{staticContentUrl+'img/completed-circle.png'}}">
+              <h4 class="multistep-name mini mt-3 text-center">
+                {{'WIZARD.BMS_STEP1_MOBILE' | translate}}
+              </h4>
+            </div>
+            <div class="col-4 d-flex justify-content-start flex-column" >
+              <img class="mobile-step" src="{{staticContentUrl+'img/circle-2.png'}}"
+              *ngIf="stepsData[currentIndex].serviceCode == 'BMS' && stepsData[currentIndex].currentStep < 2">
+              <img class="mobile-step animated bounceIn" src="{{staticContentUrl+'img/completed-circle.png'}}"
+              *ngIf="stepsData[currentIndex].serviceCode == 'BMS' && stepsData[currentIndex].currentStep >= 2">
+              <h4 class="multistep-name mini mt-3 text-center">
+                {{'WIZARD.BMS_STEP2_MOBILE' | translate}}
+              </h4>
+            </div>
+            <div class="col-4 pr-0 d-flex justify-content-start flex-column" >
+              <img class="mobile-step" src="{{staticContentUrl+'img/circle-3.png'}}"
+              *ngIf="stepsData[currentIndex].serviceCode == 'BMS' && stepsData[currentIndex].currentStep < 3">
+              <h4 class="multistep-name mini mt-3 text-center">
+                {{'WIZARD.BMS_STEP3_MOBILE' | translate}}
+              </h4>
+            </div>
+          </div>
+
+          <div class="row pl-0 pr-0 justify-content-between activation-service-multisteps text-center">
+            <div class="col-lg-4 col-md-12 col-sm-12 d-flex justify-content-start flex-column" *ngIf="!mobile && !tablet">
+              <img class="multistep-step animated bounceIn" src="{{staticContentUrl+'img/completed-circle.png'}}">
+              <h4 class="multistep-name mt-3 text-center">
+                {{'WIZARD.BMS_STEP1_TITLE' | translate}}
+              </h4>
+              <p class="multistep-desc mt-2 text-center">
+                {{'WIZARD.BMS_STEP1_TEXT' | translate}}
+              </p>
+            </div>
+            <div class="col-lg-4 col-md-12 col-sm-12 d-flex justify-content-start flex-column" *ngIf="(!mobile && !tablet) || stepsData[currentIndex].currentStep == 1">
+              <img class="multistep-step" src="{{staticContentUrl+'img/password-circle.png'}}"
+              *ngIf="stepsData[currentIndex].serviceCode == 'BMS' && stepsData[currentIndex].currentStep < 2">
+              
+              <img class="multistep-step animated bounceIn" src="{{staticContentUrl+'img/completed-circle.png'}}"
+              *ngIf="stepsData[currentIndex].serviceCode == 'BMS' && stepsData[currentIndex].currentStep >= 2"> 
+              <h4 class="multistep-name mt-3 text-center" *ngIf="!isSSOBMS">
+                {{'WIZARD.BMS_STEP2_TITLE' | translate}}
+              </h4>
+              <h4 class="multistep-name mt-3 text-center" *ngIf="isSSOBMS">
+                {{'WIZARD.BMS_STEP2_TITLE_SSO' | translate}}
+              </h4>
+              <p class="multistep-desc mt-2 text-center" *ngIf="!isSSOBMS" [innerHTML]="'WIZARD.BMS_STEP2_TEXT' | translate" ></p>
+              <p class="multistep-desc mt-2 text-center" *ngIf="isSSOBMS" [innerHTML]="'WIZARD.BMS_STEP2_TEXT_SSO' | translate: { partnerName: user.partnerName}"  ></p>
+              <section *ngIf="stepsData[currentIndex].currentStep == 1">
+                <div class="multistep-btns mt-2">
+                  <button
+                    class="btn btn-primary activation-service-btn"
+                    *ngIf="!isSSOBMS"
+                    (click)="openBMSTab()">
+                    <nz-spinner *ngIf="loading"></nz-spinner>
+                    <div *ngIf="!loading" class="text-uppercase">
+                      {{'WIZARD.BTNS.PASSWORD' | translate}}
+                    </div>
+                  </button>
+                  <button
+                    class="btn btn-primary activation-service-btn"
+                    *ngIf="isSSOBMS"
+                    (click)="openBMSPage()">
+                    <nz-spinner *ngIf="loading"></nz-spinner>
+                    <div *ngIf="!loading" class="text-uppercase">
+                      {{'WIZARD.BTNS.ACCOUNT' | translate}}
+                    </div>
+                  </button>
+                </div>
+                <div class="multistep-btns mt-2">
+                  <button
+                    class="btn btn-outline-secondary activation-service-btn"
+                    [ngClass]="(loading)? 'focus' : ''"
+                    (click)="checkLicence(true)">
+                    <nz-spinner *ngIf="loading"></nz-spinner>
+                    <div *ngIf="!loading" class="text-uppercase">
+                      {{'WIZARD.BTNS.TEST' | translate}}
+                    </div>
+                  </button>
+                </div>
+              </section>
+              
+            </div>
+            <div class="col-lg-4 col-md-12 col-sm-12 d-flex justify-content-start flex-column" *ngIf="(!mobile && !tablet) || stepsData[currentIndex].currentStep == 2">
+              <img class="multistep-step" src="{{staticContentUrl+'img/download-circle.png'}}">
+              <h4 class="multistep-name mt-3 text-center"
+              [ngClass]="(stepsData[currentIndex].currentStep < 2) ? 'inactive' : ''">
+                {{'WIZARD.BMS_STEP3_TITLE' | translate}}
+              </h4>
+              <p class="multistep-desc  mt-2 text-center" 
+                [innerHTML]="'WIZARD.BMS_STEP3_TEXT1' | translate" 
+                [ngClass]="(stepsData[currentIndex].currentStep < 2) ? 'inactive' : ''">
+              </p>
+               <div class="multistep-desc d-flex mb-2 justify-content-center">
+                <div class="icon-more-info main-secondary step-icon"
+                  [ngClass]="(stepsData[currentIndex].currentStep < 2) ? 'inactive' : ''"
+                  (click)='openBmsHelpModal()'>
+                </div>
+                <p class="text-center ml-2 mb-2 main-secondary text-uppercase step-help" 
+                  [innerHTML]="'WIZARD.HELP' | translate" 
+                  [ngClass]="(stepsData[currentIndex].currentStep < 2) ? 'inactive' : ''"
+                  (click)='openBmsHelpModal()'>
+                </p>
+              </div>
+              <p class="multistep-desc text-center" 
+                [innerHTML]="'WIZARD.BMS_STEP3_TEXT2' | translate" 
+                [ngClass]="(stepsData[currentIndex].currentStep < 2) ? 'inactive' : ''">
+              </p>
+              <section *ngIf="stepsData[currentIndex].currentStep == 2">
+                <div class="multistep-btns mt-2">
+                  <button
+                    class="btn btn-primary activation-service-btn"
+                    (click)="loadBitdefenderPopup()">
+                    <nz-spinner *ngIf="loading"></nz-spinner>
+                    <div *ngIf="!loading" class="text-uppercase">
+                      {{'WIZARD.BTNS.DOWNLOAD_MSP' | translate}}
+                    </div>
+                  </button>
+                </div>
+                <div class="multistep-btns mt-2">
+                  <button
+                    class="btn btn-outline-secondary activation-service-btn"
+                    [ngClass]="(loading)? 'focus' : ''"
+                    (click)="renewStepsData('BMS')">
+                    <nz-spinner *ngIf="loading"></nz-spinner>
+                    <div *ngIf="!loading" class="text-uppercase">
+                      {{'WIZARD.BTNS.CONTINUE' | translate}}
+                    </div>
+                  </button>
+                </div>
+              </section>
+            </div>
+          </div>
+        </section>
+        <!-- end BMS -->
+        <!-- Gravity section-->
+        <section class="activation-step-body" *ngIf="!resumed && currentStep >= 2 && currentStep < totalSteps && stepsData[currentIndex].serviceCode == 'GRA' && (currentService == 'GRA' || gravityService.clientDownloaded == true)" >
+          <div class="col-sm-12 pl-0 pr-0 mb-3 d-flex justify-content-between flex-column" >
+            <img class="activation-service-central-img mb-4" src="{{staticContentUrl+'img/secure_icon_warning.png'}}" *ngIf="gravityService.clientDownloaded == true && currentService != 'GRA' && !graGreen">
+            <img class="activation-service-central-img mb-4" src="{{staticContentUrl+'img/secure_icon.png'}}" *ngIf="gravityService.clientDownloaded == true && currentService != 'GRA'  && graGreen">
+            <h2 class="activation-service-title">
+              {{stepsData[currentIndex].serviceName}}
+            </h2>
+            <p class="activation-service-text" *ngIf="currentService == 'GRA'">
+              {{'WIZARD.GRA_TEXT1' | translate}}
+            </p>
+            <p class="activation-service-text fs-16 lh-19 roboto-b" 
+              *ngIf="gravityService.clientDownloaded == true && currentService != 'GRA'">
+              {{'WIZARD.BMS_TEXT2' | translate}}
+            </p>
+            <p class="activation-service-text fs-16 lh-19" *ngIf="gravityService.clientDownloaded == true && currentService != 'GRA'">
+              {{'WIZARD.BMS_TEXT3' | translate}}
+            </p>
+            <button
+              class="btn btn-primary activation-service-btn"
+              (click)="submitStep()"
+              *ngIf="currentService != 'GRA' && gravityService.clientDownloaded == true">
+              <nz-spinner *ngIf="loading"></nz-spinner>
+              <div *ngIf="!loading" class="text-uppercase">
+                {{'WIZARD.BTNS.CONTINUE' | translate}}
+              </div>
+            </button>
+          </div>
+          <section *ngIf="stepsData[currentIndex].currentStep == 1 && currentService == 'GRA'">
+            <div class="row pl-0 pr-0 justify-content-center activation-service-multisteps text-center">
+              <div class="col-lg-12 col-md-12 col-sm-12 d-flex justify-content-start flex-column">
+                <img class="multistep-step" src="{{staticContentUrl+'img/download-circle.png'}}">
+                <h4 class="multistep-name mt-3 text-center">
+                  {{'WIZARD.GRA_STEP1_TITLE' | translate}}
+                </h4>
+                <p class="activation-service-text" 
+                  
+                  [innerHTML]="'WIZARD.GRA_TEXT2' | translate">
+                </p>
+              </div>
+            </div>
+
+            <div class="d-flex mx-auto justify-content-between align-items-center gravity-download-btns mx-auto gra-btn-div mt-3">
+              <a href="{{gravityService.installationLinks.installLinkWindows}}" class="gra-btn">
+                <button class="btn btn-primary p-0 d-flex justify-content-center"
+                  href="agentData.download|safe: 'resourceUrl'"
+                  (click)="downloadGravity()">
+                  <div class="icon-windows so-logo mr-2"></div>
+                  <div class="d-flex flex-column">
+                    <span class="small-text-btn">{{ 'WIZARD.GRA_DOWNLOAD' | translate}}</span>
+                    <span class="big-text-btn">{{ 'WIZARD.WINDOWS' | translate}}</span>
+                  </div>
+                </button>
+              </a>
+              <a href="{{gravityService.installationLinks.installLinkMac}}" class="gra-btn">
+                <button class="btn btn-primary p-0 d-flex justify-content-center"
+                  href="agentData.download|safe: 'resourceUrl'"
+                  (click)="downloadGravity()">
+                  <div class="icon-apple so-logo mr-2"></div>
+                  <div class="d-flex flex-column">
+                    <span class="small-text-btn">{{ 'WIZARD.GRA_DOWNLOAD' | translate}}</span>
+                    <span class="big-text-btn">{{ 'WIZARD.APPLE' | translate}}</span>
+                  </div>
+                </button>
+              </a>
+              <a href="{{gravityService.installationLinks.installLinkLinux}}" class="gra-btn">
+                <button class="btn btn-primary p-0 d-flex justify-content-center"
+                  href="agentData.download|safe: 'resourceUrl'"
+                  (click)="downloadGravity()">
+                  <div class="icon-linux so-logo mr-2"></div>
+                  <div class="d-flex flex-column">
+                    <span class="small-text-btn">{{ 'WIZARD.GRA_DOWNLOAD' | translate}}</span>
+                    <span class="big-text-btn">{{ 'WIZARD.LINUX' | translate}}</span>
+                  </div>
+                </button>
+              </a>
+            </div>
+            <div class="row pl-0 pr-0 mt-3 justify-content-center">
+              <button
+                class="btn btn-outline-secondary activation-service-btn"
+                [ngClass]="(loading)? 'focus' : ''"
+                (click)="checkGravity()">
+                <nz-spinner *ngIf="loading"></nz-spinner>
+                <div *ngIf="!loading" class="text-uppercase">
+                  {{'WIZARD.BTNS.CONTINUE' | translate}}
+                </div>
+              </button>
+            </div>
+          </section>
+        </section>
+        <!-- end gravity -->
+        <!-- acronis section -->
+        <section class="activation-step-body" *ngIf="!resumed && currentStep >= 2 && currentStep < totalSteps && stepsData[currentIndex].serviceCode == 'CAC' " >
+          <div class="col-sm-12 pl-0 pr-0 mb-3 d-flex justify-content-between flex-column" >
+            <img class="activation-service-central-img mb-4" src="{{staticContentUrl+'img/secure_icon_warning.png'}}" *ngIf="currentService != 'CAC' && !cacGreen && backupService.clientDownloaded == true">
+            <img class="activation-service-central-img mb-4" src="{{staticContentUrl+'img/secure_icon.png'}}" *ngIf="currentService != 'CAC' && cacGreen && backupService.clientDownloaded == true">
+            <h2 class="activation-service-title">
+              {{stepsData[currentIndex].serviceName}} 
+            </h2>
+            <p class="activation-service-text" *ngIf="backupService.clientDownloaded == false && currentService == 'CAC'">
+              {{'WIZARD.ACRO_TEXT' | translate}}
+            </p>
+            <p class="activation-service-text roboto-b" 
+              *ngIf="backupService.clientDownloaded == true && currentService != 'CAC'"
+              [innerHTML]="'WIZARD.ACRO_TEXT2' | translate">
+            </p>
+            <p class="activation-service-text" 
+              *ngIf="backupService.clientDownloaded == true && currentService != 'CAC'"
+              [innerHTML]="'WIZARD.ACRO_TEXT3' | translate">
+            </p>
+            <button
+              class="btn btn-primary activation-service-btn"
+              (click)="submitStep()"
+              *ngIf="currentService != 'CAC' && backupService.clientDownloaded == true">
+              <nz-spinner *ngIf="loading"></nz-spinner>
+              <div *ngIf="!loading" class="text-uppercase">
+                {{'WIZARD.BTNS.CONTINUE' | translate}}
+              </div>
+            </button>
+          </div>
+        </section>
+        <section class="activation-step-full-body" *ngIf="!resumed && currentStep >= 2 && currentStep < totalSteps && stepsData[currentIndex].serviceCode == 'CAC' && currentService == 'CAC' && backupService.clientDownloaded == false">
+          <div class="row pl-0 pr-0 justify-content-between activation-lines">
+            <div class="col-6 activation-service-conection finalized"></div>
+            <div class="col-6 activation-service-conection" [ngClass]="(stepsData[currentIndex].currentStep >= 2) ? 'finalized' : ''"></div>
+          </div>
+
+          <div class="row pl-0 pr-0 mb-5 justify-content-between activation-service-multisteps text-center" *ngIf="mobile || tablet">
+            <div class="col-4 pl-0 d-flex justify-content-start flex-column" >
+              <img class="mobile-step animated bounceIn" src="{{staticContentUrl+'img/completed-circle.png'}}">
+              <h4 class="multistep-name mini mt-3 text-center">
+                {{'WIZARD.BMS_STEP1_MOBILE' | translate}}
+              </h4>
+            </div>
+            <div class="col-4 d-flex justify-content-start flex-column" >
+              <img class="mobile-step" src="{{staticContentUrl+'img/circle-2.png'}}"
+              *ngIf="stepsData[currentIndex].serviceCode == 'CAC' && stepsData[currentIndex].currentStep < 2">
+              <img class="mobile-step animated bounceIn" src="{{staticContentUrl+'img/completed-circle.png'}}"
+              *ngIf="stepsData[currentIndex].serviceCode == 'CAC' && stepsData[currentIndex].currentStep >= 2">
+              <h4 class="multistep-name mini mt-3 text-center">
+                {{'WIZARD.BMS_STEP2_MOBILE' | translate}}
+              </h4>
+            </div>
+            <div class="col-4 pr-0 d-flex justify-content-start flex-column" >
+              <img class="mobile-step" src="{{staticContentUrl+'img/circle-3.png'}}"
+              *ngIf="stepsData[currentIndex].serviceCode == 'CAC' && stepsData[currentIndex].currentStep < 3">
+              <h4 class="multistep-name mini mt-3 text-center">
+                {{'WIZARD.BMS_STEP3_MOBILE' | translate}}
+              </h4>
+            </div>
+          </div>
+
+          <div class="row pl-0 pr-0 justify-content-between activation-service-multisteps text-center">
+            <div class="col-lg-4 col-md-12 col-sm-12 d-flex justify-content-start flex-column" *ngIf="!mobile && !tablet">
+              <img class="multistep-step animated bounceIn" src="{{staticContentUrl+'img/completed-circle.png'}}">
+              <h4 class="multistep-name mt-3 text-center">
+                {{'WIZARD.BMS_STEP1_TITLE' | translate}}
+              </h4>
+              <p class="multistep-desc mt-2 text-center">
+                {{'WIZARD.ACRO_STEP1.1' | translate}}
+              </p>
+              <p class="multistep-desc mt-2 text-center">
+                {{'WIZARD.ACRO_STEP1.2' | translate}}
+              </p>
+            </div>
+            <div class="col-lg-4 col-md-12 col-sm-12 d-flex justify-content-start flex-column" *ngIf="(!mobile && !tablet) || stepsData[currentIndex].currentStep == 1">
+              <img class="multistep-step" src="{{staticContentUrl+'img/password-circle.png'}}"
+              *ngIf="stepsData[currentIndex].serviceCode == 'CAC' && stepsData[currentIndex].currentStep < 2">
+              
+              <img class="multistep-step animated bounceIn" src="{{staticContentUrl+'img/completed-circle.png'}}"
+              *ngIf="stepsData[currentIndex].serviceCode == 'CAC' && stepsData[currentIndex].currentStep >= 2"> 
+              <h4 class="multistep-name mt-3 text-center">
+                {{'WIZARD.BMS_STEP2_TITLE' | translate}}
+              </h4>
+              <p class="multistep-desc mt-2 text-center" [innerHTML]="'WIZARD.ACRO_STEP2' | translate" ></p>
+              <section *ngIf="stepsData[currentIndex].currentStep == 1">
+                <div class="multistep-btns mt-2">
+                  <button
+                    class="btn btn-outline-secondary activation-service-btn"
+                    [ngClass]="(loading)? 'focus' : ''"
+                    (click)="validateAcronis('password')">
+                    <nz-spinner *ngIf="loading"></nz-spinner>
+                    <div *ngIf="!loading" class="text-uppercase">
+                      {{'WIZARD.BTNS.TEST' | translate}}
+                    </div>
+                  </button>
+                </div>
+              </section>
+              
+            </div>
+            <div class="col-lg-4 col-md-12 col-sm-12 d-flex justify-content-start flex-column" *ngIf="(!mobile && !tablet) || stepsData[currentIndex].currentStep == 2">
+              <img class="multistep-step" src="{{staticContentUrl+'img/download-circle.png'}}">
+              <h4 class="multistep-name mt-3 text-center"
+              [ngClass]="(stepsData[currentIndex].currentStep < 2) ? 'inactive' : ''">
+                {{'WIZARD.ACRO_STEP3_TITLE' | translate}}
+              </h4>
+
+              <p class="multistep-desc  mt-2 text-center" 
+                [innerHTML]="'WIZARD.ACRO_STEP3_TEXT1' | translate" 
+                [ngClass]="(stepsData[currentIndex].currentStep < 2) ? 'inactive' : ''">
+              </p>
+              <div class="multistep-desc d-flex mb-2 justify-content-center">
+                <div class="icon-more-info main-secondary step-icon"
+                  [ngClass]="(stepsData[currentIndex].currentStep < 2) ? 'inactive' : ''"
+                  (click)='openAcronisHelpModal()'>
+                </div>
+                <p class="text-center ml-2 mb-2 main-secondary text-uppercase step-help" 
+                  [innerHTML]="'WIZARD.HELP' | translate" 
+                  [ngClass]="(stepsData[currentIndex].currentStep < 2) ? 'inactive' : ''"
+                  (click)='openAcronisHelpModal()'>
+                </p>
+              </div>
+              <p class="multistep-desc text-center" 
+                [innerHTML]="'WIZARD.ACRO_STEP3_TEXT2' | translate" 
+                [ngClass]="(stepsData[currentIndex].currentStep < 2) ? 'inactive' : ''">
+              </p>
+
+              <section *ngIf="stepsData[currentIndex].currentStep == 2">
+                <div class="multistep-btns mt-2">
+                  <button
+                    class="btn btn-primary activation-service-btn"
+                    (click)="downloadCAC()">
+                    <nz-spinner *ngIf="loading"></nz-spinner>
+                    <div *ngIf="!loading" class="text-uppercase">
+                      {{'WIZARD.BTNS.DOWNLOAD_CAC' | translate}}
+                    </div>
+                  </button>
+                </div>
+                <div class="multistep-btns mt-2">
+                  <button
+                    class="btn btn-outline-secondary activation-service-btn"
+                    [ngClass]="(loading)? 'focus' : ''"
+                    (click)="renewStepsData('CAC')">
+                    <nz-spinner *ngIf="loading"></nz-spinner>
+                    <div *ngIf="!loading" class="text-uppercase">
+                      {{'WIZARD.BTNS.CONTINUE' | translate}}
+                    </div>
+                  </button>
+                </div>
+              </section>
+            </div>
+          </div>
+        </section>
+        <!-- end acronis -->
+      </div>
+    </div>
+  </div>
+</section>
+
+<div *ngIf="globalLoading">
+  <div class="app-loading">
+    <div class="logo">
+      <img src="{{partnerService.preloaderImage}}" width="100" height="100">
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" id="stopWizardModal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content wizard-modal-content">
+      <div class="new-modal-header row ml-4">
+        <div class="col-sm-12 d-flex justify-content-end">
+          <button type="button" id="closeModal" class="new-close col-sm-1 pr-0" aria-label="Close" data-dismiss="modal">
+            <div class="icon-close" data-dismiss="modal"></div>
+          </button>
+        </div>
+      </div>
+      <section class="row mt-2 mr-4 ml-4 mb-4">
+        <div class="col-sm-12 pl-0 pr-0 d-flex justify-content-center">
+          <img class="new-modal-img unplug" src="{{staticContentUrl+'img/unplug.png'}}">
+        </div>
+        <div class="col-sm-12 pl-0 pr-0 mb-2 d-flex justify-content-center">
+          <h4 class="wizard-modal-title neutral-black">{{'WIZARD.MODAL_TITLE' | translate}}</h4>
+        </div> 
+        <div class="col-sm-12 pl-0 pr-0 d-flex justify-content-center">
+          <p class="wizard-modal-text neutral-black">
+            {{'WIZARD.MODAL_TEXT' | translate}}
+          </p>
+        </div>
+        <div class="col-sm-12 pl-0 pr-0 wizard-modal-btns d-flex">
+          <button
+            class="btn mr-3 btn-primary wizard-modal-btn"
+            (click)="closeWizard()">
+            <div class="text-uppercase">
+              {{'WIZARD.BTNS.STOP' | translate}}
+            </div>
+          </button>
+          <button
+            class="btn btn-outline-secondary wizard-modal-btn"
+            data-dismiss="modal">
+            <div class="text-uppercase">
+              {{'WIZARD.BTNS.CONTINUE' | translate}}
+            </div>
+          </button>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>

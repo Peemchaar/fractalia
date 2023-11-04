@@ -1,0 +1,41 @@
+<section class="loginBox">
+
+  <div class="container-fluid pl-0 px-0">
+    <div class="row vh-100 no-gutters">
+        <div class="col-xl-4 col-lg-4 col-md-5 d-flex flex-column auth-bg-section loginText" [ngStyle]="{'background-image':backgroundImage}">
+          <div class="header">
+            <img class="logo" alt="logo" src="{{partnerService.partner.logotipo}}">
+          <h3>{{partnerService.partner.name}}</h3>
+          </div>
+          <div class="body d-md-block d-none">
+            <h5>{{partnerService.partner.loginTitle}}</h5>
+            <p>{{partnerService.partner.loginSubtitle}}</p>
+            <!--
+            <div class="section-list">
+              <hr>
+              <ul>
+                <li><div class="icon-user-protection"></div>{{"COMP_LANDING.ICONS.USER_PROTECTION"| translate}}</li>
+                <li><div class="icon-device-protection"></div>{{"COMP_LANDING.ICONS.DEVICE_PROTECTION"| translate}}</li>
+                <li><div class="icon-network-protection"></div>{{"COMP_LANDING.ICONS.NETWORK_PROTECTION"| translate}}</li>
+                <li><div class="icon-expert-support"></div>{{"COMP_LANDING.ICONS.EXPERT_SUPPORT"| translate}}</li>
+              </ul>
+            </div>
+            -->
+          </div>
+        </div>
+        <div class="col-xl-8 col-lg-8 col-md-7 d-flex flex-column justify-content-center vh-100 loginBox">
+            <div class="auth-form-section loginForm">
+              <form class="form-signin">
+                <h4>{{'NO_DISPONIBLES' | translate}}</h4>
+                <p>{{'VUELVE_INTENTAR' | translate}}</p>
+                <div>
+                  <button class="btn btn-primary" routerLink="/" >{{'ACCEDER' | translate}}</button>
+                </div>
+              </form>
+            </div>
+        </div>
+    </div>
+  </div>
+
+</section>
+

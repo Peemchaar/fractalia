@@ -1,0 +1,41 @@
+<section id="header">
+  <div class="container-fluid">
+      <ul class="navbar-nav float-left mr-auto ml-3 pl-1">
+          <li class="nav-item">
+          <small>&nbsp;</small>
+          </li>
+          <li class="nav-item">
+          <h4 [innerHTML]="chatService.serviceName"></h4>
+          </li>
+      </ul>
+  </div>
+</section>
+
+<section id="servicestitles" class="mr-3 ml-3 pl-1">
+  <div class="container-fluid">
+    <br/><br/><br/>
+    <a class="bback" href="javascript:history.back()">
+      <div class="myicons-arrow"></div>{{ 'ATRAS' | translate }}
+    </a>
+    <br/><br/> 
+    <div class="service-title" [innerHTML]="chatService.serviceDesc"></div>
+    <br/>
+    <button class="collapse-btn" data-toggle="collapse"
+      data-target="#description-service"><div class="myicons-info"></div> {{ 'MAS_INFO_SERVICIO' | translate }}</button>
+    <div id="description-service" class="collapse">
+      <div>
+        <span [innerHTML]="chatService.longDesc"></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="chat mr-3 ml-3 pl-1 mt-3" #chatea>
+  <div class="container-fluid">
+    <hr>
+    <br/>
+    <h3>{{'NECESITAS_EXPERTO' | translate}}</h3>
+    <hr class="sph">
+    <app-chat-form [name]="chatService.serviceName"></app-chat-form>
+  </div>
+</section>

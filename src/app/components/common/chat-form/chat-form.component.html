@@ -1,0 +1,12 @@
+<div>
+    <div style ="height: 50vh" *ngIf="!chatDataService.showChat" class="app-loading">
+        <div class="logo">
+          <img src="{{this.partnerService.preloaderImage}}" width="100" height="100">
+        </div>
+    </div>
+
+    <iframe *ngIf="chatDataService.showChat && chatDataService.chatExists" id="chatFrame" class="chat" [src]="chatDataService.url|safe: 'resourceUrl'"></iframe>
+    <div *ngIf="chatDataService.showChat && !chatDataService.chatExists" class="chat">
+      <h3>{{'NO_DISPONIBLE_CHAT' | translate}}</h3>
+    </div>
+</div>

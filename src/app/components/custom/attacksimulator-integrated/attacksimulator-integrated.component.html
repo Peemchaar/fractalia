@@ -1,0 +1,246 @@
+<!-- Estado inicial para meter la primera tarjeta -->
+
+<div class="row h-100" *ngIf="attacksimulatorService.status==0">
+    <div class="col-xl-3 col-lg-2 col-md-1 col-sm-1 col-1 pt-4 mb-2">
+
+    </div>
+    <div class="col-xl-6 col-lg-8 col-md-10 col-sm-10 col-10 pt-4 mb-2">
+        <div class="cg-icon text-center d-block mx-auto mb-3">
+            <div class="icon-phishing" style="font-size: 3em; line-height: 1.5;"></div>
+        </div>
+        <ng-container *ngIf="userService.currentUserValue.isAdminUserId">
+            <h6 class="text-center">{{'COMP_ATTACKSIMULATOR.TEXT0' | translate}}</h6>
+            <p class="text-center">{{'COMP_ATTACKSIMULATOR.TEXT1' | translate}}</p>
+            <button type="submit" class="btn btn-primary w-auto mb-2 d-block mx-auto" [disabled]="loading" (click)="createFamily()">
+                <nz-spinner *ngIf="loading"></nz-spinner>
+                <div *ngIf="!loading">
+                    {{'COMP_ATTACKSIMULATOR.BUTTON_SOLICITAR' | translate}}
+                </div>
+            </button>
+        </ng-container>
+        <ng-container *ngIf="!userService.currentUserValue.isAdminUserId">
+            <h6 class="text-center">{{'COMP_ATTACKSIMULATOR.TEXT0_NO_ADMIN' | translate}}</h6>
+        </ng-container>
+    </div>
+    <div class="col-xl-3 col-lg-2 col-md-1 col-sm-1 col-1 pt-4 mb-2">
+
+    </div>
+</div>
+
+<div class="h-100 row grid-divider"  *ngIf="attacksimulatorService.status==1">
+    <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-xs-12 pt-4 pb-4">
+        <div class="w-75 d-block mx-auto">
+            <div class="status-as text-center">
+                <div class="icon-star-1 text-center" [ngClass]="{ 'green': attacksimulatorService.stats.score==5, 'orange': attacksimulatorService.stats.score==4 || attacksimulatorService.stats.score==3, 'red': attacksimulatorService.stats.score==2 || attacksimulatorService.stats.score==1 }"><font>{{attacksimulatorService.stats.score}}<small class="small">/5</small></font></div>
+                <span class="title text-center" *ngIf="attacksimulatorService.stats.score==5">{{'COMP_ATTACKSIMULATOR.PUNTUACION5' | translate}}</span>
+                <span class="title text-center" *ngIf="attacksimulatorService.stats.score==4">{{'COMP_ATTACKSIMULATOR.PUNTUACION4' | translate}}</span>
+                <span class="title text-center" *ngIf="attacksimulatorService.stats.score==3">{{'COMP_ATTACKSIMULATOR.PUNTUACION3' | translate}}</span>
+                <span class="title text-center" *ngIf="attacksimulatorService.stats.score==2">{{'COMP_ATTACKSIMULATOR.PUNTUACION2' | translate}}</span>
+                <span class="title text-center" *ngIf="attacksimulatorService.stats.score==1">{{'COMP_ATTACKSIMULATOR.PUNTUACION1' | translate}}</span>
+            </div>
+            <!--
+            <div class="status-as text-center">
+                <div class="icon-star-1 text-center green"><font>4<small class="small">/5</small></font></div>
+                <span class="title text-center">{{'COMP_ATTACKSIMULATOR.PUNTUACION4' | translate}}</span>
+            </div>
+            <div class="status-as text-center">
+                <div class="icon-star-1 text-center orange"><font>3<small class="small">/5</small></font></div>
+                <span class="title text-center">{{'COMP_ATTACKSIMULATOR.PUNTUACION3' | translate}}</span>
+            </div>
+            <div class="status-as text-center">
+                <div class="icon-star-1 text-center red"><font>2<small class="small">/5</small></font></div>
+                <span class="title text-center">{{'COMP_ATTACKSIMULATOR.PUNTUACION2' | translate}}</span>
+            </div>
+            <div class="status-as text-center">
+                <div class="icon-star-1 text-center red"><font>1<small class="small">/5</small></font></div>
+                <span class="title text-center">{{'COMP_ATTACKSIMULATOR.PUNTUACION1' | translate}}</span>
+            </div>
+            -->
+        </div>
+        <!--
+        <div class="w-75 d-block mx-auto">
+            <span class="title d-block text-center mb-4">{{'COMP_ATTACKSIMULATOR.SCHEDULED_LIST' |
+                translate}}</span>
+            <h3 class="d-block text-center mb-4">1</h3>
+        </div>
+        <button class="btn btn-primary d-flex justify-content-between align-items-center p-2 pt-3 pb-3 mb-1">
+            <font class="w-75 text-left" style="white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">Nombre simulación en proceso</font> <span class="w-25" style="color: #333;">En proceso</span> <div class="icon-right-big-arrow" style="color: #333;"></div>
+        </button>
+        <button class="btn btn-outline-secondary d-flex justify-content-between align-items-center p-2 pt-3 pb-3 mb-1">
+            <font class="w-75 text-left" style="white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">Nombre simulación finalizada</font> <span class="w-25" style="color: #333;">Finalizada</span> <div class="icon-right-big-arrow" style="color: #333;"></div>
+        </button>
+        <button class="btn btn-outline-secondary d-flex justify-content-between align-items-center p-2 pt-3 pb-3 mb-1">
+            <font class="w-75 text-left" style="white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">Nombre simulación finalizada</font> <span class="w-25" style="color: #333;">Finalizada</span> <div class="icon-right-big-arrow" style="color: #333;"></div>
+        </button>
+        -->
+    </div>
+    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12 pt-4 pb-4">
+        <span class="title mb-4 text-center">{{'COMP_ATTACKSIMULATOR.TITLE_STATS' | translate}}</span>
+        <div class="row justify-content-center align-items-center">
+            <div
+                class="col-xl-6 col-lg-6 col-md-5 col-sm-5 col-xs-6 col-8 mb-2 offset-0 offset-sm-1 offset-md-1 offset-lg-0">
+                <div class="w100 d-block mx-auto">
+                    <!-- <div class="mb-2 d-flex align-items-center">
+                        <div class="w-25">
+                            <span>{{'COMP_ATTACKSIMULATOR.TOTAL' | translate}}</span>
+                        </div>
+                        <div class="w-25 text-center">
+                            <h4 class="float-none">12
+                            </h4>
+                        </div>
+                        <div class="progress progressdash w-50">
+                            <div class="progress-bar" role="progressbar" style="width: 100%"
+                                aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                            </div>
+                        </div>
+                    </div> -->
+                    <div class="mb-2 d-flex align-items-center">
+                        <div class="w-25">
+                            <span>{{'COMP_ATTACKSIMULATOR.DELIVERED' | translate}}</span>
+                        </div>
+                        <div class="w-25 text-center">
+                            <h4 class="float-none">{{attacksimulatorService.stats.received}}</h4>
+                        </div>
+                        <div class="progress progressdash w-50">
+                            <div class="progress-bar" role="progressbar"
+                                style="width: 100%"
+                                aria-valuenow="100"
+                                aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                    </div>
+                    <div class="mb-2 d-flex align-items-center">
+                        <div class="w-25">
+                            <span>{{'COMP_ATTACKSIMULATOR.OPEN' | translate}}</span>
+                        </div>
+                        <div class="w-25 text-center">
+                            <h4 class="float-none">{{attacksimulatorService.stats.opened}}</h4>
+                        </div>
+                        <div class="progress progressdash w-50">
+                            <div class="progress-bar" role="progressbar"
+                                style="width: {{(attacksimulatorService.stats.opened * 100) / (attacksimulatorService.stats.received)}}%"
+                                aria-valuenow="{{(attacksimulatorService.stats.opened * 100) / (attacksimulatorService.stats.received)}}"
+                                aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="border-bottom w-100 d-inline-flex d-sm-none"></div>
+            </div>
+
+            <div
+                class="col-xl-6 col-lg-6 col-md-5 col-sm-5 col-xs-6 col-8 mb-2 offset-0 offset-sm-1 offset-md-1 offset-lg-0">
+                <div class="w100 d-block mx-auto">
+                    <div class="mb-2 d-flex align-items-center">
+                        <div class="w-25">
+                            <span>{{'COMP_ATTACKSIMULATOR.CLICS' | translate}}</span>
+                        </div>
+                        <div class="w-25 text-center">
+                            <h4 class="float-none">{{attacksimulatorService.stats.clicked}}</h4>
+                        </div>
+                        <div class="progress progressdash w-50">
+                            <div class="progress-bar kored" role="progressbar"
+                                style="width: {{(attacksimulatorService.stats.clicked * 100) / (attacksimulatorService.stats.received)}}%"
+                                aria-valuenow="{{(attacksimulatorService.stats.clicked * 100) / (attacksimulatorService.stats.received)}}"
+                                aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                    </div>
+                    <div class="mb-2 d-flex align-items-center">
+                        <div class="w-25">
+                            <span>{{'COMP_ATTACKSIMULATOR.AFFECTED' | translate}}</span>
+                        </div>
+                        <div class="w-25 text-center">
+                            <h4 class="float-none">{{attacksimulatorService.stats.affected}}</h4>
+                        </div>
+                        <div class="progress progressdash w-50">
+                            <div class="progress-bar kored" role="progressbar"
+                                style="width: {{(attacksimulatorService.stats.affected * 100) / (attacksimulatorService.stats.received)}}%"
+                                aria-valuenow="{{(attacksimulatorService.stats.affected * 100) / (attacksimulatorService.stats.received)}}"
+                                aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                    </div>
+                    <!-- <div class="align-left">
+                        <div class="mb-2">
+                            <span>{{'COMP_ATTACKSIMULATOR.CLICS' | translate}}</span>
+                            <h4>{{attacksimulatorService.stats.clicked}}</h4>
+                        </div>
+                        <div class="mb-2">
+                            <span>{{'COMP_ATTACKSIMULATOR.AFFECTED' | translate}}</span>
+                            <h4 class="red d-flex" style="position: relative; left: 18px;">
+                                {{attacksimulatorService.stats.affected}} <div class="icon-exclamation-tri"></div>
+                            </h4>
+                        </div>
+                    </div> -->
+                </div>
+            </div>
+        </div>
+        
+        
+        <!--
+        <div class="row grid-divider">
+            <div class="col-xl-7 col-lg-7 col-md-7 col-sm-7 col-xs-7 col-12">
+                <div class="d-block mx-auto mb-3 w-75">
+                    <div class="canvasservices">
+                        <div class="numbercanvas">
+                            <h3 class="text-center">4</h3>
+                            <span
+                                class="subtitle text-center"></span>
+                        </div>
+                        <canvas baseChart [data]="pentestingService.doughnutChartData"
+                            [labels]="pentestingService.chartLabels"
+                            [colors]="pentestingService.doughnutColors"
+                            [chartType]="pentestingService.chartType"
+                            [options]="{cutoutPercentage: 75}"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-5 col-lg-5 col-md-5 col-sm-5 col-xs-5 col-12">
+                <div class="w50 d-block mx-auto">
+                    <span
+                        class="subtitle text-left mb-4">{{'COMP_ATTACKSIMULATOR.LAST_SCHEDULED' | translate}}</span>
+                    <div class="mb-2">
+                        <div class="led red">
+                            <i class="fas fa-circle"></i>
+                        </div>
+                        <span>{{'COMP_ATTACKSIMULATOR.SCHEDULED' | translate}}</span>
+                        <h4 class="">4</h4>
+                    </div>
+                    <div class="mb-2">
+                        <div class="led orange">
+                            <i class="fas fa-circle"></i>
+                        </div>
+                        <span>{{'COMP_ATTACKSIMULATOR.DELIVERED' | translate}}</span>
+                        <h4 class="">4
+                        </h4>
+                    </div>
+                    <div class="mb-2">
+                        <div class="led green">
+                            <i class="fas fa-circle"></i>
+                        </div>
+                        <span>{{'COMP_ATTACKSIMULATOR.OPEN' | translate}}</span>
+                        <h4 class="">4</h4>
+                    </div>
+                    <div class="mb-2">
+                        <div class="led purple">
+                            <i class="fas fa-circle"></i>
+                        </div>
+                        <span>{{'COMP_ATTACKSIMULATOR.CLICS' | translate}}</span>
+                        <h4 class="">12</h4>
+                    </div>
+                    <div class="mb-2">
+                        <div class="led purple">
+                            <i class="fas fa-circle"></i>
+                        </div>
+                        <span>{{'COMP_ATTACKSIMULATOR.AFFECTED' | translate}}</span>
+                        <h4 class="">12</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+        -->
+    </div>
+    <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-xs-12 pt-4 pb-4">
+        <!-- <div class="mt-4">
+            <img class="logoprov" src="{{staticContentUrl+'img/art/attack_simulator_logo.png'}}"
+                width="150" heigth="" alt="Backup" />
+        </div> -->
+    </div>
+</div>

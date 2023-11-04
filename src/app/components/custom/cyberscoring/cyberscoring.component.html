@@ -1,0 +1,1110 @@
+<section *ngIf="serviceCard ">
+  <div class="card-header">
+    <div class="icontext">
+      <div class="icon-cyberscoring neutral-black"></div>
+      <h4 [innerHTML]="cyberscoringService.serviceName" class="neutral-black custom-h4"></h4>
+    </div>
+    <button *ngIf="hasHistory && !analyzing" class="simplebtnheader cyber-mt8 cyber-ml8" (click)="editMode()" data-toggle="modal"
+      data-target="#analisisForm">
+      <div class="icon-edit main-disabled"></div>
+    </button>
+    <button class="simplebtnheader cyber-mt8"
+      (click)="open(cyberscoringService.serviceName, cyberscoringService.longDesc, cyberscoringService.icon)">
+      <div class="icon-exclamation main-disabled"></div>
+    </button>
+  </div>
+  <div *ngIf="globalLoading">
+    <div class="app-loading">
+      <div class="logo">
+        <img src="{{partnerService.preloaderImage}}" width="100" height="100">
+      </div>
+    </div>
+  </div>
+  <div class="card-body pr-0 pl-0 mt-0" *ngIf="!globalLoading">
+    <div class="h-100 row justify-content-center align-items-center" >
+      <div class="icon-cyberscoring mb-2 mt-4 neutral-black cyber-main-icon" *ngIf="!hasHistory || analyzing">
+      </div>
+      <section *ngIf="!hasHistory && !analyzing" class="minW-100">
+        <div class="col-sm-12 mb-1">
+          <h2 class="text-center neutral-black cyb-body-title">
+            {{'CYBERSCORING.PRIMER_ANALISIS' | translate}}
+          </h2>
+        </div>
+        <div class="col-sm-12 mb-4 pr-0 pl-0 align-items-center">
+          <p class="text-center cyb-body-text">
+            {{'CYBERSCORING.DESCRIPCION_SERVICIO' | translate}}
+          </p>
+        </div>
+        <div class="col-sm-12 mb-3 cyb-body-button">
+          <button class="btn btn-primary text-uppercase" data-toggle="modal" (click)="toggleValidate()"
+            data-target="#analisisForm">
+            {{'COMP_BITDEFENDERMSP.BUTTON_SOLICITAR'| translate}}
+          </button>
+        </div>
+      </section>
+      <section *ngIf="analyzing" class="minW-100">
+        <div class="col-sm-12 mb-1">
+          <h2 class="text-center neutral-black cyb-body-title">
+            {{'CYBERSCORING.ANALIZANDO_TITULO' | translate}}
+          </h2>
+        </div>
+        <div class="col-sm-12 mb-4 pr-0 pl-0 align-items-center">
+          <p class="text-center cyb-body-text">
+            {{'CYBERSCORING.ANALIZANDO_TEXTO' | translate}}
+          </p>
+        </div>
+      </section>
+    </div>
+
+    <div class="container-fluid mt-4" *ngIf="hasHistory && !globalLoading && !analyzing">
+      <div class="row h-100 grid-divider justify-content-center cyb-web mb-5">
+        <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-xs-12 pt-4 justify-content-between d-flex flex-column mobile-mb">
+          <div>
+            <h2 class="title text-center mb-4 neutral-black fs-16">{{'CYBERSCORING.SCORE' | translate}}</h2>
+            <div class="col-12">
+              <ngx-gauge class="d-block mx-auto maxh-120" [type]="gaugeType" [value]="lastScore"
+                [max]="gaugeMax" cap="round" [min]="gaugeMin" [thresholds]="thresholdConfig"
+                [markers]="markerConfig" [thick]="15">
+              </ngx-gauge>
+              <div class="mb-3">
+                <span class=" text-center d-block gaugeLbl bg-semantic-danger mx-auto" *ngIf="gaugeMessage == 1">
+                  {{gaugeLabel}}
+                </span>
+                <span class=" text-center d-block gaugeLbl bg-semantic-warning mx-auto" *ngIf="gaugeMessage == 2">
+                  {{gaugeLabel}}
+                </span>
+                <span class=" text-center d-block gaugeLbl bg-semantic-success mx-auto" *ngIf="gaugeMessage == 3">
+                  {{gaugeLabel}}
+                </span>
+              </div>
+              <div class="mb-4" *ngIf="gaugeMessage > 0">
+                <span class=" text-center d-block gaugeMsg" *ngIf="gaugeMessage == 1">
+                  {{'CYBERSCORING.GAUGE_LOW' | translate}}
+                </span>
+                <span class=" text-center d-block gaugeMsg" *ngIf="gaugeMessage == 2">
+                  {{'CYBERSCORING.GAUGE_MID' | translate}}
+                </span>
+                <span class=" text-center d-block gaugeMsg" *ngIf="gaugeMessage == 3">
+                  {{'CYBERSCORING.GAUGE_HIGH' | translate}}
+                </span>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="col-12">
+              <div class="datos w-100 d-block text-left">
+                <div class="dg mb-2 pl-5 pr-5">
+                  <div class="led mr-2 semantic-success">
+                    <i class="fas fa-circle"></i>
+                  </div>
+                  <span class="neutral-black fs-12">{{'CYBERSCORING.GOOD' | translate}}</span>
+                  <h4 class="neutral-black">{{good}}</h4>
+                </div>
+                <div class="dg mb-2 pl-5 pr-5">
+                  <div class="led mr-2 semantic-warning">
+                    <i class="fas fa-circle"></i>
+                  </div>
+                  <span class="neutral-black fs-12">{{'CYBERSCORING.FAIR' | translate}}</span>
+                  <h4 class="neutral-black">{{fair}}</h4>
+                </div>
+                <div class="dg mb-2 pl-5 pr-5">
+                  <div class="led mr-2 semantic-danger">
+                    <i class="fas fa-circle"></i>
+                  </div>
+                  <span class="neutral-black fs-12">{{'CYBERSCORING.POOR' | translate}}</span>
+                  <h4 class="neutral-black"> {{poor}} </h4>
+                </div>
+              </div>
+            </div>
+            <div class="col-12 mt-4" *ngIf="!freemiun && !isMinDate">
+              <div class="datos w-100 d-block">
+                <span class="w-100 text-center crit-label">
+                  {{'CYBERSCORING.NEXT_ANALYSIS' | translate}}{{(nextDate.toString()+ 'Z').toLocaleString() | date: 'dd/MM/yyyy'}}
+                </span>
+              </div>
+            </div>
+            <div class="col-12 mt-4" *ngIf="!freemiun && isMinDate">
+              <div class="datos w-100 d-block">
+                <span class="w-100 text-center crit-label">
+                  {{'CYBERSCORING.NEXT_ANALYSIS' | translate}}{{'CYBERSCORING.NO_NEXT_ANALYSIS_DATE' | translate}}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-xs-12 pt-4 tri-div justify-content-between d-flex flex-column mobile-mb pl-4 pr-4">
+          <div>
+            <div class="col-12 ml-0 mr-0 pl-0 pr-0 datos">
+              <h2 class="title text-center mb-4 neutral-black fs-16">{{'CYBERSCORING.ASSETS' | translate}}</h2>
+              <div class="datos row justify-content-between text-left w-100 mr-0 ml-0">
+
+                <div class="asset-card pr-2 pl-2 mb-2 w-48">
+                  <div class="col-12 pl-0 pr-0 d-flex justify-content-between">
+                    <h3 class="mt-1 w-70 neutral-black fs-24">
+                      {{data.summaryAssetTypes.domains}}</h3>
+                    <div class="icon-cyberscoring-domain fs-20"></div>
+                  </div>
+                  <div class="col-12 pl-0 pr-0 pb-2">
+                    <span class="neutral-black fs-16 ">{{'CYBERSCORING.DOMAINS_LABEL' | translate}}</span>
+                  </div>
+                </div>
+
+                <div class="asset-card pr-2 pl-2 mb-2 w-48">
+                  <div class="col-12 pl-0 pr-0 d-flex justify-content-between">
+                    <h3 class="mt-1 w-70 neutral-black fs-24">{{data.summaryAssetTypes.ipv4}}
+                    </h3>
+                    <div class="icon-cyberscoring-ip4 fs-20"></div>
+                  </div>
+                  <div class="col-12 pl-0 pr-0 pb-2">
+                    <span class="neutral-black fs-16 ">IP4</span>
+                  </div>
+                </div>
+
+                <div class="asset-card pr-2 pl-2 mb-2 w-48">
+                  <div class="col-12 pl-0 pr-0 d-flex justify-content-between">
+                    <h3 class="mt-1 w-70 neutral-black fs-24">{{data.summaryAssetTypes.ipv6}}
+                    </h3>
+                    <div class="icon-cyberscoring-ip6 fs-20"></div>
+                  </div>
+                  <div class="col-12 pl-0 pr-0 pb-2">
+                    <span class="neutral-black fs-16 ">IP6</span>
+                  </div>
+                </div>
+
+                <div class="asset-card pr-2 pl-2 mb-2 w-48">
+                  <div class="col-12 pl-0 pr-0 d-flex justify-content-between">
+                    <h3 class="mt-1 w-75 neutral-black fs-24">{{data.summaryAssetTypes.ports}}
+                    </h3>
+                    <div class="icon-cyberscoring-port fs-20"></div>
+                  </div>
+                  <div class="col-12 pl-0 pr-0 pb-2">
+                    <span class="neutral-black fs-16 ">{{'CYBERSCORING.PORTS' | translate}}</span>
+                  </div>
+                </div>
+
+                <!-- <div class="asset-card pr-2 pl-2 mb-2 w-48">
+                  <div class="col-12 pl-0 pr-0 d-flex justify-content-between">
+                    <h3 class="mt-1 w-75 neutral-black fs-24">
+                      {{data.summaryAssetTypes.userProvided}}</h3>
+                    <div class="icon-cyberscoring-user fs-20"></div>
+                  </div>
+                  <div class="col-12 pl-0 pr-0 pb-2">
+                    <span class="neutral-black fs-16 ">{{'CYBERSCORING.USER' | translate}}</span>
+                  </div>
+                </div> -->
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="col-12 ml-0 mr-0 pl-0 pr-0 datos">
+              <h2 class="title text-center mb-4 neutral-black fs-16"> {{'CYBERSCORING.CRITICITIES.TITLE' | translate}}</h2>
+              <div class="datos w-100 d-block text-left">
+                <div class="dg  d-flex justify-content-between">
+                  <span class="crit-label">{{'CYBERSCORING.CRITICITIES.CRITICAL' | translate}}</span>
+                  <h4 class="crit-elem bg-semantic-danger-light">{{data.summaryAffectedAssets.critical}}</h4>
+                </div>
+                <div class="dg  d-flex justify-content-between">
+                  <span class="crit-label">{{'CYBERSCORING.CRITICITIES.HIGH' | translate}}</span>
+                  <h4 class="crit-elem bg-semantic-orange-light">{{data.summaryAffectedAssets.high}}</h4>
+                </div>
+                <div class="dg  d-flex justify-content-between">
+                  <span class="crit-label">{{'CYBERSCORING.CRITICITIES.MEDIUM' | translate}}</span>
+                  <h4 class="crit-elem bg-semantic-warning-light">{{data.summaryAffectedAssets.medium}}</h4>
+                </div>
+                <div class="dg  d-flex justify-content-between">
+                  <span class="crit-label">{{'CYBERSCORING.CRITICITIES.LOW' | translate}}</span>
+                  <h4 class="crit-elem bg-semantic-success-light">{{data.summaryAffectedAssets.low}}</h4>
+                </div>
+                <div class="dg  d-flex justify-content-between">
+                  <span class="crit-label">{{'CYBERSCORING.CRITICITIES.INFO' | translate}}</span>
+                  <h4 class="crit-elem bg-semantic-information-light mb-0">{{data.summaryAffectedAssets.info}}</h4>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-xs-12 pt-4 justify-content-between d-flex flex-column">
+          <div class="datos">
+            <h2 class="title text-center mb-4 neutral-black fs-16">{{'CYBERSCORING.LAST_ANALYSIS' | translate}}</h2>
+            <span class=" text-center crit-label">
+              <font>{{data.businessName}}</font>
+            </span>
+            <div class="mb-4">
+              <span class=" text-center d-block crit-label ">
+                {{(lastDate.toString()+ 'Z').toLocaleString() | date: 'dd/MM/yyyy HH:mm:ss'}}
+              </span>
+            </div>
+            <div class="mb-4">
+              <span class=" text-center d-block crit-label">{{sector}}</span>
+            </div>
+            <div *ngFor="let domain of data.domains">
+              <span class="w-100 text-center crit-label">{{domain}}</span>
+            </div>
+
+          </div>
+          <div class="datos mt-3" >
+            <div class="d-block mx-auto mw-182" *ngIf="!freemiun">
+              <button class="btn btn-primary d-flex justify-content-center align-items-center mx-auto mb-3"
+                (click)="getLastReport()">
+                <a class="cyb-download-last" target="_blank">
+                  {{'CYBERSCORING.DOWNLOAD_LAST_BUTTON' | translate}}</a>
+              </button>
+              <button type="button" class="btn btn-outline-secondary text-center text-uppercase d-block ml-0"
+                (click)="goCyberscoring()">
+                {{'CYBERSCORING.MORE_INFO' | translate}}
+              </button>
+            </div>
+
+            <div class="d-block mx-auto mw-182" *ngIf="freemiun">
+              <button class="btn btn-primary d-flex justify-content-center align-items-center mx-auto mb-3"
+                data-toggle="modal" data-target="#analisisForm" (click)="toggleFreeModal()">
+                <a class="cyb-download-last" target="_blank">
+                  {{'CYBERSCORING.DOWNLOAD_LAST_BUTTON' | translate}}</a>
+              </button>
+              <button type="button" class="btn btn-outline-secondary text-center text-uppercase d-block ml-0"
+              data-toggle="modal" data-target="#analisisForm" (click)="toggleFreeModal()">
+                {{'CYBERSCORING.MORE_INFO' | translate}}
+              </button>
+            </div>
+          </div>
+        </div>
+
+
+
+      </div>
+      <div class="row h-100 grid-divider justify-content-center cyb-mobile">
+        <app-slider [autoplay]="true">
+          <ng-template Slide>
+
+            <div class="col-md-12 pt-4 justify-content-between d-flex flex-column mobile-mb">
+              <div>
+                <h2 class="title text-center mb-4 neutral-black fs-16">{{'CYBERSCORING.SCORE' | translate}}</h2>
+                <div class="col-12">
+                  <ngx-gauge class="d-block mx-auto maxh-120" [type]="gaugeType" [value]="lastScore"
+                    [max]="gaugeMax" cap="round" [min]="gaugeMin" [thresholds]="thresholdConfig"
+                    [markers]="markerConfig" [thick]="15">
+                  </ngx-gauge>
+                  <div class="mb-3">
+                    <span class=" text-center d-block gaugeLbl bg-semantic-danger mx-auto" *ngIf="gaugeMessage == 1">
+                      {{gaugeLabel}}
+                    </span>
+                    <span class=" text-center d-block gaugeLbl bg-semantic-warning mx-auto" *ngIf="gaugeMessage == 2">
+                      {{gaugeLabel}}
+                    </span>
+                    <span class=" text-center d-block gaugeLbl bg-semantic-success mx-auto" *ngIf="gaugeMessage == 3">
+                      {{gaugeLabel}}
+                    </span>
+                  </div>
+                  <div class="mb-4" *ngIf="gaugeMessage > 0">
+                    <span class=" text-center d-block gaugeMsg" *ngIf="gaugeMessage == 1">
+                      {{'CYBERSCORING.GAUGE_LOW' | translate}}
+                    </span>
+                    <span class=" text-center d-block gaugeMsg" *ngIf="gaugeMessage == 2">
+                      {{'CYBERSCORING.GAUGE_MID' | translate}}
+                    </span>
+                    <span class=" text-center d-block gaugeMsg" *ngIf="gaugeMessage == 3">
+                      {{'CYBERSCORING.GAUGE_HIGH' | translate}}
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <div class="center-flex-section flex-column">
+                  <div class="minw-170">
+                    <div class="d-flex align-items-center justify-content-between mb-10p">
+                      <div>
+                        <div class="led mr-12p semantic-success">
+                          <i class="fas fa-circle"></i>
+                        </div>
+                        <span class="neutral-black fs-12">{{'CYBERSCORING.GOOD' | translate}}</span>
+                      </div>
+                      <span class="neutral-black  fs-12">{{good}}</span>
+                    </div>
+
+                    <div class="d-flex align-items-center justify-content-between mb-10p">
+                      <div>
+                        <div class="led mr-12p semantic-warning">
+                          <i class="fas fa-circle"></i>
+                        </div>
+                        <span class="neutral-black fs-12 ">{{'CYBERSCORING.FAIR' | translate}}</span>
+                      </div>
+
+
+                      <span class="neutral-black  fs-12">{{fair}}</span>
+                    </div>
+
+                    <div class="d-flex align-items-center justify-content-between mb-10p">
+                      <div>
+                        <div class="led mr-12p  semantic-danger">
+                          <i class="fas fa-circle"></i>
+                        </div>
+                        <span class="neutral-black fs-12 ">{{'CYBERSCORING.POOR' | translate}}</span>
+                      </div>
+
+                      <span class="neutral-black  fs-12">{{poor}}</span>
+                    </div>
+                  </div>
+
+                </div>
+
+                <!-- <div class="col-12">
+                  <div class="datos w-100 d-block text-left">
+                    <div class="dg mb-2 pl-5 pr-5">
+                      <div class="led mr-2 semantic-success">
+                        <i class="fas fa-circle"></i>
+                      </div>
+                      <span class="neutral-black fs-12">{{'CYBERSCORING.GOOD' | translate}}</span>
+                      <h4 class="neutral-black">{{good}}</h4>
+                    </div>
+                    <div class="dg mb-2 pl-5 pr-5">
+                      <div class="led mr-2 semantic-warning">
+                        <i class="fas fa-circle"></i>
+                      </div>
+                      <span class="neutral-black fs-12">{{'CYBERSCORING.FAIR' | translate}}</span>
+                      <h4 class="neutral-black">{{fair}}</h4>
+                    </div>
+                    <div class="dg mb-2 pl-5 pr-5">
+                      <div class="led mr-2 semantic-danger">
+                        <i class="fas fa-circle"></i>
+                      </div>
+                      <span class="neutral-black fs-12">{{'CYBERSCORING.POOR' | translate}}</span>
+                      <h4 class="neutral-black"> {{poor}} </h4>
+                    </div>
+                  </div>
+                </div> -->
+                <div class="col-12 mt-4" *ngIf="!freemiun && !isMinDate">
+                  <div class="datos w-100 d-block">
+                    <span class="w-100 text-center crit-label">
+                      {{'CYBERSCORING.NEXT_ANALYSIS' | translate}}{{(nextDate.toString()+ 'Z').toLocaleString() | date: 'dd/MM/yyyy'}}
+                    </span>
+                  </div>
+                </div>
+                <div class="col-12 mt-4" *ngIf="!freemiun && isMinDate">
+                  <div class="datos w-100 d-block">
+                    <span class="w-100 text-center crit-label">
+                      {{'CYBERSCORING.NEXT_ANALYSIS' | translate}}{{'CYBERSCORING.NO_NEXT_ANALYSIS_DATE' | translate}}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+          </ng-template>
+          <ng-template Slide>
+            <div class="justify-content-between d-flex flex-column" style="width: 60%;">
+              <div>
+                <div class="col-12 ml-0 mr-0 pl-0 pr-0 datos ">
+                  <h2 class="title text-center mb-4 neutral-black fs-16">{{'CYBERSCORING.ASSETS' | translate}}</h2>
+                  <div class="datos row justify-content-between text-left w-100 mr-0 ml-0">
+
+                    <div class="asset-card pr-2 pl-2 mb-2 w-48">
+                      <div class="col-12 pl-0 pr-0 d-flex justify-content-between">
+                        <h3 class="mt-1 w-70 neutral-black fs-24">
+                          {{data.summaryAssetTypes.domains}}</h3>
+                        <div class="icon-cyberscoring-domain fs-20"></div>
+                      </div>
+                      <div class="col-12 pl-0 pr-0 pb-2">
+                        <span class="neutral-black fs-16 ">{{'CYBERSCORING.DOMAINS_LABEL' | translate}}</span>
+                      </div>
+                    </div>
+
+                    <div class="asset-card pr-2 pl-2 mb-2 w-48">
+                      <div class="col-12 pl-0 pr-0 d-flex justify-content-between" >
+                        <h3 class="mt-1 w-70 neutral-black fs-24">{{data.summaryAssetTypes.ipv4}}
+                        </h3>
+                        <div class="icon-cyberscoring-ip4 fs-20"></div>
+                      </div>
+                      <div class="col-12 pl-0 pr-0 pb-2">
+                        <span class="neutral-black fs-16 ">IP4</span>
+                      </div>
+                    </div>
+
+                    <div class="asset-card pr-2 pl-2 mb-2 w-48">
+                      <div class="col-12 pl-0 pr-0 d-flex justify-content-between">
+                        <h3 class="mt-1 w-70 neutral-black fs-24">{{data.summaryAssetTypes.ipv6}}
+                        </h3>
+                        <div class="icon-cyberscoring-ip6 fs-20"></div>
+                      </div>
+                      <div class="col-12 pl-0 pr-0 pb-2">
+                        <span class="neutral-black fs-16 ">IP6</span>
+                      </div>
+                    </div>
+
+                    <div class="asset-card pr-2 pl-2 mb-2 w-48">
+                      <div class="col-12 pl-0 pr-0 d-flex justify-content-between">
+                        <h3 class="mt-1 w-75 neutral-black fs-24">{{data.summaryAssetTypes.ports}}
+                        </h3>
+                        <div class="icon-cyberscoring-port fs-20"></div>
+                      </div>
+                      <div class="col-12 pl-0 pr-0 pb-2">
+                        <span class="neutral-black fs-16 ">{{'CYBERSCORING.PORTS' | translate}}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <div class="col-12 ml-0 mr-0 pl-0 pr-0 datos mb-4">
+                  <h2 class="title text-center mb-4 neutral-black fs-16"> {{'CYBERSCORING.CRITICITIES.TITLE' | translate}}</h2>
+                  <div class="datos w-100 d-block text-left">
+                    <div class="dg  d-flex justify-content-between">
+                      <span class="crit-label">{{'CYBERSCORING.CRITICITIES.CRITICAL' | translate}}</span>
+                      <h4 class="crit-elem bg-semantic-danger-light">{{data.summaryAffectedAssets.critical}}</h4>
+                    </div>
+                    <div class="dg  d-flex justify-content-between">
+                      <span class="crit-label">{{'CYBERSCORING.CRITICITIES.HIGH' | translate}}</span>
+                      <h4 class="crit-elem bg-semantic-orange-light">{{data.summaryAffectedAssets.high}}</h4>
+                    </div>
+                    <div class="dg  d-flex justify-content-between">
+                      <span class="crit-label">{{'CYBERSCORING.CRITICITIES.MEDIUM' | translate}}</span>
+                      <h4 class="crit-elem bg-semantic-warning-light">{{data.summaryAffectedAssets.medium}}</h4>
+                    </div>
+                    <div class="dg  d-flex justify-content-between">
+                      <span class="crit-label">{{'CYBERSCORING.CRITICITIES.LOW' | translate}}</span>
+                      <h4 class="crit-elem bg-semantic-success-light">{{data.summaryAffectedAssets.low}}</h4>
+                    </div>
+                    <div class="dg  d-flex justify-content-between">
+                      <span class="crit-label">{{'CYBERSCORING.CRITICITIES.INFO' | translate}}</span>
+                      <h4 class="crit-elem bg-semantic-information-light mb-0">{{data.summaryAffectedAssets.info}}</h4>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+          </ng-template>
+          <ng-template Slide>
+            <div class="col-md-12 col-sm-12 col-xs-12 pt-4 justify-content-between d-flex flex-column">
+              <div class="datos">
+                <h2 class="title text-center mb-4 neutral-black fs-16">{{'CYBERSCORING.LAST_ANALYSIS' | translate}}</h2>
+                <span class=" text-center crit-label">
+                  <font>{{data.businessName}}</font>
+                </span>
+                <div class="mb-4">
+                  <span class=" text-center d-block crit-label ">
+                    {{(lastDate.toString()+ 'Z').toLocaleString() | date: 'dd/MM/yyyy HH:mm:ss'}}
+                  </span>
+                </div>
+                <div class="mb-4">
+                  <span class=" text-center d-block crit-label">{{sector}}</span>
+                </div>
+                <div *ngFor="let domain of data.domains">
+                  <span class="w-100 text-center crit-label">{{domain}}</span>
+                </div>
+
+              </div>
+              <div class="datos mt-3" >
+                <div class="d-block mx-auto mw-182" *ngIf="!freemiun">
+                  <button class="btn btn-primary d-flex justify-content-center align-items-center mx-auto mb-3"
+                    (click)="getLastReport()">
+                    <a class="cyb-download-last" target="_blank">
+                      {{'CYBERSCORING.DOWNLOAD_LAST_BUTTON' | translate}}</a>
+                  </button>
+                  <button type="button" class="btn btn-outline-secondary text-center text-uppercase d-block ml-0"
+                    (click)="goCyberscoring()">
+                    {{'CYBERSCORING.MORE_INFO' | translate}}
+                  </button>
+                </div>
+
+                <div class="d-block mx-auto mw-182" *ngIf="freemiun">
+                  <button class="btn btn-primary d-flex justify-content-center align-items-center mx-auto mb-3"
+                    data-toggle="modal" data-target="#analisisForm" (click)="toggleFreeModal()">
+                    <a class="cyb-download-last" target="_blank">
+                      {{'CYBERSCORING.DOWNLOAD_LAST_BUTTON' | translate}}</a>
+                  </button>
+                  <button type="button" class="btn btn-outline-secondary text-center text-uppercase d-block ml-0"
+                  data-toggle="modal" data-target="#analisisForm" (click)="toggleFreeModal()">
+                    {{'CYBERSCORING.MORE_INFO' | translate}}
+                  </button>
+                </div>
+              </div>
+            </div>
+
+          </ng-template>
+        </app-slider>
+      </div>
+
+
+
+    </div>
+  </div>
+  <div class="modal fade" id="analisisForm" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content mh-400 mw-482">
+        <div class="new-modal-header row ml-4 mt-21">
+          <h4 *ngIf="!success && !editModal && !cantEdit && !freeModal" class="new-modal-title col-sm-11 pl-0 pr-0 neutral-black">
+            {{'CYBERSCORING.FORMULARIO_CYBERSCORING_TITLE' | translate}}</h4>
+          <h4 *ngIf="!success && editModal" class="new-modal-title col-sm-11 pl-0 pr-0 neutral-black mb-4">
+            {{'CYBERSCORING.FORMULARIO_CYBERSCORING_TITLE_EDIT' | translate}}
+          </h4>
+          <h4 *ngIf="success || cantEdit || freeModal" class="new-modal-title col-sm-11 pl-0 pr-0"></h4>
+          <button type="button" class="new-close col-sm-1 pr-0" aria-label="Close" data-dismiss="modal" (click)="toggleValidate()">
+            <div class="icon-close" data-dismiss="modal" (click)="toggleValidate()"></div>
+          </button>
+          <p *ngIf="!success && editModal">{{'CYBERSCORING.FORMULARIO_CYBERSCORING_DESC_EDIT' | translate:{ nextAnalysisDate: ((data.nextAnalysisDate.toString()+ 'Z').toLocaleString() | date: 'dd/MM/yyyy') } }}</p>
+          <p *ngIf="!success && editModal">{{'CYBERSCORING.FORMULARIO_CYBERSCORING_DESC_EDIT_2' | translate}}</p>
+          <div class="form-group col-lg-12 col-md-12 col-sm-12 mt-2 pl-0 pr-0 mb-0" *ngIf="!success && !cantEdit && !freeModal">
+            <label class="w-100 fs-12 ">
+              {{'CYBERSCORING.FORMULARIO_CYBERSCORING_REQUIRED' | translate}}
+            </label>
+          </div>
+        </div>
+
+        <section class="row mt-2 mr-4 ml-4">
+          <div class="col-sm-12 pl-0 pr-0 d-flex justify-content-center" *ngIf="success">
+            <img class="new-modal-img mw-66"
+              src="{{staticContentUrl+'img/check-circle-outline.png'}}">
+          </div>
+          <div class="col-sm-12 pl-0 pr-0 d-flex justify-content-center" *ngIf="cantEdit">
+            <div class="new-modal-img mt-0">
+              <div class="icon-cyberscoring mb-2 fs-78"></div>
+            </div>
+          </div>
+
+          <div class="col-sm-12 pl-0 pr-0 d-flex justify-content-center" *ngIf="freeModal">
+            <div class="new-modal-img mt-0">
+              <div class="icon-illustration-info mb-2 fs-88" ></div>
+            </div>
+          </div>
+
+          <div class="col-sm-12 pl-0 pr-0 d-flex justify-content-center flex-column mt-3" *ngIf="success && !editModal">
+            <h3 class="text-center mb-2 fs-20 lh-24">{{'CYBERSCORING.PROCESSED' | translate}}</h3>
+            <p class="pl-3 pr-3 text-center right-card-text">{{'CYBERSCORING.PROCESSED_DESC1' | translate}}</p>
+            <p class="pl-3 pr-3 text-center right-card-text">{{'CYBERSCORING.PROCESSED_DESC2' | translate}}</p>
+          </div>
+
+          <div class="col-sm-12 pl-0 pr-0 d-flex justify-content-center flex-column" *ngIf="freeModal">
+            <h3 class="text-center mb-2 fs-20 lh-24">{{'CYBERSCORING.FREE_MODAL_TITLE' | translate}}</h3>
+            <p class="pl-3 pr-3 text-center right-card-text">{{'CYBERSCORING.FREE_MODAL_DESC1' | translate}}</p>
+            <p class="mb-5 pl-3 pr-3 text-center right-card-text">{{'CYBERSCORING.FREE_MODAL_DESC2' | translate}}</p>
+          </div>
+
+          <div class="col-sm-12 pl-0 pr-0 d-flex justify-content-center flex-column mt-3" *ngIf="cantEdit">
+            <h3 class="text-center mb-2 fs-20 lh-24">{{'CYBERSCORING.NO_EDIT_DESC' | translate}}</h3>
+          </div>
+
+          <div class="col-sm-12 pl-0 pr-0 d-flex justify-content-center flex-column mt-3" *ngIf="success && editModal">
+            <h3 class="text-center mb-2 fs-20 lh-24">{{'CYBERSCORING.UPDATE_SUCCESS' | translate}}</h3>
+            <p class="pl-3 pr-3 text-center right-card-text">
+              {{'CYBERSCORING.UPDATE_SUCCESS_TEXT1' | translate}}
+              {{(data.nextAnalysisDate.toString()+ 'Z').toLocaleString() | date: 'dd/MM/yyyy'}}
+              {{'CYBERSCORING.UPDATE_SUCCESS_TEXT2' | translate}}
+            </p>
+            <p class="pl-3 pr-3 text-center right-card-text">{{'CYBERSCORING.PROCESSED_DESC2' | translate}}</p>
+          </div>
+
+
+
+
+          <form class="col-sm-12 pl-0 pr-0" (ngSubmit)="createCompany()" (keydown.enter)="$event.preventDefault()">
+            <div class="form-group col-md-12 col-sm-12 pl-0 pr-0 no-padding-responsive" *ngIf="!cantEdit && !freeModal">
+              <label class="modal-form-label neutral-black">{{'CYBERSCORING.BUSINESS_NAME' | translate}}
+                *</label>
+              <div class="input-group" *ngIf="!editModal && !success">
+                <input type="text" required class="form-control new-input" name="businessName"
+                  [(ngModel)]="data.businessName"
+                  (focusout)="onFocusOutBusiness($event)"
+                  [ngClass]="{ 'is-invalid': businessName.invalid && (businessName.dirty || businessName.touched) }"
+                  [attr.disabled]="readonlyFields? 'disabled':null" #businessName="ngModel" maxlength="200"
+                  [readonly]="readonlyFields">
+              </div>
+              <div class="input-group" *ngIf="editModal || success">
+                <input type="text" required class="form-control new-input" name="nextBusinessName"
+                  [(ngModel)]="data.nextBusinessName"
+                  (focusout)="onFocusOutBusiness($event)"
+                  [ngClass]="{ 'is-invalid': nextBusinessName.invalid && (nextBusinessName.dirty || nextBusinessName.touched) }"
+                  [attr.disabled]="readonlyFields? 'disabled':null" #nextBusinessName="ngModel" maxlength="200"
+                  [readonly]="readonlyFields">
+              </div>
+              <div *ngIf="errorBusinessName"
+                class="text-danger text-left">{{'CAMPO_REQUERIDO' | translate}}
+              </div>
+            </div>
+
+            <div class="form-group col-md-12 col-sm-12 pl-0 pr-0 no-padding-responsive" *ngIf="!cantEdit && !freeModal">
+              <label class="modal-form-label neutral-black">{{'CYBERSCORING.SECTOR' | translate}} *</label>
+              <div class="input-group" *ngIf="!editModal && !success">
+                <select class="form-control new-input" name="cnae" required bindLabel="cnae" (blur)="onFocusOutCnae($event)" [(ngModel)]="data.cnae"
+                  [attr.disabled]="readonlyFields? 'disabled':null"
+                  [ngClass]="{ 'is-invalid': errorCnae }">
+                  <option [value]="-1" [disabled]="true" [hidden]="data.cnae">{{'CYBERSCORING.SECTOR' | translate}}
+                  </option>
+                  <option *ngFor="let sector of sectors" [value]="sector.id">
+                    {{sector.name}}
+                  </option>
+                </select>
+              </div>
+              <div class="input-group" *ngIf="editModal || success">
+                <select class="form-control new-input" name="nextCnae" required bindLabel="nextCnae" (blur)="onFocusOutCnae($event)" [(ngModel)]="data.nextCnae"
+                  [attr.disabled]="readonlyFields? 'disabled':null"
+                  [ngClass]="{ 'is-invalid': errorCnae }">
+                  <option [value]="-1" [disabled]="true" [hidden]="data.nextCnae">{{'CYBERSCORING.SECTOR' | translate}}
+                  </option>
+                  <option *ngFor="let sector of sectors" [value]="sector.id">
+                    {{sector.name}}
+                  </option>
+                </select>
+              </div>
+                <div *ngIf="errorCnae"
+                  class="text-danger text-left">{{'CAMPO_REQUERIDO' | translate}}
+                </div>
+            </div>
+
+            <div class="form-row cyberscoring-form mr-0 ml-0 p-0" *ngIf="!cantEdit && !freeModal">
+              <div class="form-group col-md-12 col-sm-12 pl-0 pr-0 no-padding-responsive" *ngIf="!readonlyFields">
+                <label class="modal-form-label neutral-black">{{'CYBERSCORING.ADD_DOMAINS' | translate}}
+                  *</label>
+                <div class="input-group" *ngIf="!editModal">
+                  <input type="text" [attr.disabled]="data.domains.length >= data.maxDomains? 'disabled' : null"
+                    class="form-control new-input mr-3" maxlength="255" [readonly]="readonlyFields" #domain
+                    (keyup.enter)="AddDomain(domain.value)"
+                    (focusout)="onFocusOutDomain(false)"
+                    [ngClass]="{ 'is-invalid': errorNoDomain }">
+                  <div class="input-group-append">
+                    <button type="button" class="btn btn-outline-secondary text-center d-block ml-0"
+                      [attr.disabled]="data.domains.length >= data.maxDomains? 'disabled' : null"
+                      (click)="AddDomain(domain.value)">{{'CYBERSCORING.BUTTON_ADD' | translate}}</button>
+                  </div>
+                </div>
+                <div class="input-group" *ngIf="editModal">
+                  <input type="text" [attr.disabled]="data.nextDomains.length >= data.maxDomains? 'disabled' : null"
+                    class="form-control new-input mr-3" maxlength="255" [readonly]="readonlyFields" #domain
+                    (keyup.enter)="AddDomain(domain.value)"
+                    (focusout)="onFocusOutDomain(true)"
+                    [ngClass]="{ 'is-invalid': errorNoDomain }">
+                  <div class="input-group-append">
+                    <button type="button" class="btn btn-outline-secondary text-center d-block ml-0"
+                      [attr.disabled]="data.nextDomains.length >= data.maxDomains? 'disabled' : null"
+                      (click)="AddDomain(domain.value)">{{'CYBERSCORING.BUTTON_ADD' | translate}}</button>
+                  </div>
+                </div>
+                <p class="col-12 pl-0 mb-0 field-desc">{{'CYBERSCORING.CAN_ADD' | translate}} {{data.maxDomains}}
+                  {{'CYBERSCORING.DOMAIN_PLACEHOLDER' | translate}}/s</p>
+                <div
+                  *ngIf="errorDomain"
+                  class="text-danger text-left fs-12">{{message}}
+                </div>
+                <div *ngIf="errorNoDomain"
+                  class="text-danger text-left">{{'CAMPO_REQUERIDO' | translate}}
+                </div>
+              </div>
+
+              <div class="form-group col-md-8 col-sm-8 pl-0 pr-0 no-padding-responsive"
+                *ngIf="data.domains.length > 0 && (!editModal && !success)">
+                <label class="modal-form-label neutral-black fs-16 lh-19">
+                  {{'CYBERSCORING.DOMAINS' | translate}}:
+                </label>
+                <div *ngFor="let domain of data.domains">
+                  <div class="col-md-12 float-left domain pl-0 pr-0 pt-2 pb-2 mb-1 ml-4">
+                    <div class="input-group-append p-0 justify-content-between">
+                      <span class="col-md-10 pr-0">{{domain}}</span>
+                      <a href="javascript:void(0)" class="col-md-1 p-0" *ngIf="!readonlyFields"
+                        (click)="DeleteDomain(domain)">
+                        <div class="myicons-delete"></div>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group col-md-8 col-sm-8 pl-0 pr-0 no-padding-responsive" *ngIf="data.nextDomains.length > 0 && (editModal || success)">
+                <label class="modal-form-label neutral-black fs-16 lh-19">{{'CYBERSCORING.DOMAINS' | translate}}:</label>
+                <div *ngFor="let domain of data.nextDomains">
+                  <div class="col-md-12 float-left domain pl-0 pr-0 pt-2 pb-2 mb-1 ml-4" >
+                    <div class="input-group-append p-0 justify-content-between">
+                      <span class="col-md-10 pr-0">{{domain}}</span>
+                      <a href="javascript:void(0)" class="col-md-1 p-0" *ngIf="!readonlyFields" (click)="DeleteDomain(domain)"><div class="myicons-delete"></div></a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group col-md-12 col-sm-12 pl-0 pr-0 no-padding-responsive" *ngIf="!readonlyFields && !cantEdit && !freeModal">
+              <div class="custom-control custom-checkbox">
+                <input type="checkbox" class="custom-control-input" id="confirm" name="confirm" [(ngModel)]="confirm" (change)="checkTerms($event)">
+                <label class="custom-control-label" for="confirm">{{'CYBERSCORING.DOMAIN_TERMS' | translate}}</label>
+              </div>
+              <div
+                *ngIf="!terms"
+                class="text-danger text-left consent">{{'CONSENTIMIENTO' | translate}}
+              </div>
+            </div>
+
+            <div class="mt-2 errormen">
+              <div *ngIf="showMessage" class="loginError d-inline-flex align-items-center">
+                 {{message}}
+              </div>
+            </div>
+            <div class="form-group col-lg-12 pl-0 pr-0 d-flex justify-content-end">
+              <button type="submit" class="btn btn-primary text-center d-block" *ngIf="!readonlyFields && !editModal && !cantEdit && !freeModal"
+                [disabled]=" !data.businessName || data.cnae == -1 || data.domains.length==0 || loading || !terms">
+                <nz-spinner *ngIf="loading"></nz-spinner>
+                <div *ngIf="!loading">{{'ENVIAR' | translate}}</div>
+              </button>
+              <button type="submit" class="btn btn-primary text-center d-block" *ngIf="!readonlyFields && editModal"
+                [disabled]=" !data.nextBusinessName || data.nextCnae == -1 || data.nextDomains.length==0 || loading || !terms">
+                <nz-spinner *ngIf="loading"></nz-spinner>
+                <div *ngIf="!loading">{{'ACTUALIZAR' | translate}}</div>
+              </button>
+              <button data-dismiss="modal" class="btn btn-primary text-center d-block" *ngIf="readonlyFields || cantEdit || freeModal"
+                [disabled]="loading"
+                (click)="toggleValidate()">
+                <nz-spinner *ngIf="loading"></nz-spinner>
+                <div *ngIf="!loading">{{'CERRAR' | translate}}</div>
+              </button>
+            </div>
+          </form>
+        </section>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+<section id="header" *ngIf="!serviceCard">
+  <app-service-header
+    [serviceName] = "cyberscoringService.serviceName"
+    [serviceLongDesc] = "cyberscoringService.longDesc"
+    [serviceDesc] = "cyberscoringService.serviceDesc"
+    [serviceIcon] = "cyberscoringService.icon">
+  </app-service-header>
+</section>
+
+<div *ngIf="globalLoading">
+  <div class="app-loading">
+    <div class="logo">
+      <img src="{{partnerService.preloaderImage}}" width="100" height="100">
+    </div>
+  </div>
+</div>
+
+<section class="mr-3 ml-3 pl-1 mt-3" *ngIf="!globalLoading && !serviceCard">
+  <div class="container-fluid">
+
+    <div *ngIf="hasHistory">
+      <div class="w-100">
+        <h2 class="title text-left mb-2 neutral-black fs-24 lh-29">
+          {{'CYBERSCORING.LAST_ANALYSIS' | translate}}</h2>
+      </div>
+      <div class="card w-100 mb-5">
+        <div class="card-body pr-0 pl-0">
+          <div class="container-fluid mt-4">
+            <div class="row h-100 grid-divider justify-content-center">
+              <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-xs-12 pt-4 mb-3 justify-content-between d-flex flex-column mobile-mb">
+                <div>
+                  <h2 class="title text-center mb-4 neutral-black fs-16">{{'CYBERSCORING.SCORE' | translate}}</h2>
+                  <div class="col-12">
+                    <ngx-gauge class="d-block mx-auto maxh-120" [type]="gaugeType" [value]="lastScore"
+                      [max]="gaugeMax" cap="round" [min]="gaugeMin" [thresholds]="thresholdConfig"
+                      [markers]="markerConfig" [thick]="15">
+                    </ngx-gauge>
+                    <div class="mb-3">
+                      <span class=" text-center d-block gaugeLbl mx-auto bg-semantic-danger" *ngIf="gaugeMessage == 1">
+                        {{gaugeLabel}}
+                      </span>
+                      <span class=" text-center d-block gaugeLbl mx-auto bg-semantic-warning" *ngIf="gaugeMessage == 2">
+                        {{gaugeLabel}}
+                      </span>
+                      <span class=" text-center d-block gaugeLbl mx-auto bg-semantic-success" *ngIf="gaugeMessage == 3">
+                        {{gaugeLabel}}
+                      </span>
+                    </div>
+                    <div class="mb-4" *ngIf="gaugeMessage > 0">
+                      <span class=" text-center d-block gaugeMsg" *ngIf="gaugeMessage == 1">
+                        {{'CYBERSCORING.GAUGE_LOW' | translate}}
+                      </span>
+                      <span class=" text-center d-block gaugeMsg" *ngIf="gaugeMessage == 2">
+                        {{'CYBERSCORING.GAUGE_MID' | translate}}
+                      </span>
+                      <span class=" text-center d-block gaugeMsg" *ngIf="gaugeMessage == 3">
+                        {{'CYBERSCORING.GAUGE_HIGH' | translate}}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <div class="col-12">
+                    <div class="datos w-100 d-block text-left">
+                      <div class="dg mb-2 pl-5 pr-5">
+                        <div class="led mr-2 semantic-success">
+                          <i class="fas fa-circle"></i>
+                        </div>
+                        <span class="neutral-black fs-12">{{'CYBERSCORING.GOOD' | translate}}</span>
+                        <h4 class="neutral-black cyb-float">{{good}}</h4>
+                      </div>
+                      <div class="dg mb-2 pl-5 pr-5">
+                        <div class="led mr-2 semantic-warning">
+                          <i class="fas fa-circle"></i>
+                        </div>
+                        <span class="neutral-black fs-12">{{'CYBERSCORING.FAIR' | translate}}</span>
+                        <h4 class="neutral-black cyb-float">{{fair}}</h4>
+                      </div>
+                      <div class="dg mb-2 pl-5 pr-5">
+                        <div class="led mr-2 semantic-danger">
+                          <i class="fas fa-circle"></i>
+                        </div>
+                        <span class="neutral-black fs-12">{{'CYBERSCORING.POOR' | translate}}</span>
+                        <h4 class="neutral-black cyb-float"> {{poor}} </h4>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-12 mt-4" *ngIf="!freemiun && !isMinDate">
+                    <div class="datos w-100 d-block text-center">
+                      <span class="w-100 text-center crit-label" >
+                        {{'CYBERSCORING.NEXT_ANALYSIS' | translate}}{{(nextDate.toString()+ 'Z').toLocaleString() | date: 'dd/MM/yyyy'}}
+                      </span>
+                    </div>
+                  </div>
+                  <div class="col-12 mt-4" *ngIf="!freemiun && isMinDate">
+                    <div class="datos w-100 d-block text-center">
+                      <span class="w-100 text-center crit-label" >
+                        {{'CYBERSCORING.NEXT_ANALYSIS' | translate}}{{'CYBERSCORING.NO_NEXT_ANALYSIS_DATE' | translate}}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-xs-12 pt-4 mb-3 tri-div justify-content-between d-flex flex-column mobile-mb pl-4 pr-4">
+                <div>
+                  <div class="col-12 ml-0 mr-0 pl-0 pr-0 datos">
+                    <h2 class="title text-center mb-4 neutral-black fs-16">{{'CYBERSCORING.ASSETS' | translate}}</h2>
+                    <div class="datos row justify-content-between text-left w-100 mr-0 ml-0">
+
+                      <div class="asset-card pr-2 pl-2 mb-2 w-48">
+                        <div class="col-12 pl-0 pr-0 d-flex justify-content-between">
+                          <h3 class="mt-1 w-70 neutral-black fs-24">
+                            {{data.summaryAssetTypes.domains}}</h3>
+                          <div class="icon-cyberscoring-domain fs-20"></div>
+                        </div>
+                        <div class="col-12 pl-0 pr-0 pb-2">
+                          <span class="neutral-black fs-16 lh-19">{{'CYBERSCORING.DOMAINS_LABEL' | translate}}</span>
+                        </div>
+                      </div>
+
+                      <div class="asset-card pr-2 pl-2 mb-2 w-48">
+                        <div class="col-12 pl-0 pr-0 d-flex justify-content-between">
+                          <h3 class="mt-1 w-70 neutral-black fs-24">{{data.summaryAssetTypes.ipv4}}
+                          </h3>
+                          <div class="icon-cyberscoring-ip4 fs-20"></div>
+                        </div>
+                        <div class="col-12 pl-0 pr-0 pb-2">
+                          <span class="neutral-black fs-16 lh-19">IP4</span>
+                        </div>
+                      </div>
+
+                      <div class="asset-card pr-2 pl-2 mb-2 w-48">
+                        <div class="col-12 pl-0 pr-0 d-flex justify-content-between">
+                          <h3 class="mt-1 w-70 neutral-black fs-24">{{data.summaryAssetTypes.ipv6}}
+                          </h3>
+                          <div class="icon-cyberscoring-ip6 fs-20"></div>
+                        </div>
+                        <div class="col-12 pl-0 pr-0 pb-2">
+                          <span class="neutral-black fs-16 lh-19">IP6</span>
+                        </div>
+                      </div>
+
+                      <div class="asset-card pr-2 pl-2 mb-2 w-48">
+                        <div class="col-12 pl-0 pr-0 d-flex justify-content-between">
+                          <h3 class="mt-1 w-75 neutral-black fs-24">{{data.summaryAssetTypes.ports}}
+                          </h3>
+                          <div class="icon-cyberscoring-port fs-20"></div>
+                        </div>
+                        <div class="col-12 pl-0 pr-0 pb-2">
+                          <span class="neutral-black fs-16 lh-19">{{'CYBERSCORING.PORTS' | translate}}</span>
+                        </div>
+                      </div>
+
+                      <!-- <div class="asset-card pr-2 pl-2 mb-2 w-48">
+                        <div class="col-12 pl-0 pr-0 d-flex justify-content-between">
+                          <h3 class="mt-1 w-75 neutral-black fs-24">
+                            {{data.summaryAssetTypes.userProvided}}</h3>
+                          <div class="icon-cyberscoring-user fs-20"></div>
+                        </div>
+                        <div class="col-12 pl-0 pr-0 pb-2">
+                          <span class="neutral-black fs-16 lh-19">{{'CYBERSCORING.USER' | translate}}</span>
+                        </div>
+                      </div> -->
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <div class="col-12 ml-0 mr-0 pl-0 pr-0 datos">
+                    <h2 class="title text-center mb-4 neutral-black fs-16"> {{'CYBERSCORING.CRITICITIES.TITLE' | translate}}</h2>
+                    <div class="datos w-100 d-block text-left">
+                      <div class="dg  d-flex justify-content-between">
+                        <span class="crit-label">{{'CYBERSCORING.CRITICITIES.CRITICAL' | translate}}</span>
+                        <h4 class="crit-elem bg-semantic-danger-light">{{data.summaryAffectedAssets.critical}}</h4>
+                      </div>
+
+                      <div class="dg  d-flex justify-content-between">
+                        <span class="crit-label">{{'CYBERSCORING.CRITICITIES.HIGH' | translate}}</span>
+                        <h4 class="crit-elem bg-semantic-orange-light">{{data.summaryAffectedAssets.high}}</h4>
+                      </div>
+                      <div class="dg  d-flex justify-content-between">
+                        <span class="crit-label">{{'CYBERSCORING.CRITICITIES.MEDIUM' | translate}}</span>
+                        <h4 class="crit-elem bg-semantic-warning-light">{{data.summaryAffectedAssets.medium}}</h4>
+                      </div>
+                      <div class="dg  d-flex justify-content-between">
+                        <span class="crit-label">{{'CYBERSCORING.CRITICITIES.LOW' | translate}}</span>
+                        <h4 class="crit-elem bg-semantic-success-light">{{data.summaryAffectedAssets.low}}</h4>
+                      </div>
+                      <div class="dg  d-flex justify-content-between">
+                        <span class="crit-label">{{'CYBERSCORING.CRITICITIES.INFO' | translate}}</span>
+                        <h4 class="crit-elem bg-semantic-information-light mb-0">{{data.summaryAffectedAssets.info}}</h4>
+                      </div>
+                    </div>
+
+
+                  </div>
+                </div>
+              </div>
+
+              <div
+                class="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-xs-12 pt-4 justify-content-between d-flex flex-column">
+                <div class="datos d-flex flex-column">
+                  <h2 class="title text-center mb-4 neutral-black fs-16">{{'CYBERSCORING.LAST_ANALYSIS' | translate}}
+                  </h2>
+                  <span class=" text-center crit-label">
+                    <font>{{data.businessName}}</font>
+                  </span>
+                  <div class="mb-4">
+                    <span class=" text-center d-block crit-label ">{{(lastDate.toString()+ 'Z').toLocaleString() | date:
+                      'dd/MM/yyyy HH:mm:ss'}}</span>
+                  </div>
+                  <div class="mb-4">
+                    <span class=" text-center d-block crit-label">{{sector}}</span>
+                  </div>
+                  <div *ngFor="let domain of data.domains">
+                    <span class="d-block w-100 text-center crit-label">{{domain}}</span>
+                  </div>
+                </div>
+                <div class="datos mt-3">
+                  <div class="d-block mx-auto mw-182">
+                    <button class="btn btn-primary d-flex justify-content-center align-items-center mx-auto mb-3 p-12" (click)="getLastReport()">
+                      <a class="cyb-download-last" target="_blank">
+                        {{'CYBERSCORING.DOWNLOAD_LAST_BUTTON' | translate}}</a>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="w-100">
+        <h2 class="title text-left mb-2 neutral-black fs-24 lh-29">
+          {{'CYBERSCORING.SCORING_HISTORY' | translate}}
+        </h2>
+      </div>
+      <div class="card w-100 mb-5">
+        <div class="container-fluid" *ngIf="data.historicalRating.length >= 2">
+          <h2 class="title text-left pt-4 mb-4 ml-4 crit-label">{{'CYBERSCORING.SCORE' | translate}}</h2>
+          <div class="d-flex flex-row w-100">
+            <canvas class="h-90 mb-4 mwp-90" baseChart [datasets]="chartDataset"
+              [chartType]="chartType" [labels]="chartLabels" [options]="chartOptions">
+            </canvas>
+            <div class="d-flex flex-column pl-2 w-10">
+              <span class="w-100 mb-2 mt-2 text-left custom-legend">{{'CYBERSCORING.GOOD' | translate}}</span>
+              <span class="w-100 mb-5 mt-3 text-left custom-legend">{{'CYBERSCORING.FAIR' | translate}}</span>
+              <span class="w-100 mb-5 text-left custom-legend">{{'CYBERSCORING.POOR' | translate}}</span>
+            </div>
+          </div>
+        </div>
+        <div class="container-fluid" *ngIf="data.historicalRating.length < 2">
+          <section class="row">
+            <div class="col-sm-12 pl-0 pr-0 d-flex justify-content-center">
+              <img class="new-modal-img mw-148 mt-96" src="{{staticContentUrl+'img/no-data.png'}}">
+            </div>
+            <div class="col-sm-12 mb-3">
+              <h3 class="text-center fs-20 bold lh-24 neutral-black">
+                {{'CYBERSCORING.NO_DATA_TITLE' | translate}}
+              </h3>
+            </div>
+            <div class="col-sm-12 pr-0 pl-0 align-items-center mb-90">
+              <p class="text-center cyb-body-text mb-0">
+                {{'CYBERSCORING.NO_DATA_DESC' | translate}}
+              </p>
+            </div>
+          </section>
+        </div>
+      </div>
+
+      <div class="w-100">
+        <h2 class="title text-left mb-2 neutral-black fs-24 lh-29">
+          {{'CYBERSCORING.INFO_HISTORY' | translate}}
+        </h2>
+      </div>
+
+
+      <div class="table-responsive card w-100 mb-5">
+        <table class="table table-bordered no-border mb-0">
+          <thead>
+            <tr>
+              <th class="custom-th text-center" scope="col">{{'COMP_PARTNERS.DOMAIN' | translate}}</th>
+              <th class="custom-th text-center" scope="col">{{'CYBERSCORING.TABLE_SCORE' | translate}}</th>
+              <th class="custom-th text-center" scope="col">{{'CYBERSCORING.TABLE_DATE' | translate}}</th>
+              <th class="custom-th text-center" scope="col">{{'CYBERSCORING.TABLE_REPORT' | translate}}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of data.reports">
+              <td class="custom-td text-center">{{item.businessName}}</td>
+              <td class="custom-td text-center"
+              [ngClass]="{ 'score-good': item.score >= 900,
+                'score-mid' : item.score < 900 && item.score >= 700,
+                'score-low' : item.score < 700}"
+              >
+                {{item.score}}
+              </td>
+              <td class="custom-td text-center">{{(item.date.toString()+ 'Z').toLocaleString() | date: 'dd/MM/yyyy'}}</td>
+              <td class="custom-td text-center minw-250" width="250">
+                <button type="button" class="btn btn-outline-secondary text-center d-block mx-auto" (click)="getLastReport(item.cyberscoringId)">
+                  <div class="icon-download"></div>
+                  {{'CYBERSCORING.DOWNLOAD_LAST_BUTTON' | translate}}
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- <div class="card w-100 vh-50 p-4" *ngIf ="data.reports && data.reports.length > 0">
+      <h2 id="header-list" class="title mb-4 text-center">{{'CYBERSCORING.TABLE_TITLE' |
+        translate}}</h2>
+      <div class="table-responsive">
+        <table class="table table-hover table-bordered">
+          <thead>
+            <tr>
+              <th scope="col">{{'CYBERSCORING.TABLE_IDENTIFIER' | translate}}</th>
+              <th scope="col">{{'CYBERSCORING.TABLE_NAME' | translate}}</th>
+              <th scope="col">{{'CYBERSCORING.TABLE_SCORE' | translate}}</th>
+              <th scope="col">{{'CYBERSCORING.TABLE_DATE' | translate}}</th>
+              <th scope="col">{{'CYBERSCORING.TABLE_REPORT' | translate}}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of data.reports">
+              <th>{{item.purchaseIdentifier}}</th>
+              <td>{{item.businessName}}</td>
+              <td>{{item.score}}</td>
+              <td><i class="far fa-calendar-alt icon"></i> {{(item.date.toString()+ 'Z').toLocaleString() | date: 'dd/MM/yyyy'}}</td>
+              <td width="150">
+                 <a class="btn btn-primary" href="{{item.pdfLink}}"  target="_blank">
+                  <div class="icon-download"></div>
+                </a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div> -->
+  </div>
+</section>

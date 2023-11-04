@@ -1,0 +1,50 @@
+.top-tabs {
+  &__container {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
+  }
+
+  &__nav {
+    display: flex;
+    padding: 0;
+    border-bottom: 2px solid #ECF1F8;
+  }
+
+ &__item {
+  padding: 15px 12px;
+  font-family: 'RobotoRegular';
+  font-size: 12px;
+  font-weight: 400;
+  color: #666A73;
+  cursor: pointer;
+    &.active {
+      font-family: 'RobotoBold';
+      color: #34383F;
+      border-bottom: 3px solid #36B3ED;
+    }
+ }
+
+
+}
+.delete-all-notification{
+  position: absolute;
+  top: 18px;
+  right: 5%;
+}
+
+@media(max-width:767px){
+  .delete-all-notification{
+    position: unset;
+    margin-top:1rem;
+  }
+}
+
+.noti-active {
+  position: absolute;
+  margin-left: 5px;
+  height: 6px;
+  width: 6px !important;
+  background: #36B3ED;
+  border-radius: 50%;
+}

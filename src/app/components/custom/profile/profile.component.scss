@@ -1,0 +1,40 @@
+p.subtitle{
+    color: #34383f;
+}
+
+p.title{
+    color: #34383f;
+    font-weight: bold;
+}
+
+.form-control{
+    border: 1px solid #34383F;
+    border-radius: 8px !important;
+}
+
+.label-input-text{
+    font-weight: 400;
+    margin-bottom: 5px !important;
+    font-size: 14px !important;
+    color: #34383F !important;
+}
+
+.label-input-text-disabled{
+    color: #666A73 !important;
+    font-size: 12px !important;
+}
+
+.border-radius{
+    border-radius: 8px !important;
+}
+
+.subtitle{
+    font-size: 16px !important;
+    color: #34383F !important;
+    margin-bottom: 5px !important;
+}
+
+.button-rigth{
+    display: flex !important;
+    justify-content: end !important;
+}

@@ -1,0 +1,146 @@
+<section id="header">
+    <div class="container-fluid">
+        <ul class="navbar-nav float-left mr-auto ml-3 pl-1">
+            <li class="nav-item">
+                <small>&nbsp;</small>
+            </li>
+            <li class="nav-item">
+                <h4 [innerHTML]="backupService.serviceName"></h4>
+            </li>
+        </ul>
+    </div>
+</section>
+
+<section id="servicestitles" class="ml-3 pl-1">
+    <div class="container-fluid">
+        <br/><br/><br/>
+        <a class="bback" href="javascript:history.back()">
+            <div class="myicons-arrow"></div>{{ 'ATRAS' | translate }}
+        </a>
+        <br/><br/>
+        <div class="service-title" [innerHTML]="backupService.serviceDesc"></div>
+        <br/>
+        <button class="collapse-btn" data-toggle="collapse" data-target="#description-service">
+            <div class="myicons-info"></div> {{ 'MAS_INFO_SERVICIO' | translate }}
+        </button>
+        <div id="description-service" class="collapse">
+            <div>
+                <span [innerHTML]="backupService.longDesc"></span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="chat" *ngIf="backupService.chatRequest" #chatea>
+    <div class="container">
+        <hr>
+        <br />
+        <h3>{{'NECESITAS_EXPERTO' | translate}}</h3>
+        <hr class="sph">
+        <app-chat-form [name]="chatService.serviceName"></app-chat-form>
+    </div>
+</section>
+
+<section class="dashboard-page" *ngIf="!backupService.chatRequest">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="container-fluid">
+                <div class="row grid-divider justify-content-center">
+                    <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 d-flex pt-4 justify-content-center align-items-center"
+                        *ngIf="!backupService.hasData">
+                        <div *ngIf="!userService.currentUserValue.hasAcronisRequested" class="mb-4">
+                            <h1 class="title text-center">{{'CYBERSECURITY.BACKUP.ACTIVATION' | translate}}</h1>
+                            <p class="text-center mb-2">{{'BACKUP.SOLICITAR1' | translate}}</p>
+                            <button class="btn btn-primary d-block mx-auto"
+                                (click)="requestBackupService()" [disabled]="loading">
+                                    <nz-spinner *ngIf="loading"></nz-spinner>
+                                    <div *ngIf="!loading">{{'BACKUP.SOLICITAR_BUTTON' | translate}}</div></button>
+
+                            <p class="text-center mt-4 mb-4">{{'BACKUP.SOLICITAR' | translate}} <strong>{{userService.currentUserValue.email}}</strong>.</p>
+
+                        </div>
+                        <div class="mb-4"
+                            *ngIf="userService.currentUserValue.hasAcronisRequested && !userService.currentUserValue.acronisProvisionDate">
+                            <p>{{'BACKUP.TEXT2' | translate}}</p>
+                            <p>{{'BACKUP.TEXT4' | translate}}</p>
+                        </div>
+                        <div class="justify-content-center mb-4" *ngIf="userService.currentUserValue.hasAcronisRequested &&
+                        userService.currentUserValue.acronisProvisionDate">
+                            <div class="align-items-center">
+                                <h1 class="text-center mb-2">{{'BACKUP.SOLICITAR_TEXT' | translate}}</h1>
+                                <p class="text-center mb-4">{{'BACKUP.SOLICITAR_TEXT2' | translate}}</p>
+                                <a href="https://eu-cloud.acronis.com/login" target="_blank" style="white-space: normal; line-height: 1.2;"
+                                    class="btn btn-primary">{{'BACKUP.SOLICITAR_BUTTON3' | translate}}
+                                    {{'BACKUP.SOLICITAR_BUTTON2' | translate}}</a>
+                                <p class="text-center mt-4 mb-4">{{'BACKUP.TEXT3' | translate}}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 pt-4"  *ngIf="backupService.hasData">
+                        <div class="datos mb-4">
+                            <h1 class="title text-center mb-5">{{'CYBERSECURITY.BACKUP.LAST_BACKUP2' | translate}}</h1>
+                            <span *ngIf="backupService.backupPercent>0; else backupServiceAlcatrazDate"
+                                class="ppal2">{{'CYBERSECURITY.BACKUP.LAST_BACKUP' | translate}}<font>
+                                {{(backupService.data.alcatrazDate + 'Z').toLocaleString() | date: 'dd/MM/yyyy HH:mm:ss'}}
+                                </font>
+                            </span>
+                            <ng-template #backupServiceAlcatrazDate>
+                              <span class="subtitle text-center">{{'CYBERSECURITY.BACKUP.NOT_LAST_BACKUP' | translate}}</span>
+                            </ng-template>
+                            <br/>
+                            <span class="r {{criticity}}"
+                                *ngIf="backupService.data.sinceLastBackup !== 0 && backupService.backupPercent>0">{{'CYBERSECURITY.BACKUP.AGO' | translate}}
+                                {{backupService.data.sinceLastBackup}} {{'CYBERSECURITY.BACKUP.DAYS' | translate}}</span>
+                            <br/><br/>
+                            <a href="https://eu-cloud.acronis.com/login" target="_blank" style="white-space: normal; line-height: 1.2;"
+                                class="btn btn-primary">{{'BACKUP.SOLICITAR_BUTTON3' | translate}}
+                                {{'BACKUP.SOLICITAR_BUTTON2' | translate}}
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-4 col-xs-4 pt-4 justify-content-center" *ngIf="backupService.hasData">
+                        <div class="datos mb-4">
+                            <h1 class="title text-center mb-4">{{'CYBERSECURITY.BACKUP.LAST_BACKUP2' | translate}}</h1>
+
+                            <div class="row grid-divider">
+                                <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-xs-12 mb-4">
+                                    <h2 class="subtitle text-left mt-4 mb-4">{{'CYBERSECURITY.BACKUP.LAST_BACKUP3' | translate}}</h2>
+                                    <h3 class="text-left">{{backupService.data.spaceUsed}}
+                                        <span>{{'CYBERSECURITY.BACKUP.FROM' | translate}} {{backupService.data.spaceAssigned}}
+                                            {{'CYBERSECURITY.BACKUP.AVAILABLE' | translate}}</span>
+                                    </h3>
+                                    <div class="progress">
+                                        <div class="progress-bar" role="progressbar" style="width: {{backupService.backupPercent}}%;" aria-valuenow="{{backupService.backupPercent}}" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                </div>
+                                <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-xs-12 pt-4 mb-4">
+                                    <h2 class="subtitle text-left mb-5">{{'CYBERSECURITY.BACKUP.DEVICES_USED' | translate}}</h2>
+                                    <div class="disp align-items-center">
+                                        <div class="myicons-portatil"></div>
+                                        <span>{{backupService.data.wksInstalled}} / {{backupService.data.wksAllowed}}
+                                            {{'CYBERSECURITY.BACKUP.DEVICES' | translate}}</span>
+                                    </div>
+                                    <br/>
+                                    <div class="disp">
+                                        <div class="myicons-phone"></div>
+                                        <span>{{backupService.data.mobInstalled}} / {{backupService.data.mobAllowed}}
+                                            {{'CYBERSECURITY.BACKUP.DEVICES' | translate}}</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 pt-4 align-items-center">
+                        <div class="text-center">
+                            <img src="{{staticContentUrl+'img/art/acronis_cloud_backup_logo.png'}}" width="150" heigth="" alt="Backup" />
+                            <div class="iconback icon-back-devices"></div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,76 @@
+<section id="header">
+    <app-service-header 
+        [serviceName] = "externalAppLegacyService.serviceName"
+        [serviceLongDesc] = "externalAppLegacyService.longDesc"
+        [serviceDesc] = "externalAppLegacyService.serviceDesc"
+        [serviceIcon] = "externalAppLegacyService.serviceIcon">
+    </app-service-header>
+</section>
+
+<section class="dashboard-page mr-3 ml-3 pl-1 mt-3">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="container-fluid">
+                <div class="row justify-content-center">
+                    <div class="d-flex align-items-center col-xl-8 col-lg-8 col-md-12 col-sm-12 pt-4">
+                        <div *ngIf="externalAppLegacyService.serviceType == 'ELD'">
+                            <h1 class="title text-left">{{ 'EXTERNAL_APPS.DIGITAL_LEGACY.HEADER1' |
+                                translate }}</h1>
+                            <p class="text-left mb-4">{{ 'EXTERNAL_APPS.DIGITAL_LEGACY.PARAGRAPH1' | translate }}</p>
+                            <h1 class="title text-left">{{ 'EXTERNAL_APPS.DIGITAL_LEGACY.HEADER2' |
+                                translate }}</h1>
+                            <p class="text-left">{{ 'EXTERNAL_APPS.DIGITAL_LEGACY.PARAGRAPH2' | translate }}</p>
+                            <ul>
+                                <li>{{ 'EXTERNAL_APPS.DIGITAL_LEGACY.LIST1' | translate }}</li>
+                                <li>{{ 'EXTERNAL_APPS.DIGITAL_LEGACY.LIST2' | translate }}</li>
+                                <li>{{ 'EXTERNAL_APPS.DIGITAL_LEGACY.LIST3' | translate }}</li>
+                                <li>{{ 'EXTERNAL_APPS.DIGITAL_LEGACY.LIST4' | translate }}</li>
+                            </ul>
+                            <br>
+                        </div>
+                        <div *ngIf="externalAppLegacyService.serviceType == 'EVD'">
+                            <h1 class="title text-left">{{
+                                'EXTERNAL_APPS.DIGITAL_LIFE_PROTECTION.HEADER1' | translate }}</h1>
+                            <p class="text-left mb-4">{{ 'EXTERNAL_APPS.DIGITAL_LIFE_PROTECTION.PARAGRAPH1' | translate }}</p>
+                            <h1 class="title text-left">{{
+                                'EXTERNAL_APPS.DIGITAL_LIFE_PROTECTION.HEADER2' | translate }}</h1>
+                            <p class="text-left mb-4">{{ 'EXTERNAL_APPS.DIGITAL_LIFE_PROTECTION.PARAGRAPH2' | translate }}</p>
+                            <h1 class="title text-left">{{
+                                'EXTERNAL_APPS.DIGITAL_LIFE_PROTECTION.HEADER3' | translate }}</h1>
+                            <p class="text-left mb-4">{{ 'EXTERNAL_APPS.DIGITAL_LIFE_PROTECTION.PARAGRAPH3' | translate }}</p>
+                        </div>
+                        <div *ngIf="externalAppLegacyService.serviceType == 'ETD'">
+                            <p class="text-left">{{ 'EXTERNAL_APPS.DIGITAL_LEGACY.PARAGRAPH2' | translate }}</p>
+                            <ul>
+                                <li>{{ 'EXTERNAL_APPS.DIGITAL_LEGACY.LIST1' | translate }}</li>
+                                <li>{{ 'EXTERNAL_APPS.DIGITAL_LEGACY.LIST2' | translate }}</li>
+                                <li>{{ 'EXTERNAL_APPS.DIGITAL_LEGACY.LIST3' | translate }}</li>
+                                <li>{{ 'EXTERNAL_APPS.DIGITAL_LEGACY.LIST4' | translate }}</li>
+                            </ul>
+                            <br>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center col-xl-4 col-lg-4 col-md-12 col-sm-12 pt-4">
+                        <div class="" *ngIf="!isRequested">
+                            <div class="scard greycard w-100 mb-4 text-center">
+                                <p class="text-center mb-3">{{'EXTERNAL_APPS.REQUEST1' | translate}} <strong>{{userService.currentUserValue.email}}</strong>.</p>
+                               
+                                <button class="btn btn-primary" [disabled]="loading" (click)="onSubmit()">
+                                    <nz-spinner *ngIf="loading"></nz-spinner>
+                                    <div *ngIf="!loading">{{'EXTERNAL_APPS.REQUEST_BUTTON' | translate}}</div>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="scard greycard w-100 mb-4 text-center" *ngIf="isRequested">
+                            <h1 class="title text-center">{{'EXTERNAL_APPS.REQUESTED0' | translate}}</h1>
+                            <p class="text-center">{{'EXTERNAL_APPS.REQUESTED1' | translate}} <strong>{{userService.currentUserValue.email}}</strong> {{'EXTERNAL_APPS.REQUESTED2' | translate}}</p>
+                            <a class="btn btn-primary" href="https://legadodigital.onlineassist.me/login">{{'EXTERNAL_APPS.REQUESTED3' | translate}}</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<br/><br/><br/>

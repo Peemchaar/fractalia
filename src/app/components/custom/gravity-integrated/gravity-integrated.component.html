@@ -1,0 +1,358 @@
+<!-- Estado inicial para meter la primera tarjeta -->
+
+<div class="datos" *ngIf="gravityService.status == 0 || loading">
+    <div class="row h-100 justify-content-center align-items-center mb-3">
+        <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-xs-12 pt-1 pb-4">
+            <div class="w-75 d-block mx-auto">
+                <p class="subtitle2 text-lg-left text-center ml-1"
+                    [innerHTML]="truncateService.removeHTML(service.desc, 250)"></p>
+            </div>
+        </div>
+        <div *ngIf="!loading" class="col-xl-5 col-lg-5 col-md-12 col-sm-12 col-xs-12 pt-1 pb-0 pb-lg-4">
+            <ng-container *ngIf="userService.currentUserValue.isAdminUserId">
+                <button (click)="createCompany()"
+                    class="btn btn-primary d-block mx-auto mw-90 ng-star-inserted">{{'COMP_GRAVITY.BUTTON_SOLICITAR' |
+                    translate}}</button>
+            </ng-container>
+            <ng-container *ngIf="!userService.currentUserValue.isAdminUserId">
+                <h6 class="text-center">{{'COMP_GRAVITY.TEXT0_NO_ADMIN' | translate}}</h6>
+            </ng-container>
+        </div>
+        <div *ngIf="loading" class="col-xl-5 col-lg-5 col-md-12 col-sm-12 col-xs-12 pt-1 pb-0 pb-lg-4 fa-3x">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p *ngIf="creatingAccount" class="text-center">{{'COMP_GRAVITY.TEXT_LOADING' | translate}}</p>
+        </div>
+        <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-xs-12 pt-1 pb-4">
+        </div>
+    </div>
+</div>
+
+<div class="row h-100" *ngIf="gravityService.status == 1 && !loading">
+    <div class="col-xl-3 col-lg-2 col-md-1 col-sm-1 col-1 pt-4 mb-2">
+
+    </div>
+    <div class="col-xl-6 col-lg-8 col-md-10 col-sm-10 col-10 pt-4 mb-2">
+        <div class="cg-icon text-center d-block mx-auto mb-3">
+            <div class="icon-frame" style="font-size: 3em; line-height: 1.5;"></div>
+        </div>
+        <h6 class="text-center">{{'COMP_GRAVITY.TEXT0' | translate}}</h6>
+        <p class="text-center mt-3">{{'COMP_GRAVITY.TEXT01' | translate}}</p>
+        <div class="d-lg-flex justify-content-between align-items-center mx-auto gra-btn-div">
+            <a href="{{gravityService.installationLinks.installLinkWindows}}" class="gra-btn">
+                <button class="btn btn-primary p-0 d-flex justify-content-center"
+                  href="agentData.download|safe: 'resourceUrl'">
+                  <div class="icon-windows so-logo mr-2"></div>
+                  <div class="d-flex flex-column">
+                    <span class="small-text-btn">{{ 'WIZARD.GRA_DOWNLOAD' | translate}}</span>
+                    <span class="big-text-btn">{{ 'WIZARD.WINDOWS' | translate}}</span>
+                  </div>
+                </button>
+              </a>
+              <a href="{{gravityService.installationLinks.installLinkMac}}" class="gra-btn">
+                <button class="btn btn-primary p-0 d-flex justify-content-center"
+                  href="agentData.download|safe: 'resourceUrl'">
+                  <div class="icon-apple so-logo mr-2"></div>
+                  <div class="d-flex flex-column">
+                    <span class="small-text-btn">{{ 'WIZARD.GRA_DOWNLOAD' | translate}}</span>
+                    <span class="big-text-btn">{{ 'WIZARD.APPLE' | translate}}</span>
+                  </div>
+                </button>
+              </a>
+              <a href="{{gravityService.installationLinks.installLinkLinux}}" class="gra-btn">
+                <button class="btn btn-primary p-0 d-flex justify-content-center"
+                  href="agentData.download|safe: 'resourceUrl'">
+                  <div class="icon-linux so-logo mr-2"></div>
+                  <div class="d-flex flex-column">
+                    <span class="small-text-btn">{{ 'WIZARD.GRA_DOWNLOAD' | translate}}</span>
+                    <span class="big-text-btn">{{ 'WIZARD.LINUX' | translate}}</span>
+                  </div>
+                </button>
+              </a>
+        </div>
+    </div>
+    <div class="col-xl-3 col-lg-2 col-md-1 col-sm-1 col-1 pt-4 mb-2">
+
+    </div>
+</div>
+
+
+<div class="h-100 row justify-content-center align-items-center" *ngIf="gravityService.status == 2 && !loading">
+    <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-xs-12 pt-4 pb-4">
+        <div class="w-75 d-block mx-auto">
+            <p class="subtitle2 text-left ml-1"></p>
+            <p class="subtitle2 text-left ml-1" [innerHTML]="truncateService.removeHTML(service.desc, 250)"></p>
+            <div class="row no-gutters mt-4">
+                <div class="form-group col-xl-8 col-lg-12 col-md-8 col-sm-6 select992">
+                    <select class="form-control" (change)="gravityEndpointchanged($event.target.value)">
+                        <option *ngFor="let endpoint of gravityService.endpoints" [value]="endpoint.id">
+                            {{endpoint.name}}</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-5 col-lg-8 col-md-12 col-sm-12 col-xs-12 pt-4 pb-4" *ngIf="gravityService.totalAlertsRevised == 0 && gravityService.totalAlertsBlocked == 0">
+        <div class="row align-items-center justify-content-md-center">
+            <div class="col-xl-7 col-lg-8 col-md-12 col-sm-12 col-xs-12 col-12 mb-2">
+                <div class="row align-items-center">
+                    <div class="icon-simple-circle-tick col-md-12 gravitytick"></div>
+                    <h6 class="text-center col-md-12">{{'COMP_GRAVITY.PROTECTED' | translate}}</h6>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-5 col-lg-8 col-md-12 col-sm-12 col-xs-12 pt-4 pb-4" *ngIf="gravityService.totalAlertsRevised > 0 || gravityService.totalAlertsBlocked > 0">
+        <div class="row align-items-center justify-content-md-center">
+            <div class="col-xl-7 col-lg-8 col-md-12 col-sm-12 col-xs-12 col-12 mb-2">
+                <div class="row align-items-center" *ngIf="gravityService.totalAlertsRevised > 0">
+                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-6 col-6 mb-2">
+                        <div class="canvasservices gravitycanvasservices">
+                            <div class="numbercanvas snumbercanvas gravitycanvas">
+                                <h3 class="text-center">{{gravityService.totalAlertsRevised}}</h3>
+                                <!-- <span class="subtitle text-center">{{'COMP_GRAVITY.BLOCKEDFILES' | translate}}</span> -->
+                            </div>
+                            <canvas baseChart *ngIf="gravityService.revisedChartData.length > 0" class="gravitycanvas"
+                                [data]="gravityService.revisedDoughnutChartData"
+                                [labels]="gravityService.revisedChartLabels"
+                                [colors]="gravityService.revisedDoughnutColors"
+                                [chartType]="gravityService.revisedChartType"
+                                [options]="{cutoutPercentage: 75}"></canvas>
+
+                        </div>
+                    </div>
+                    <div class="col-xl-6 col-lg-6 col-md-4 col-sm-5 col-xs-5 col-5 mb-2">
+                        <div class="w75 d-block mx-auto">
+                            <span class="subtitle text-left mb-2">{{'COMP_GRAVITY.STATUS_DEVICES'
+                                |
+                                translate}}:</span>
+                            <div class="mb-2">
+                                <div class="led blue">
+                                    <i class="fas fa-circle"></i>
+                                </div>
+                                <span>{{'COMP_GRAVITY.CLEAN' |
+                                    translate}}</span>
+                                <h4 class="">{{endpointSelected.revisedCleaned}}</h4>
+                            </div>
+                            <div class="mb-2">
+                                <div class="led gray">
+                                    <i class="fas fa-circle"></i>
+                                </div>
+                                <span>{{'COMP_GRAVITY.BORRADOS' |
+                                    translate}}</span>
+                                <h4 class="">{{endpointSelected.revisedErased}}</h4>
+                            </div>
+                            <div class="mb-2">
+                                <div class="led orange">
+                                    <i class="fas fa-circle"></i>
+                                </div>
+                                <span>{{'COMP_GRAVITY.EXCLUIDOS' | translate}}</span>
+                                <h4 class="">{{endpointSelected.revisedExcluded}}</h4>
+                            </div>
+                            <div class="mb-2">
+                                <div class="led red">
+                                    <i class="fas fa-circle"></i>
+                                </div>
+                                <span>{{'COMP_GRAVITY.CUARENTENA' | translate}}</span>
+                                <h4 class="red d-flex" style="position: relative; left: 18px;">
+                                    {{endpointSelected.revisedQuarantined}}
+                                    <div class="icon-exclamation-tri"></div>
+                                </h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row align-items-center" *ngIf="gravityService.totalAlertsRevised == 0 && gravityService.totalAlertsBlocked > 0">
+                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-6 col-6 mb-2">
+                        <div class="canvasservices gravitycanvasservices">
+                            <div class="numbercanvas snumbercanvas gravitycanvas">
+                                <h3 class="text-center">{{gravityService.totalAlertsBlocked}}</h3>
+                                <!-- <span class="subtitle text-center">{{'COMP_GRAVITY.BLOCKEDFILES' | translate}}</span> -->
+                            </div>
+                            <canvas baseChart *ngIf="gravityService.blockedChartData.length > 0" class="gravitycanvas"
+                                [data]="gravityService.blockedDoughnutChartData"
+                                [labels]="gravityService.blockedChartLabels"
+                                [colors]="gravityService.blockedDoughnutColors"
+                                [chartType]="gravityService.blockedChartType"
+                                [options]="{cutoutPercentage: 75}"></canvas>
+
+                        </div>
+                    </div>
+                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-6 col-6 mb-2">
+                        <div class="w75 d-block mx-auto">
+                            <span class="subtitle text-left mb-2"
+                                style="font-size: 10px;">{{'COMP_GRAVITY.LIST_FILES'
+                                |
+                                translate}}</span>
+                            <div class="mb-2">
+                                <div class="led gray">
+                                    <i class="fas fa-circle"></i>
+                                </div>
+                                <span>{{'COMP_GRAVITY.MALICIOUS_WEBSITES' |
+                                    translate}}</span>
+                                <h4 class="">{{endpointSelected.blockedWebs}}</h4>
+                            </div>
+                            <div class="mb-2">
+                                <div class="led yellow">
+                                    <i class="fas fa-circle"></i>
+                                </div>
+                                <span>{{'COMP_GRAVITY.PHISHING_ATTACKS' |
+                                    translate}}</span>
+                                <h4 class="">{{endpointSelected.blockedPhising}}</h4>
+                            </div>
+                            <div class="mb-2">
+                                <div class="led blue">
+                                    <i class="fas fa-circle"></i>
+                                </div>
+                                <span>{{'COMP_GRAVITY.MALWARE_ATTACKS' | translate}}</span>
+                                <h4 class="">{{endpointSelected.blockedMalware}}</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-xs-12 col-12 mb-2">
+                <div class="w-75 d-block mx-auto">
+                    <span _ngcontent-ixt-c119="" class="title text-left mb-1">{{'COMP_GRAVITY.LAST_ANALYSIS' |
+                        translate}}:</span>
+                    <!-- <span _ngcontent-ixt-c119="" class="subtitle2 text-left pt-1">{{'COMP_GRAVITY.DATE' |
+                        translate}}</span> -->
+                    <span _ngcontent-ixt-c119="" class="subtitle2 text-left pt-1">{{endpointSelected.lastAnalisys | date
+                        : "dd-MM-yyyy"}}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-lg-12 col-md-12 col-sm-12 col-xs-12 pt-4 pb-4">
+        <div class="">
+            <button class="btn btn-outline-secondary ng-star-inserted mt-3 mw-80 d-block mx-auto"
+                (click)="openServicePage()">
+                {{'GESTIONAR' | translate}} <div class="icon-right-big-arrow"></div>
+            </button>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="h-100 row grid-divider" *ngIf="gravityService.status==3 && !loading">
+    <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-xs-12 pt-4 pb-4">
+        <div class="w-75 d-block mx-auto">
+            <span class="title d-block text-center mb-4">{{'COMP_GRAVITY.PROTECTED_DEVICES' |
+                translate}}</span>
+            <h3 class="d-block text-center mb-5">{{gravityService.endpoints.length}}</h3>
+            <!-- <span class="title d-block text-center mb-4">{{'COMP_GRAVITY.DANGER_DEVICES' |
+                translate}}</span>
+            <h3 class="d-block text-center">2</h3> -->
+        </div>
+    </div>
+    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12 col-12 pt-3 pb-4">
+        <span class="text-center d-block mx-auto pt-3 pb-3"
+            *ngIf="gravityService.endpoints.length == 0">{{'COMP_GRAVITY.NO_DEVICES' | translate}}</span>
+        <div class="row align-items-start cards-services pr-3 pl-3">
+            <ng-container *ngFor="let endpoint of gravityService.endpoints; let m = index">
+                <div class="col-xl-4 col-lg-6 col-md-4 col-sm-4 col-xs-6 col-6 mb-1 p-1 align-self-stretch">
+                    <div class="card p-2 h-100 status">
+                        <!-- 'status ko' para que aparezca en rojo como incidencia -->
+                        <div class="card-body p-0">
+                            <p>{{'COMP_GRAVITY.ALIAS' | translate}}: <span class="card-data">{{endpoint.name}}</span>
+                            </p>
+                            <p>{{'COMP_GRAVITY.SO' | translate}}: <span
+                                    class="card-data">{{endpoint.operatingSystemVersion}}</span></p>
+                        </div>
+                        <div class="card-footer mt-3 p-0">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="creditcard-icon">
+                                    <div class="creditcard-status">
+                                        <!-- ko para que aparezca en rojo como incidencia -->
+                                        <div class="icon-shield-status"
+                                            title="{{'COMP_GRAVITY.PROTECTED' | translate}}"></div>
+                                        <!-- <i title="Tarjeta protegida" class="fas fa-circle"></i> -->
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-center">
+                                    <button title="{{'COMP_GRAVITY.DELETE_DEVICES' | translate}}" class="delete mb-0"
+                                        onclick="$('#frmGravityRemoveEndpoint').show()"
+                                        (click)="openDeleteModal(endpoint.id)"
+                                        title="{{'COMP_GRAVITY.DELETE_DEVICES' | translate}}"
+                                        style="margin-right: -4px !important;">
+                                        <div class="icon-delete-circle"></div>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+        </div>
+    </div>
+    <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-xs-12 pt-4 pb-4">
+        <div class="w-75 d-block justify-content-between align-items-center text-center mx-auto gra-btn-div">
+            <span class="title mb-4 text-center">{{'COMP_GRAVITY.DOWNLOAD_LINKS' | translate}}</span>
+            <a href="{{gravityService.installationLinks.installLinkWindows}}" class="gra-btn">
+                <button class="btn btn-primary p-0 d-flex justify-content-center"
+                  href="agentData.download|safe: 'resourceUrl'">
+                  <div class="icon-windows so-logo mr-2"></div>
+                  <div class="d-flex flex-column">
+                    <span class="small-text-btn">{{ 'WIZARD.GRA_DOWNLOAD' | translate}}</span>
+                    <span class="big-text-btn">{{ 'WIZARD.WINDOWS' | translate}}</span>
+                  </div>
+                </button>
+              </a>
+              <a href="{{gravityService.installationLinks.installLinkMac}}" class="gra-btn">
+                <button class="btn btn-primary p-0 d-flex justify-content-center"
+                  href="agentData.download|safe: 'resourceUrl'">
+                  <div class="icon-apple so-logo mr-2"></div>
+                  <div class="d-flex flex-column">
+                    <span class="small-text-btn">{{ 'WIZARD.GRA_DOWNLOAD' | translate}}</span>
+                    <span class="big-text-btn">{{ 'WIZARD.APPLE' | translate}}</span>
+                  </div>
+                </button>
+              </a>
+              <a href="{{gravityService.installationLinks.installLinkLinux}}" class="gra-btn">
+                <button class="btn btn-primary p-0 d-flex justify-content-center"
+                  href="agentData.download|safe: 'resourceUrl'">
+                  <div class="icon-linux so-logo mr-2"></div>
+                  <div class="d-flex flex-column">
+                    <span class="small-text-btn">{{ 'WIZARD.GRA_DOWNLOAD' | translate}}</span>
+                    <span class="big-text-btn">{{ 'WIZARD.LINUX' | translate}}</span>
+                  </div>
+                </button>
+              </a>
+        </div>
+    </div>
+</div>
+
+<section class="forms">
+    <div id="frmGravityRemoveEndpoint" class="popup add-service" *ngIf="showDeleteForm">
+        <div id="popup" class="">
+            <div class="popup-header sph">
+                <a id="CloseGravityDeletePopup" class="cerrar" href="javascript:void(0);"
+                    (click)="showDeleteForm = false">
+                    <div _ngcontent-oui-c3="" class="icon-close"></div>
+                </a>
+                <h2 class="text-left">{{ 'COMP_GRAVITY.REMOVE_FORM.TEXT1' | translate }}</h2>
+            </div>
+            <form (ngSubmit)="deleteGravityEndpoint()">
+                <div class="popup-body">
+                    <div class="row align-items-start">
+                        <div class="col-lg-12">
+                            <p class="text-left mb-4">{{'COMP_GRAVITY.REMOVE_FORM.SURE1' | translate}}
+                                <span>{{deleteEndpointName}}</span>? {{'COMP_GRAVITY.REMOVE_FORM.SURE2' |
+                                translate}}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="popup-footer text-left">
+                    <button type="submit" [disabled]="loadingDelete" class="btn btn-primary w-25">
+                        <nz-spinner *ngIf="loadingDelete">loading</nz-spinner>
+                        <div *ngIf="!loadingDelete"> {{'COMP_GRAVITY.REMOVE_FORM.DELETE_BUTTON' | translate}}
+                        </div>
+                    </button>
+                    <a class="btn mx-3" href="javascript:void(0)" (click)="showDeleteForm = false">{{'CANCEL' |
+                        translate}}</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>

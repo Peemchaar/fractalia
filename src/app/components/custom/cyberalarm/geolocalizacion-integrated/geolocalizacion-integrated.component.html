@@ -1,0 +1,352 @@
+<!-- Estado inicial para meter el primer dispositivo -->
+<!--
+<div class="row h-100">
+    <div class="col-xl-3 col-lg-2 col-md-1 col-sm-1 col-1 pt-4 mb-2">
+
+    </div>
+    <div class="col-xl-6 col-lg-8 col-md-10 col-sm-10 col-10 pt-4 mb-2">
+        <div class="cg-icon text-center d-block mx-auto mb-3">
+            <div class="icon-antivirus"></div>
+        </div>
+        <h6 class="text-center">{{'CYBERALARM.GEOLOCALIZACION.TEXT2' | translate}}</h6>
+        <p class="text-center">{{'CYBERALARM.GEOLOCALIZACION.TEXT3' | translate}}</p>
+        <div class="d-flex justify-content-center mt-4 mb-2">
+            <form class="form-inline fism">
+                <button type="submit" class="btn btn-primary w-auto mb-2"
+                    onclick="$('#frmAddDevice').show()">{{'CYBERALARM.GEOLOCALIZACION.ADD_DEVICE'
+                    | translate}}</button>
+            </form>
+        </div>
+    </div>
+    <div class="col-xl-3 col-lg-2 col-md-1 col-sm-1 col-1 pt-4 mb-2">
+
+    </div>
+</div>
+-->
+
+<div class="h-100 row grid-divider">
+    <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-xs-12 pt-4 pb-4">
+        <div class="w-75 d-block mx-auto">
+            <span class="title d-block text-center mb-4">{{'CYBERALARM.GEOLOCALIZACION.TEXT5' |
+                translate}}</span>
+            <h3 class="d-block text-center mb-5">1</h3>
+            <span class="title d-block text-center mb-4">{{'CYBERALARM.GEOLOCALIZACION.TEXT6' |
+                translate}}</span>
+            <h3 class="d-block text-center">1</h3>
+        </div>
+    </div>
+    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12 col-12 pt-3 pb-4">
+        <div class="row align-items-start cards-services pr-3 pl-3">
+            <div class="col-xl-4 col-lg-6 col-md-4 col-sm-4 col-xs-6 col-6 mb-1 p-1 align-self-stretch">
+                <div class="card p-2 h-100 status ok">
+                    <!-- 'status ko' para que aparezca en rojo como incidencia -->
+                    <div class="card-body p-0">
+                        <p>{{'CYBERALARM.GEOLOCALIZACION.ALIAS' | translate}}: <span class="card-data">Alias del dispositivo</span></p>
+                        <p>{{'CYBERALARM.GEOLOCALIZACION.SO' | translate}}: <span class="card-data">Sistema Operativo</span></p>
+                    </div>
+                    <div class="card-footer mt-3 p-0">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="creditcard-icon">
+                                <div class="creditcard-status ok">
+                                    <!-- ko para que aparezca en rojo como incidencia -->
+                                    <div class="icon-shield-status" title="{{'CYBERALARM.GEOLOCALIZACION.PROTEGIDO' | translate}}"></div>
+                                    <!--<i title="{{'CYBERALARM.GEOLOCALIZACION.NOPROTEGIDO' | translate}}" class="fas fa-circle"></i>-->
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <button title="{{'CYBERALARM.GEOLOCALIZACION.TACK_BUTTON' | translate}}" class="delete mb-0"
+                                    data-toggle="modal"
+                                    data-target="#GeoTack"
+                                    title="{{'CYBERALARM.GEOLOCALIZACION.TACK_BUTTON' | translate}}">
+                                    <div class="icon-tack"></div>
+                                </button>
+                                <button title="{{'CYBERALARM.GEOLOCALIZACION.REMOVE_FORM.TEXT1' | translate}}" class="delete mb-0"
+                                    data-toggle="modal"
+                                    data-target="#frmRemoveGeo"
+                                    title="{{'CYBERALARM.GEOLOCALIZACION.REMOVE_FORM.TEXT1' | translate}}"
+                                    style="margin-right: -4px !important;">
+                                    <div class="icon-delete-circle"></div>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-4 col-lg-6 col-md-4 col-sm-4 col-xs-6 col-6 mb-1 p-1 align-self-stretch">
+                <div class="card p-2 h-100 status ko">
+                    <!-- 'status ko' para que aparezca en rojo como incidencia -->
+                    <div class="card-body p-0">
+                        <p>{{'CYBERALARM.GEOLOCALIZACION.ALIAS' | translate}}: <span class="card-data">Alias del dispositivo</span></p>
+                        <p>{{'CYBERALARM.GEOLOCALIZACION.SO' | translate}}: <span class="card-data">Sistema Operativo</span></p>
+                    </div>
+                    <div class="card-footer mt-3 p-0">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="creditcard-icon">
+                                <div class="creditcard-status ko">
+                                    <!-- ko para que aparezca en rojo como incidencia -->
+                                    <!--<div class="icon-shield-status" title="{{'CYBERALARM.GEOLOCALIZACION.PROTEGIDO' | translate}}"></div>-->
+                                    <i title="{{'CYBERALARM.GEOLOCALIZACION.NOPROTEGIDO' | translate}}" class="fas fa-circle"></i>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <button title="{{'CYBERALARM.GEOLOCALIZACION.TACK_BUTTON' | translate}}" class="delete mb-0"
+                                    data-toggle="modal"
+                                    data-target="#GeoTack"
+                                    title="{{'CYBERALARM.GEOLOCALIZACION.TACK_BUTTON' | translate}}">
+                                    <div class="icon-tack"></div>
+                                </button>
+                                <button title="{{'CYBERALARM.GEOLOCALIZACION.REMOVE_FORM.TEXT1' | translate}}" class="delete mb-0"
+                                    data-toggle="modal"
+                                    data-target="#frmRemoveGeo"
+                                    title="{{'CYBERALARM.GEOLOCALIZACION.REMOVE_FORM.TEXT1' | translate}}"
+                                    style="margin-right: -4px !important;">
+                                    <div class="icon-delete-circle"></div>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-4 col-lg-6 col-md-4 col-sm-4 col-xs-6 col-6 mb-1 p-1 align-self-stretch">
+                <div class="card scard h-100">
+                    <button class="add-plus h-100"
+                        data-toggle="modal"
+                        data-target="#frmAddGeo">
+                        <div class="icon-plus"></div>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-xs-12 pt-4 pb-4">
+        <div class="w-75 d-flex justify-content-center align-items-center text-center mx-auto">
+            <div>
+                <div class="iconback icon-add-plus-hand mr-4 mt-4"></div>
+                <span class="subtitle2 text-center">{{'CYBERALARM.GEOLOCALIZACION.TEXT7' |
+                    translate}}</span>
+                <button class="btn btn-primary mt-4" 
+                    data-toggle="modal"
+                    data-target="#frmConfigurateGeo">
+                    <div class="icon-configuration"></div>
+                    {{'CYBERALARM.GEOLOCALIZACION.EDITAR_CONFIGURACION' | translate}}  
+                </button>
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<section class="forms">
+    <div class="modal fade add-service" tabindex="-1" role="dialog" aria-hidden="true" id="frmAddGeo">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content" style="min-height: fit-content; max-width: 700px;">
+                <div class="popup-header sph">
+                    <a id="CloseDeletePopup" class="cerrar" aria-label="Close" data-dismiss="modal" >
+                        <div _ngcontent-oui-c3="" class="icon-close" data-dismiss="modal"></div>
+                    </a>
+                    <h2 class="text-left" [innerHtml]="serviceName"></h2>
+                    <div class="{{serviceIcon}}"></div>
+                </div>
+                <form>
+                    <div class="popup-body">
+                        <div class="row align-items-start">
+                            <div class="col-lg-12">
+                                <div class="greyback mb-3">
+                                    <p class="text-left">{{'CYBERALARM.GEOLOCALIZACION.TEXT1' | translate}}</p>
+                                    <div class="row align-items-start">
+                                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 m-0">
+                                            <div class="form-group">
+                                                <select class="form-control">
+                                                    <option [value]="0">{{'CYBERALARM.GEOLOCALIZACION.ADD_FORM.SO' | translate}} 
+                                                    </option>
+                                                    <option [value]="1">Android</option>
+                                                    <option [value]="2">iPhone</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                            <div class="form-group">
+                                                <input type="text" class="form-control" name="alias"
+                                                    maxlength="40" placeholder="{{'CYBERALARM.GEOLOCALIZACION.ALIAS' | translate}}">
+                                                <div>
+                                                    <div class="loginError d-inline-flex align-items-center">
+                                                        <div class="icon-exclamation-tri"></div>
+                                                        {{'CYBERALARM.GEOLOCALIZACION.ADD_FORM.VALIDATION_ALIAS1' | translate }}
+                                                    </div>
+                                                    <div class="loginError d-inline-flex align-items-center">
+                                                        <div class="icon-exclamation-tri"></div>
+                                                        {{'CYBERALARM.GEOLOCALIZACION.ADD_FORM.VALIDATION_ALIAS2' | translate }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                            <div class="form-group">
+                                                <input type="text" class="form-control"
+                                                    placeholder="{{'CYBERALARM.GEOLOCALIZACION.EMAIL' | translate}}"
+                                                    name="numberCard" maxlength="19">
+                                                <small class="subtitle text-left d-flex mt-2"><div class="icon-exclam-circle"></div> {{'CYBERALARM.GEOLOCALIZACION.ADD_FORM.TEXT1' | translate }}</small>
+                                                <div>
+                                                    <div class="loginError d-inline-flex align-items-center">
+                                                        <div class="icon-exclamation-tri"></div>
+                                                        {{'CYBERALARM.GEOLOCALIZACION.ADD_FORM.VALIDATION_EMAIL1' | translate }}
+                                                    </div>
+                                                    <div class="loginError d-inline-flex align-items-center">
+                                                        <div class="icon-exclamation-tri"></div>
+                                                        {{'CYBERALARM.GEOLOCALIZACION.ADD_FORM.VALIDATION_EMAIL2' | translate }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="popup-footer text-left" style="padding-bottom: 21px;">
+                        <button type="submit" class="btn btn-primary" data-dismiss="modal">
+                            <div>{{ 'CYBERALARM.GEOLOCALIZACION.ADD_FORM.ACTIVATION_BUTTON' | translate }}
+                            </div>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade add-service" tabindex="-1" role="dialog" aria-hidden="true" id="frmGeo">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content" style="min-height: 400px; max-width: 700px;">
+                <div class="popup-header sph">
+                    <a id="CloseDeletePopup" class="cerrar" aria-label="Close" data-dismiss="modal" >
+                        <div _ngcontent-oui-c3="" class="icon-close"></div>
+                    </a>
+                    <h2 class="text-left" [innerHtml]="serviceName"></h2>
+                    <div class="{{serviceIcon}}"></div>
+                </div>
+                <div class="popup-body">
+                    <div class="row align-items-start">
+                        <div class="col-lg-12">
+                            <div class="greyback mb-3">
+                                <h6 class="text-center">{{ 'CYBERALARM.GEOLOCALIZACION.TEXT8' | translate }}</h6>
+                                <p class="text-center"><u>{{ 'CYBERALARM.GEOLOCALIZACION.TEXT9' | translate }}</u> {{ 'CYBERALARM.GEOLOCALIZACION.TEXT10' | translate }}</p>
+                                <h6 class="text-center mt-4">{{ 'CYBERALARM.GEOLOCALIZACION.TEXT11' | translate }}</h6>
+                                <div class="row align-items-start">
+                                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12 m-0">
+                                        <a href="https://apps.apple.com/es/app/ciberalarma-navegaci%C3%B3n-segura/id1400113000" target="_blank">
+                                            <img src="{{staticContentUrl+'img/art/descarga-proteccion-appstore.png'}}" alt="{{ 'CYBERALARM.GEOLOCALIZACION.TEXT13' | translate }}" width="150" height="auto">
+                                        </a>
+                                    </div>
+                                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12 m-0">
+                                        <a href="https://play.google.com/store/apps/details?id=com.vpn.ciberalarma&amp;hl=es_419" target="_blank">
+                                            <img src="{{staticContentUrl+'img/art/descarga-proteccion-googleplay.png'}}" alt="{{ 'CYBERALARM.GEOLOCALIZACION.TEXT12' | translate }}" width="150" height="auto">
+                                        </a>
+                                    </div>
+                                </div>
+                                <h6 class="text-center mt-4">{{ 'CYBERALARM.GEOLOCALIZACION.ACTIVATION_CODE' | translate }}: <strong>XXXXXXXXXXXXXX</strong></h6>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="popup-footer text-left">
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade add-service" tabindex="-1" role="dialog" aria-hidden="true" id="frmRemoveGeo">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content" style="min-height: 200px; max-width: 700px;">
+                <div class="popup-header sph">
+                    <a id="CloseDeletePopup" class="cerrar" aria-label="Close" data-dismiss="modal">
+                        <div _ngcontent-oui-c3="" class="icon-close" data-dismiss="modal"></div>
+                    </a>
+                    <h2 class="text-left">{{ 'CYBERALARM.GEOLOCALIZACION.REMOVE_FORM.TEXT1' | translate }}</h2>
+                </div>
+                <form>
+                    <div class="popup-body">
+                        <div class="row align-items-start">
+                            <div class="col-lg-12">
+                                <p class="text-left mb-4">{{'CYBERALARM.GEOLOCALIZACION.REMOVE_FORM.SURE1' | translate}}
+                                    <span>Nombre de dispositivo</span>? {{'CYBERALARM.GEOLOCALIZACION.REMOVE_FORM.SURE2' |
+                                    translate}}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="popup-footer text-left">
+                        <button type="submit" class="btn btn-primary w-25">
+                            <div>
+                                {{'CYBERALARM.GEOLOCALIZACION.REMOVE_FORM.DELETE_BUTTON' | translate}}
+                            </div>
+                        </button>
+                        <a class="btn mx-3" data-dismiss="modal">{{'CANCEL' | translate}}</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade add-service" tabindex="-1" role="dialog" aria-hidden="true" id="frmConfigurateGeo">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content" style="min-height: 200px; max-width: 700px;">
+    
+                <div class="popup-header sph">
+                    <a id="CloseDeletePopup" class="cerrar" aria-label="Close" data-dismiss="modal" >
+                        <div _ngcontent-oui-c3="" class="icon-close" data-dismiss="modal"></div>
+                    </a>
+                    <h2 class="text-left" [innerHtml]="serviceName"></h2>
+                    <div class="{{serviceIcon}}"></div>
+                </div>
+                <div class="popup-body des m-0">
+                    <div class="div">
+                        <p>{{ 'CYBERALARM.GEOLOCALIZACION.CONFIGURACION_DESCRIPCION' | translate }}</p>
+                        <form>
+                            <div class="form-group">
+                                <div class="custom-control custom-switch mt-1 mb-1">
+                                    <input type="checkbox" class="custom-control-input" id="" name="">
+                                    <label class="custom-control-label title" for="">{{ 'CYBERALARM.GEOLOCALIZACION.CONFIGURACION_SEGURIDAD' | translate }}</label>
+                                </div>
+                                <p class="mb-2">{{ 'CYBERALARM.GEOLOCALIZACION.DESCRIP_CONFIGURACION_SEGURIDAD' | translate }}</p>
+                            </div>
+                            <hr class="mt-1 mb-3">
+                            <div class="form-group">
+                                <div class="custom-control custom-switch mt-1 mb-1">
+                                    <input type="checkbox" class="custom-control-input" id="" name="">
+                                    <label class="custom-control-label title" for="">{{ 'CYBERALARM.GEOLOCALIZACION.CONFIGURACION_PUBLICIDAD' | translate }}</label>
+                                </div>
+                                <p class="mb-2">{{ 'CYBERALARM.GEOLOCALIZACION.DESCRIP_CONFIGURACION_PUBLICIDAD' | translate }}</p>
+                            </div>
+                            <hr class="mt-1 mb-3">
+                            <div class="form-group">
+                                <div class="custom-control custom-switch mt-1 mb-1">
+                                    <input type="checkbox" class="custom-control-input" id="" name="">
+                                    <label class="custom-control-label title" for="">{{ 'CYBERALARM.GEOLOCALIZACION.CONFIGURACION_ADULTOS' | translate }}</label>
+                                </div>
+                                <p class="mb-2">{{ 'CYBERALARM.GEOLOCALIZACION.DESCRIP_CONFIGURACION_ADULTOS' | translate }}</p>
+                            </div>
+                            <hr class="mt-1 mb-3">
+                            <div class="form-group">
+                                <div class="custom-control custom-switch mt-1 mb-1">
+                                    <input type="checkbox" class="custom-control-input" id="" name="">
+                                    <label class="custom-control-label title" for="">{{ 'CYBERALARM.GEOLOCALIZACION.CONFIGURACION_LADRON_TIEMPO' | translate }}</label>
+                                </div>
+                                <p class="mb-2">{{ 'CYBERALARM.GEOLOCALIZACION.DESCRIP_CONFIGURACION_LADRON_TIEMPO' | translate }}</p>
+                            </div>
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary w-auto text-left d-block">
+                                    <div>
+                                        {{ 'CYBERALARM.GEOLOCALIZACION.ADD_FORM.CONFIGURATION_BUTTON' | translate }}
+                                    </div>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="popup-footer text-left">
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

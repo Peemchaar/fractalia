@@ -1,0 +1,40 @@
+<section id="header">
+  <app-service-header 
+    [serviceName] = "ciberalarmaService.serviceName"
+    [serviceLongDesc] = "ciberalarmaService.longDesc"
+    [serviceDesc] = "ciberalarmaService.serviceDesc"
+    [serviceIcon] = "ciberalarmaService.serviceIcon">
+  </app-service-header>
+</section>
+  
+  <section class="dashboard-page mr-3 ml-3 pl-1 mt-3">
+    <div class="container-fluid">
+      <div class="card">
+        <div class="container-fluid">
+          <div class="row grid-divider justify-content-center">
+            <div class="col-xl-4 col-lg-6 col-md-12 col-sm-12 d-flex pt-5 justify-content-center align-items-center">
+              <div class="justify-content-center mb-5">
+                <div class="align-items-center">
+                  <!-- <h5 class="ps">{{'CIBERALARMA.TEXT_NAV1' | translate}}</h5>
+                  <p class="ps">{{'CIBERALARMA.TEXT_NAV2' | translate}}</p> -->
+                  <button [disabled]="loading" class="btn btn-primary mt-3" (click)="accessCiberalarma()">
+                    <nz-spinner *ngIf="loading"></nz-spinner>
+                    <div *ngIf="!loading">{{'CIBERALARMA.ACCESS_BUTTON' | translate}}</div>
+                  </button>
+                  <div class="alert-danger" *ngIf="error">
+                    <br>
+                    {{'CIBERALARMA.ACCESS_NOT_AVAILABLE' | translate}}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-xl-4 col-lg-6 col-md-12 col-sm-12 justify-content-center d-flex align-items-center">
+              <div class="text-center">
+                <img src="{{staticContentUrl+'img/art/ciberalarma-logo.png'}}" width="215" heigth="" alt="Ciberalarma" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>

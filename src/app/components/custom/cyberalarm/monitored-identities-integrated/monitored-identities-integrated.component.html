@@ -1,0 +1,601 @@
+<section *ngIf="serviceCard ">
+    <div class="card-header">
+      <div class="icontext">
+        <div class="icon-robo-identidad neutral-black"></div>
+        <h4 [innerHTML]="serviceName" class="neutral-black custom-h4"></h4>
+      </div>
+
+      <button class="simplebtnheader cyber-mt8 mt-0"
+        (click)="open(monitoredIdentitiesService.serviceName, monitoredIdentitiesService.longDesc, monitoredIdentitiesService.icon)">
+        <div class="icon-info main-disabled"></div>
+      </button>
+    </div>
+    <div *ngIf="globalLoading">
+        <div class="app-loading">
+            <div class="logo">
+                <img src="{{partnerService.preloaderImage}}" width="100" height="100">
+            </div>
+        </div>
+    </div>
+    <div class="card-body pr-0 pl-0 mt-0" *ngIf="!globalLoading">
+        <div class="h-100 row mr-0 ml-0 justify-content-center align-items-center" >
+            <!-- ACTIVATION SECTION -->
+            <section *ngIf="monitoredIdentitiesService.identities.length === 0 ">
+                <div class="icon-robo-identidad mb-2 mt-4 mx-auto main-primary cyber-main-icon">
+                </div>
+                <div class="col-sm-12 mb-1">
+                    <h2 class="text-center neutral-black cyb-body-title">
+                        {{'CYBERALARM.IDENTITIES.TEXT2' | translate}}
+                    </h2>
+                </div>
+                <div class="col-sm-12 mb-4 pr-0 pl-0 align-items-center">
+                    <p class="text-center cyb-body-text">
+                        {{'CYBERALARM.IDENTITIES.TEXT3' | translate}}
+                    </p>
+                </div>
+                <div class="col-sm-12 mb-3 cyb-body-button">
+                    <button class="btn btn-primary text-uppercase" data-toggle="modal"
+                        data-target="#frmAddIdentity">
+                        {{'CYBERALARM.IDENTITIES.ADD_EMAIL'| translate}}
+                    </button>
+                </div>
+            </section>
+            <!-- DASHBOARD SECTION -->
+            <section class="w-100" *ngIf="monitoredIdentitiesService.identities.length > 0 ">
+                <div class="mt-4 pl-4 pr-4 d-flex justify-content-between row mr-0 ml-0">
+                    <div class="col-lg-6 col-md-12 col-sm-12 sumary-l ">
+                        <div class="identities-sumary d-flex justify-content-between">
+                            <span class="fs-16 lh-19 mb-0 neutral-black">
+                                {{'CYBERALARM.IDENTITIES.TEXT5' | translate}}
+                            </span>
+                            <h3 class="fs-24 lh-19 mb-0 neutral-black">
+                                {{totalIdentities}}
+                            </h3>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-12 col-sm-12 sumary-r">
+                        <div class="identities-sumary d-flex justify-content-between">
+                            <div class="clipper">
+                                <div class="led mr-2 semantic-danger">
+                                    <i class="fas fa-circle"></i>
+                                </div>
+                                <span class="fs-16 lh-19 mb-0 neutral-black">
+                                    {{'CYBERALARM.IDENTITIES.TEXT6' | translate}}
+                                </span>
+                            </div>
+                            <h3 class="fs-24 lh-19 mb-0 neutral-black">
+                                {{monitoredIdentitiesService.breachedIdentities}}
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-2 identity-card-container row mr-0 ml-0 d-flex col-sm-12" [ngClass]="(monitoredIdentitiesService.identities.length == 1)? 'justify-content-start' : 'justify-content-between'">
+
+                    <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-1 pt-1 pb-1 pr-0 pl-0 align-self-stretch identity-card"
+                        [ngClass]="{'single-card' : monitoredIdentitiesService.identities.length == 1, 'compact' : compactCards == true}"
+                        *ngFor="let monitoredIdentity of monitoredIdentitiesService.identities">
+                        <div class="card p-2 h-100 status" [ngClass]="monitoredIdentity.breaches === 0 ? 'ok' : 'ko'">
+
+                            <div class="card-body p-0">
+                                <p class="neutral-black fs-16 mb-0 identity-email"
+                                    [ngClass]="(compactCards) ? 'lh-19' : 'lh-29'">
+                                    <b>{{'CYBERALARM.IDENTITIES.EMAIL' | translate}}:</b> 
+                                    <span class="neutral-black fs-16 "
+                                    [ngClass]="(compactCards) ? 'lh-19' : 'lh-29'">
+                                        {{monitoredIdentity.identity}}
+                                    </span>
+                                </p>
+                                <p class="neutral-black fs-16 mb-0"
+                                    [ngClass]="(compactCards) ? 'lh-19' : 'lh-29'">
+                                    <b>{{'CYBERALARM.IDENTITIES.LASTANALISYS' | translate}}</b> 
+                                    <span class="neutral-black fs-16"
+                                    [ngClass]="(compactCards) ? 'lh-19' : 'lh-29'">
+                                        {{monitoredIdentity.lastAnalysisDate}}
+                                    </span>
+                                </p>
+                            </div>
+
+                            <div class="card-footer p-0">
+                                <div class="d-flex align-items-center"
+                                    [ngClass]="(compactCards) ? 'justify-content-end' : 'justify-content-between'">
+                                    <div class="creditcard-icon" *ngIf="!compactCards">
+                                        <div class="creditcard-status">
+                                            <div *ngIf="monitoredIdentity.breaches === 0" class="d-flex">
+                                                <div class="icon-shield-check semantic-success fs-24 fade-infinite"></div>
+                                                <span class="ml-2 semantic-success align-self-center fs-16 lh-19"><b>{{'CYBERALARM.IDENTITIES.PROTECTING' | translate}}</b></span>
+                                            </div>
+                                            <div *ngIf="monitoredIdentity.breaches > 0" class="d-flex">
+                                                <div class="icon-shield-cross semantic-danger fs-24"></div>
+                                                <span class="ml-2 semantic-danger align-self-center fs-16 lh-19"><b>{{'CYBERALARM.IDENTITIES.DANGER' | translate}}</b></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex justify-content-end">
+                                        <div class="d-flex align-items-center mr-2 cursor-pointer"
+                                            *ngIf="monitoredIdentity.breaches > 0"
+                                            data-toggle="modal"
+                                            data-target="#breachModal"
+                                            (click)="getIdentityBreach(monitoredIdentity.identityId)"> 
+                                            <div class="icon-warning fs-18 semantic-danger"></div>
+                                        </div>
+                                        <div class="d-flex align-items-center cursor-pointer"
+                                        data-toggle="modal"
+                                        data-target="#removeIdentity"
+                                        (click)="getSelectedIdentity(monitoredIdentity.identityId)">
+                                            <div class="icon-trash fs-20 main-secondary">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <ng-container *ngIf="monitoredIdentitiesService.identities.length !== 0 ">
+                        <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-1 pt-1 pb-1 pr-0 pl-0 align-self-stretch identity-card"
+                            [ngClass]="(compactCards) ? 'compact' : ''"
+                            *ngIf="showAddCard">
+                            <div class="card scard h-100">
+                                <button class="add-plus h-100" 
+                                data-toggle="modal"
+                                data-target="#frmAddIdentity">
+                                    <div class="mx-auto icon-plus main-disabled fs-20"></div>
+                                    <span class="fs-14 lh-16 mx-auto plus-text main-disabled"
+                                    [ngClass]="(compactCards) ? '' : 'mt-2'">
+                                        {{'CYBERALARM.IDENTITIES.TEXT7' | translate}}
+                                    </span>
+                                </button>
+                            </div>
+                        </div>
+                    </ng-container>
+                </div>
+            </section>
+        </div>
+    </div>
+</section>
+
+<div class="modal fade pr-1 pl-1" id="breachModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content breachModal">
+            <div class="new-modal-header row ml-4">
+                <div class="col-sm-12 d-flex justify-content-end">
+                    <button type="button" id="closeModal" class="new-close col-1 pr-0" aria-label="Close" data-dismiss="modal">
+                        <div class="icon-close" data-dismiss="modal"></div>
+                    </button>
+                </div>
+            </div>
+            <section class="row mt-2 mr-4 ml-4 mb-4">
+                <div class="col-sm-12 pl-0 pr-0 d-flex justify-content-center">
+                    <div class="new-modal-img mb-4 mt-0 fs-78 icon-warning semantic-danger"></div>
+                </div>
+                <div class="col-sm-12 pl-0 pr-0 mb-2 d-flex justify-content-center">
+                    <h4 class="wizard-modal-title fs-20 lh-24 neutral-black">{{'CYBERALARM.IDENTITIES.BREACH_MODAL.TITLE' | translate}}</h4>
+                </div>
+                <div class="col-sm-12 pl-0 pr-0 d-flex justify-content-center">
+                    <p class="wizard-modal-text neutral-black fs-16 lh-19"
+                    [innerHTML]="'CYBERALARM.IDENTITIES.BREACH_MODAL.TEXT1' | translate: { email: breachedIdentity.identity}">
+                    </p>
+                </div>
+                <div class="col-sm-12 pl-0 pr-0 d-flex flex-column justify-content-center">
+                    <p class="wizard-modal-text neutral-black fs-16 lh-19 mb-0">
+                    {{'CYBERALARM.IDENTITIES.BREACH_MODAL.TEXT2' | translate}}
+                    </p>
+                    <li *ngFor="let breach of currentBreach"
+                        class="wizard-modal-text neutral-black mt-0 mb-0 fs-16 lh-19">
+                        <b>{{breach.name}}</b>
+                    </li>
+                    <p class="wizard-modal-text neutral-black mt-3 fs-16 lh-19">
+                        {{'CYBERALARM.IDENTITIES.BREACH_MODAL.TEXT3' | translate}}
+                    </p>
+                </div>
+                <div class="col-sm-12 pl-0 pr-0  d-flex flex-column justify-content-center" >
+                    <div *ngFor="let breach of currentBreach"
+                        class="breach-info mb-3 d-flex justify-content-between" >
+                        <img src="{{staticContentUrl+'img/breach.png'}}" alt="">
+                        <p class="neutral-black fs-14 lh-16 mb-0"
+                            [innerHTML]="breach.description">
+                        </p>
+                    </div>
+                </div>
+                <div class="col-sm-12 pl-0 pr-0 d-flex justify-content-center">
+                    <p class="wizard-modal-text neutral-black fs-16 lh-19">
+                        {{'CYBERALARM.IDENTITIES.BREACH_MODAL.TEXT4' | translate}}
+                    </p>
+                </div>
+                <div class="col-sm-12 mt-3 pl-0 pr-0 justify-content-end d-flex">
+                    <button
+                        class="btn btn-primary wizard-modal-btn"
+                        data-dismiss="modal">
+                        <nz-spinner *ngIf="loading"></nz-spinner>
+                        <div *ngIf="!loading" class="text-uppercase">
+                        {{'WIZARD.BTNS.CLOSE' | translate}}
+                        </div>
+                    </button>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade pr-1 pl-1" id="removeIdentity" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" style="max-height: 500px; min-height: 480px; max-width: 400px;">
+            <div class="new-modal-header row ml-4">
+                <div class="col-sm-12 d-flex justify-content-end">
+                    <button type="button" id="closeModalRemove" class="new-close col-1 pr-0" aria-label="Close" data-dismiss="modal">
+                        <div class="icon-close" data-dismiss="modal"></div>
+                    </button>
+                </div>
+            </div>
+  
+            <section class="row mt-2 mr-4 ml-4 mb-4">
+                <div class="col-sm-12 pl-0 pr-0 d-flex justify-content-center">
+                    <div class="new-modal-img mb-4 mt-0 fs-78 icon-trash neutral-black"></div>
+                </div>
+                <div class="col-sm-12 pl-0 pr-0 mb-2 d-flex justify-content-center">
+                    <h4 class="wizard-modal-title fs-20 lh-24 neutral-black">{{'CYBERALARM.IDENTITIES.REMOVE_FORM.SURE1' | translate}}</h4>
+                </div>
+                <div class="col-sm-12 pl-0 pr-0 d-flex justify-content-center">
+                    <p class="wizard-modal-text neutral-black fs-16 lh-19">
+                        {{'CYBERALARM.IDENTITIES.REMOVE_FORM.SURE2' | translate}}
+                    </p>
+                </div>
+                <div class="col-sm-12 pl-0 pr-0 d-flex justify-content-center">
+                    <p class="wizard-modal-text neutral-black fs-16 lh-19">
+                        <b>{{selectedIdentity.identity}}</b>
+                    </p>
+                </div>
+                <div class="col-sm-12 pl-0 pr-0 wizard-modal-btns d-flex">
+                    <button
+                        class="btn btn-outline-secondary wizard-modal-btn mr-2"
+                        [ngClass]="(loading)? 'focus' : ''"
+                        data-dismiss="modal">
+                        <nz-spinner *ngIf="loading"></nz-spinner>
+                        <div *ngIf="!loading" class="text-uppercase">
+                        {{'CANCEL' | translate}}
+                        </div>
+                    </button>
+                    <button
+                        class="btn btn-primary wizard-modal-btn"
+                        (click)="deleteIdentity()">
+                        <nz-spinner *ngIf="loading"></nz-spinner>
+                        <div *ngIf="!loading" class="text-uppercase">
+                        {{'COMP_GRAVITY.REMOVE_FORM.DELETE_BUTTON' | translate}}
+                        </div>
+                    </button>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade pr-1 pl-1" id="frmAddIdentity" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" style="max-width: 400px;">
+            <div class="new-modal-header row ml-4 mt-21">
+                <h4 *ngIf="!success" class="new-modal-title col-11 pl-0 pr-0 fs-20 lh-24 neutral-black">
+                    {{monitoredIdentitiesService.serviceName}}
+                </h4>
+                <h4 *ngIf="success" class="new-modal-title col-11 pl-0 pr-0"></h4>
+                <button type="button" id="addModalClose" class="new-close col-1 pr-0" aria-label="Close" data-dismiss="modal">
+                    <div class="icon-close" data-dismiss="modal"></div>
+                </button>
+                <p class="right-card-text" *ngIf="!success">{{'CYBERALARM.IDENTITIES.ADD_FORM.TEXT1' | translate}}</p>
+                <div class="form-group col-lg-12 col-md-12 col-sm-12 mt-2 pl-0 pr-0 mb-0" *ngIf="!success">
+                    <label class="w-100 fs-12 ">
+                        {{'CYBERSCORING.FORMULARIO_CYBERSCORING_REQUIRED' | translate}}
+                    </label>
+                </div>
+            </div>
+            <section class="row mt-2 mr-4 ml-4">
+                <div class="col-sm-12 pl-0 pr-0 d-flex justify-content-center" *ngIf="success">
+                <img class="new-modal-img mw-66"
+                    src="{{staticContentUrl+'img/check-circle-outline.png'}}">
+                </div>
+                <div class="col-sm-12 pl-0 pr-0 d-flex justify-content-center flex-column mt-3" *ngIf="success">
+                    <h3 class="text-center mb-2 fs-20 lh-24">{{'CYBERALARM.IDENTITIES.ADD_FORM.RESULT_OK' | translate}}</h3>
+                    <p class="pl-3 pr-3 text-center right-card-text">{{'CYBERALARM.IDENTITIES.ADD_FORM.RESULT_OK_TEXT' | translate}}</p>
+                </div>
+                <form class="col-sm-12 pl-0 pr-0 " [formGroup]="addIdentityForm" (ngSubmit)="addIdentity()" (keydown.enter)="$event.preventDefault()">
+                    <div class="form-group col-md-12 col-sm-12 pl-0 pr-0 no-padding-responsive" *ngIf="!success">
+                        <label class="modal-form-label neutral-black" >
+                            {{'CYBERALARM.IDENTITIES.ADD_FORM.EMAIL' | translate}} *
+                        </label>
+                        <div class="input-group">
+                            <input type="text" formControlName="identity"
+                                class="form-control new-input mr-3"
+                                name="identity" maxlength="120"
+                                #identity
+                                [attr.disabled]="(dataEmails.length + monitoredIdentitiesService.identities.length) >= monitoredIdentitiesService.maxIdentitiesByUser? 'disabled' : null">
+                            <div class="input-group-append">
+                                <button type="button" class="btn btn-outline-secondary text-center d-block ml-0 main-secondary text-uppercase"
+                                    [attr.disabled]="(dataEmails.length + monitoredIdentitiesService.identities.length) >= monitoredIdentitiesService.maxIdentitiesByUser? 'disabled' : null"
+                                    (click)="addEmail(identity.value)">{{'CYBERSCORING.BUTTON_ADD' | translate}}
+                                </button>
+                            </div>
+                        </div>
+                        <p class="col-12 pl-0 mb-0 field-desc main-secondary">
+                            {{'CYBERALARM.IDENTITIES.ADD_FORM.MAX' | translate: { maxAccount: monitoredIdentitiesService.maxIdentitiesByUser} }}
+                        </p>
+                    </div>
+                    <div class="form-group col-md-12 col-sm-12 pl-0 pr-0 no-padding-responsive" *ngIf="dataEmails.length > 0 && !success">
+                        <label class="modal-form-label neutral-black fs-16 lh-19">
+                            {{'CYBERALARM.IDENTITIES.ADD_FORM.EMAIL_PROTECT' | translate}} 
+                        </label>
+                    </div>
+                    <div class="form-group cyberscoring-form col-md-8 col-8 pt-0 pl-0 pr-0 pb-0 no-padding-responsive"
+                        *ngIf="dataEmails.length > 0 && !success">
+                        
+                        <div class="emailContainer" *ngFor="let email of dataEmails">
+                            <div class="col-md-12 float-left domain pl-0 pt-1 pb-1 pr-1 mb-1 ml-4">
+                                <div class="input-group-append p-0 justify-content-between">
+                                    <span class="col-md-10 col-10 pr-0 fs-12">{{email}}</span>
+                                    <a href="javascript:void(0)" class="col-1 p-0" *ngIf="!readonlyFields"
+                                        (click)="deleteEmail(email)">
+                                        <div class="myicons-delete fs-20"></div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-12 col-sm-12 col-12 pl-0 pr-0 no-padding-responsive" *ngIf="dataEmails.length > 0 && success">
+                        <label class="modal-form-label neutral-black fs-16 lh-19">
+                            {{'CYBERALARM.IDENTITIES.ADD_FORM.EMAIL_PROTECTED' | translate}} 
+                        </label>
+                    </div>
+                    <div class="form-group cyberscoring-form col-md-8 col-8 pt-0 pl-0 pr-0 pb-0 no-padding-responsive" *ngIf="dataEmails.length > 0 && success">
+                        <div class="emailContainer" *ngFor="let email of dataEmails">
+                            <div class="col-md-12 float-left domain pl-0 pt-1 pb-1 pr-1 mb-1 ml-4" >
+                                <div class="input-group-append p-0 justify-content-between">
+                                    <span class="col-md-10 col-10 pr-0 fs-12 ">{{email}}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <div class="form-group col-lg-12 pl-0 pr-0 identity-btns d-flex justify-content-end">
+                        <section class="d-flex justify-content-between">
+                            <button type="button" class="btn btn-outline-secondary text-center d-block mr-2 main-secondary text-uppercase" *ngIf="!success"
+                                (click)="closeAddModal()"
+                                [disabled]="loading">
+                                <nz-spinner *ngIf="loading"></nz-spinner>
+                                <div *ngIf="!loading">{{'CANCEL' | translate}}</div>
+                            </button>
+                            <button type="submit" class="btn btn-primary text-center d-block"  *ngIf="!success"
+                                [disabled]="dataEmails.length==0 || loading">
+                                <nz-spinner *ngIf="loading"></nz-spinner>
+                                <div *ngIf="!loading">{{'CYBERALARM.IDENTITIES.ADD_FORM.BTN' | translate}}</div>
+                            </button>
+                            <button data-dismiss="modal" class="btn btn-primary text-center d-block" *ngIf="success"
+                                [disabled]="loading" (click)="closeAddModal()">
+                                <nz-spinner *ngIf="loading"></nz-spinner>
+                                <div *ngIf="!loading">{{'CERRAR' | translate}}</div>
+                            </button>
+                        </section>
+                    </div>
+                </form>
+            </section>
+        </div>
+    </div>
+</div>
+
+
+
+  
+
+
+
+
+
+
+
+<!-- Estado inicial para meter la primera credencial -->
+<!-- <div class="row h-100" *ngIf="monitoredIdentitiesService.identities.length === 0 ">
+    <div class="col-xl-3 col-lg-2 col-md-1 col-sm-1 col-1 pt-4 mb-2">
+
+    </div>
+    <div class="col-xl-6 col-lg-8 col-md-10 col-sm-10 col-10 pt-4 mb-2">
+        <div class="cg-icon text-center d-block mx-auto mb-3">
+            <div class="icon-proteccion-vida-digital"></div>
+        </div>
+        <h6 class="text-center">{{'CYBERALARM.IDENTITIES.TEXT2' | translate}}</h6>
+        <p class="text-center">{{'CYBERALARM.IDENTITIES.TEXT3' | translate}}</p>
+        <div class="d-flex justify-content-center mt-4 mb-2">
+            <form class="form-inline fism">
+                <button type="submit" class="btn btn-primary w-auto mb-2"
+                    data-toggle="modal"
+                    data-target="#frmAddIdentity">
+                    {{'CYBERALARM.IDENTITIES.ADD_EMAIL' | translate}}
+                </button>
+            </form>
+        </div>
+    </div>
+    <div class="col-xl-3 col-lg-2 col-md-1 col-sm-1 col-1 pt-4 mb-2">
+
+    </div>
+</div>
+
+<div class="h-100 row grid-divider">
+    <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-xs-12 pt-4 pb-4"
+        *ngIf="monitoredIdentitiesService.identities.length !== 0 ">
+        <div class="w-75 d-block mx-auto">
+            <span class="title d-block text-center mb-4">{{'CYBERALARM.IDENTITIES.TEXT5' |
+                translate}}</span>
+            <h3 class="d-block text-center mb-5">{{monitoredIdentitiesService.protectedIdentities}}</h3>
+            <span class="title d-block text-center mb-4">{{'CYBERALARM.IDENTITIES.TEXT6' |
+                translate}}</span>
+            <h3 class="d-block text-center">{{monitoredIdentitiesService.breachedIdentities}}</h3>
+        </div>
+    </div>
+    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12 col-12 pt-3 pb-4">
+        <div class="row align-items-start cards-services pr-3 pl-3"
+            *ngIf="monitoredIdentitiesService.identities.length !== 0 ">
+
+            <div class="col-xl-4 col-lg-6 col-md-4 col-sm-4 col-xs-6 col-6 mb-1 p-1 align-self-stretch"
+                *ngFor="let monitoredIdentity of monitoredIdentitiesService.identities">
+                <div class="card p-2 h-100 status" [ngClass]="monitoredIdentity.breaches === 0 ? 'ok' : 'ko'">
+
+                    <div class="card-body p-0">
+                        <p>{{'CYBERALARM.IDENTITIES.EMAIL' | translate}}: <span
+                                class="card-data">{{monitoredIdentity.identity}}</span></p>
+                    </div>
+
+                    <div class="card-footer mt-3 p-0">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="creditcard-icon">
+                                <div class="creditcard-status"
+                                    [ngClass]="monitoredIdentity.breaches === 0 ? 'ok' : 'ko'">
+                                   
+                                    <div *ngIf="monitoredIdentity.breaches === 0" class="icon-shield-status"
+                                        title="Tarjeta protegida"></div>
+                                    <i *ngIf="monitoredIdentity.breaches !== 0" title="Tarjeta protegida"
+                                        class="fas fa-circle"></i>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center">
+                              <button title="Informacion de Vulnerabilidades" class="delete mb-0"
+                                    (click)="getIdentityBreach(monitoredIdentity.identityId)"
+                                    style="margin-right: -4px !important;">
+                                    <div class="icon-more-info"></div>
+                                </button>
+                                <button title="Eliminar email" class="delete mb-0"
+                                    data-toggle="modal"
+                                    data-target="#frmRemoveIdentity"
+                                    (click)="getSelectedIdentity(monitoredIdentity.identityId)"
+                                    style="margin-right: -4px !important;">
+                                    <div class="icon-delete-circle"></div>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <ng-container *ngIf="monitoredIdentitiesService.identities.length !== 0 ">
+                <div class="col-xl-4 col-lg-6 col-md-4 col-sm-4 col-xs-6 col-6 mb-1 p-1 align-self-stretch"
+                    *ngFor="let card of fakeArray(monitoredIdentitiesService.maxIdentitiesByUser - monitoredIdentitiesService.identities.length); let m = index">
+                    <div class="card scard h-100" *ngIf="!monitoredIdentitiesService.canAddIdentities">
+                        <button class="add-plus h-100"
+                        data-toggle="modal"
+                        data-target="#frmAddIdentity">
+                            <div class="icon-plus"></div>
+                        </button>
+                    </div>
+                </div>
+            </ng-container>
+        </div>
+
+        <section class="forms">
+            <div class="modal fade add-service" tabindex="-1" role="dialog" aria-hidden="true" id="frmAddIdentity">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content" style="min-height: fit-content; max-width: 700px;">
+                        <div class="popup-header sph">
+                            <a id="CloseDeletePopup" class="cerrar"
+                                data-dismiss="modal" (click)="reloadForm()" *ngIf="!loading">
+                                <div _ngcontent-oui-c3="" class="icon-close" data-dismiss="modal"></div>
+                            </a>
+                            <h2 class="text-left" [innerHTML]="serviceName"></h2>
+                            <div class="{{serviceIcon}}"></div>
+                        </div>
+
+                        <form [formGroup]="addIdentityForm" (ngSubmit)="addIdentity()">
+                            <div class="popup-body">
+                                <div class="row align-items-start">
+                                    <div class="col-lg-12">
+                                        <div class="greyback mb-3">
+                                            <p class="text-left">{{'CYBERALARM.IDENTITIES.ADD_FORM.TEXT1' | translate}}</p>
+                                            <div class="form-group">
+                                                <input type="text" formControlName="identity" class="form-control"
+                                                name="identity" maxlength="120"
+                                                placeholder="{{'CYBERALARM.IDENTITIES.ADD_FORM.EMAIL' | translate}}">
+
+                                                <input type="button" class="btn btn-secondary btn-sm" value="añadir" (click)="AgregarEmail()">
+                                                <div *ngFor="let item of emails" >
+                                                    {{item.identity}}
+                                                </div>
+
+                                                <div
+                                                    *ngIf="(inputIdentity.invalid && inputIdentity.touched) || inputIdentity.dirty">
+                                                    <div *ngIf="inputIdentity.errors?.required"
+                                                        class="loginError d-inline-flex align-items-center">
+                                                        <div class="icon-exclamation-tri"></div>
+                                                        {{'CYBERALARM.IDENTITIES.ADD_FORM.VALIDATION_EMAIL1' | translate }}
+                                                    </div>
+                                                    <div *ngIf="inputIdentity.errors?.validEmail"
+                                                        class="loginError d-inline-flex align-items-center">
+                                                        <div class="icon-exclamation-tri"></div>
+                                                        {{'CYBERALARM.IDENTITIES.ADD_FORM.VALIDATION_EMAIL2' | translate }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="popup-footer text-left" style=" padding-bottom: 21px;">
+                                <div class="errormen">
+                                    <div *ngIf="showMessage" class="loginError d-inline-flex align-items-center">
+                                        <div class="icon-exclamation-tri"></div> {{errorMessage}}
+                                    </div>
+                                </div>
+                                <button type="submit" [disabled]="inputIdentity.invalid || loading" class="btn btn-primary">
+                                    <nz-spinner *ngIf="loading">loading</nz-spinner>
+                                    <div *ngIf="!loading">
+                                        {{ 'CYBERALARM.IDENTITIES.ADD_FORM.ACTIVATION_BUTTON' | translate }} 
+                                        PROTEGER
+                                    </div>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="modal fade add-service" tabindex="-1" role="dialog" aria-hidden="true" id="frmRemoveIdentity">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content" style="min-height: 200px; max-width: 700px;">
+                        <div class="popup-header sph">
+                            <a id="CloseDeletePopup" class="cerrar" href="javascript:void(0);"
+                                aria-label="Close" data-dismiss="modal">
+                                <div _ngcontent-oui-c3="" class="icon-close" data-dismiss="modal"></div>
+                            </a>
+                            <h2 class="text-left">{{ 'CYBERALARM.IDENTITIES.REMOVE_FORM.TEXT1' | translate }}</h2>
+                        </div>
+                        <form (ngSubmit)="deleteIdentity()">
+                            <div class="popup-body">
+                                <div class="row align-items-start">
+                                    <div class="col-lg-12">
+                                        <p class="text-left mb-4">{{'CYBERALARM.IDENTITIES.REMOVE_FORM.SURE1' | translate}}
+                                            <span>{{this.selectedIdentity.identity}}</span>?
+                                            {{'CYBERALARM.IDENTITIES.REMOVE_FORM.SURE2' | translate}}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="popup-footer text-left">
+                                <button type="submit" [disabled]="loading" class="btn btn-primary w-25">
+                                    <nz-spinner *ngIf="loading">loading</nz-spinner>
+                                    <div *ngIf="!loading">
+                                        {{ 'CYBERALARM.IDENTITIES.REMOVE_FORM.DELETE_BUTTON' | translate }}
+                                    </div>
+                                </button>
+                                <a class="btn mx-3" href="javascript:void(0)" data-dismiss="modal">{{'CANCEL' |translate}}</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+    <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-xs-12 pt-4 pb-4"
+        *ngIf="monitoredIdentitiesService.maxIdentitiesByUser - monitoredIdentitiesService.identities.length !== 0 && monitoredIdentitiesService.identities.length !== 0">
+        <div class="w-75 d-flex justify-content-center align-items-center text-center mx-auto">
+            <div>
+                <div class="iconback icon-add-plus-hand mr-4 mt-4"></div>
+                <span class="subtitle2 text-center">{{'CYBERALARM.IDENTITIES.TEXT7' |
+                    translate}}</span>
+            </div>
+        </div>
+    </div>
+</div> -->

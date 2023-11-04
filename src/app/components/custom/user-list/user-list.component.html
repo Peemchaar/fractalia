@@ -1,0 +1,425 @@
+<section id="header">
+    <div class="container-fluid">
+        <ul class="navbar-nav float-left mr-auto ml-3 pl-1">
+            <li class="nav-item">
+                <small>&nbsp;</small>
+            </li>
+            <li class="nav-item">
+                <h4>{{'MULTIUSER.TEXT1' | translate}}</h4>
+            </li>
+        </ul>
+    </div>
+</section>
+
+<section class="user-list ml-3 pl-1">
+    <div class="container-fluid m767 pr-4">
+        <br /><br /><br />
+        <div class="datausers mt-2">
+            <div class="card mb-5">
+                <div class="row align-items-center" *ngIf="totalUsers > 0">
+                    <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12">
+                        <ul class="">
+                            <li>
+                                <a class="btn btn-primary" href="javascript:void(0)" (click)="validateAddUser()" [class.disabled]="totalUsers==0">
+                                    <div class="icon-user-plus"></div> {{'MULTIUSER.ADD_USER_TEXT' | translate}}
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-xl-9 col-lg-9 col-md-12 col-sm-12">
+                        <ul class="d-inline-flex align-items-center list">
+                            <li class="d-inline-flex align-items-center grey">
+                                <div class="icon-users"></div> {{'MULTIUSER.TOTAL_USERS' | translate}}:
+                                {{totalUsers}}/{{maxLicense}}
+                            </li>
+                            <li class="d-inline-flex align-items-center activegreen">
+                                <div class="icon-users"></div> {{'MULTIUSER.ACTIVE_USERS' | translate}}: {{activeUsers}}
+                            </li>
+                            <li class="d-inline-flex align-items-center desactivered">
+                                <div class="icon-users"></div> {{'MULTIUSER.NON_ACTIVE_USERS' | translate}}:
+                                {{usersNotActivated}}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="row align-items-center" *ngIf="totalUsers == 0">
+                    <div class="col-md-12">
+                        <h5 class="m-3">{{'LOAD_INFO' | translate}}</h5>
+                    </div>
+                </div>
+            </div>
+
+            <p>{{'MULTIUSER.TEXT2' | translate}}</p>
+            <div class="card">
+                <div id="accordion">
+                    <div class="card" *ngFor="let user of usersConfig">
+                        <div class="card-header" id="headingOne">
+                            <h5 class="mt-2 mb-0">
+                                <div class="d-inline-flex align-items-center">
+                                    <div class="dropdown">
+                                        <button class="" type="button" id="dropdownMenuButton" data-toggle="dropdown"
+                                            aria-haspopup="true" aria-expanded="false">
+                                            <div class="icon-menu-points" aria-hidden="true"></div>
+                                        </button>
+                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                            <a class="dropdown-item" href="javascript:void(0)"
+                                                (click)="editUser(user.userConfigId)">{{'COMP_USER_LIST.USER_INFORMATION'
+                                                | translate}}</a>
+                                            <!-- <div class="dropdown-divider"></div>
+                                            <a class="dropdown-item" href="#">Contactar usuario</a> -->
+                                            <div class="dropdown-divider" *ngIf="!user.isAdminUserId"></div>
+                                            <a class="dropdown-item" href="javascript:void(0)"
+                                                (click)="deleteUser(user.userConfigId)"
+                                                *ngIf="!user.isAdminUserId">{{'COMP_USER_LIST.REMOVE_USER' |
+                                                translate}}</a>
+                                        </div>
+                                    </div>
+                                    <div class="foto">
+                                        <img src="{{user.profileImage != null ? user.profileImage : staticContentUrl+'img/profileDefaultMenu.png'}}"
+                                            width="30" height="30" alt="{{user.name}}" />
+                                    </div>
+                                    <div>
+                                        <div class="user-status active" *ngIf="user.isActive">
+                                            <i title="{{'COMP_USER_LIST.ACTIVE_USER' | translate}}"
+                                                class="fas fa-circle"></i>
+                                        </div>
+                                        <div class="user-status inactive" *ngIf="!user.isActive">
+                                            <i title="{{'COMP_USER_LIST.INACTIVE_USER' | translate}}"
+                                                class="fas fa-circle"></i>
+                                        </div>
+                                    </div>
+                                    <span class="username">{{user.name}} {{user.surname}} {{user.surname2}}</span> <span
+                                        class="you" *ngIf="user.isAdminUserId">({{'YOU' | translate}})</span>
+                                </div>
+                                <a class="btn btn-link collapsed float-right" data-toggle="collapse"
+                                    href="#collapse{{user.userConfigId}}" role="button" aria-expanded="false"
+                                    (click)="loadInitialState(user.userConfigId)">
+                                    <div class="icon-bottom-arrow"></div>
+                                </a>
+                            </h5>
+                        </div>
+
+                        <div id="collapse{{user.userConfigId}}" class="collapse" aria-labelledby="headingOne"
+                            data-parent="#accordion">
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-responsive">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col"><span>|</span>{{'COMP_USER_LIST.SERVICE' | translate}}
+                                                </th>
+                                                <th scope="col"><span>|</span>{{'COMP_USER_LIST.ACTIVATION' |
+                                                    translate}}</th>
+                                                <th scope="col"><span>|</span>{{'COMP_USER_LIST.ASSIGNED' | translate}}
+                                                </th>
+                                                <th scope="col"><span>|</span>{{'COMP_USER_LIST.USED' | translate}}</th>
+                                                <th scope="col"><span>|</span>{{'COMP_USER_LIST.TOTAL_AVAILABLE'
+                                                    |translate}}</th>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody>
+                                            <tr *ngFor="let serviceTypeConfig of user.servicesTypeConfig"
+                                                [ngSwitch]="serviceTypeConfig.code">
+                                            <ng-container *ngIf="!serviceTypeConfig.denyEmployeeAccess">
+                                                <th scope="row">
+                                                    <p>{{serviceTypeConfig.name}}</p>
+                                                </th>
+                                                <td *ngIf="!familyUser.isCustomizable">
+                                                    <div class="service-status active"
+                                                        *ngIf="serviceTypeConfig.isActive">
+                                                        <i title="{{'COMP_USER_LIST.ACTIVE_SERVICE' | translate}}"
+                                                            class="fas fa-circle"></i>
+                                                    </div>
+                                                    <div class="service-status inactive"
+                                                        *ngIf="!serviceTypeConfig.isActive">
+                                                        <i title="{{'COMP_USER_LIST.INACTIVE_SERVICE' | translate}}"
+                                                            class="fas fa-circle"></i>
+                                                    </div>
+                                                </td>
+                                                <td *ngIf="familyUser.isCustomizable">
+                                                    <font class="tableth">{{'COMP_USER_LIST.ACTIVATION' | translate}}
+                                                    </font>
+                                                    <div class="custom-control custom-switch">
+                                                        <input type="checkbox" class="custom-control-input"
+                                                            id="serviceType_{{user.userConfigId}}_{{serviceTypeConfig.code}}"
+                                                            name="serviceType_{{user.userConfigId}}_{{serviceTypeConfig.code}}"
+                                                            [(ngModel)]="serviceTypeConfig.isActive"
+                                                            (click)="confirmDialog($event,user.userConfigId,serviceTypeConfig.code)">
+                                                        <label class="custom-control-label"
+                                                            for="serviceType_{{user.userConfigId}}_{{serviceTypeConfig.code}}"></label>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <font class="tableth">{{'COMP_USER_LIST.ASSIGNED' | translate}}
+                                                    </font>
+                                                    <div class="d-flex align-items-center dper">
+                                                        <p *ngSwitchCase="'CAC'">{{'COMP_USER_LIST.ASSIGNED_SPACE' |
+                                                            translate}}</p>
+                                                        <p *ngSwitchCase="'BAK'">{{'COMP_USER_LIST.ASSIGNED_SPACE' |
+                                                            translate}}</p>
+                                                        <p *ngSwitchDefault>{{'COMP_USER_LIST.ASSIGNED_LICENSES' |
+                                                            translate}}</p>
+                                                        <p *ngSwitchCase="'CAC'">
+                                                            {{GetSpaceWithDecimals(serviceTypeConfig.available)}}<br />
+                                                            (+{{serviceTypeConfig.assigned}} GB)</p>
+                                                        <p class="strong" *ngSwitchCase="'BAK'">
+                                                            {{GetSpaceWithDecimals(serviceTypeConfig.available)}}</p>
+                                                        <p class="strong" *ngSwitchDefault>
+                                                            {{serviceTypeConfig.assigned}}</p>
+                                                        <!--div *ngSwitchCase="'ACU'">
+                                                            <div class="service-status active"
+                                                                *ngIf="serviceTypeConfig.assigned">
+                                                                <i title="{{'COMP_USER_LIST.REQUESTED_SERVICE' | translate}}"
+                                                                    class="fas fa-circle"></i>
+                                                            </div>
+                                                            <div class="service-status inactive"
+                                                                *ngIf="!serviceTypeConfig.assigned">
+                                                                <i title="{{'COMP_USER_LIST.NOT_REQUESTED_SERVICE' | translate}}"
+                                                                    class="fas fa-circle"></i>
+                                                            </div>
+                                                        </div-->
+                                                        <div *ngSwitchCase="serviceTypeConfig.code === 'TNX' ? serviceTypeConfig.code : ''">
+                                                            <div class="service-status active"
+                                                                *ngIf="serviceTypeConfig.isActive">
+                                                                <i title="{{'COMP_USER_LIST.REQUESTED_SERVICE' | translate}}"
+                                                                    class="fas fa-circle"></i>
+                                                            </div>
+                                                            <div class="service-status inactive"
+                                                                *ngIf="!serviceTypeConfig.isActive">
+                                                                <i title="{{'COMP_USER_LIST.NOT_REQUESTED_SERVICE' | translate}}"
+                                                                    class="fas fa-circle"></i>
+                                                            </div>
+                                                        </div>
+                                                        <div *ngSwitchCase="serviceTypeConfig.code === 'ACU'  || serviceTypeConfig.code === 'ATS' || serviceTypeConfig.code === 'GRA' || serviceTypeConfig.code === 'ELE' ? serviceTypeConfig.code : ''">
+                                                            <div class="service-status active"
+                                                                *ngIf="serviceTypeConfig.assigned">
+                                                                <i title="{{'COMP_USER_LIST.REQUESTED_SERVICE' | translate}}"
+                                                                    class="fas fa-circle"></i>
+                                                            </div>
+                                                            <div class="service-status inactive"
+                                                                *ngIf="!serviceTypeConfig.assigned">
+                                                                <i title="{{'COMP_USER_LIST.NOT_REQUESTED_SERVICE' | translate}}"
+                                                                    class="fas fa-circle"></i>
+                                                            </div>
+                                                        </div>
+                                                        <!--<ng-container *ngSwitchDefault>
+                                                            <p>{{'COMP_USER_LIST.ASSIGNED_LICENSES' |
+                                                                translate}}</p>
+                                                            <p class="strong">
+                                                                {{serviceTypeConfig.assigned}}</p>
+                                                        </ng-container>-->
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <font class="tableth">{{'COMP_USER_LIST.USED' | translate}}</font>
+                                                    <div class="d-flex">
+                                                        <div class="service-status active"
+                                                            *ngIf="serviceTypeConfig.used=='' && serviceTypeConfig.isUsed">
+                                                            <i title="{{'COMP_USER_LIST.REQUESTED_SERVICE' | translate}}"
+                                                                class="fas fa-circle"></i>
+                                                        </div>
+                                                        <div class="service-status inactive"
+                                                            *ngIf="serviceTypeConfig.used=='' && !serviceTypeConfig.isUsed">
+                                                            <i title="{{'COMP_USER_LIST.NOT_REQUESTED_SERVICE' | translate}}"
+                                                                class="fas fa-circle"></i>
+                                                        </div>
+                                                        <p
+                                                            *ngIf="serviceTypeConfig.used!='' && serviceTypeConfig.code !== 'CAC'">
+                                                            {{serviceTypeConfig.used}}</p>
+                                                        <p
+                                                            *ngIf="serviceTypeConfig.used!='' && serviceTypeConfig.code === 'CAC'">
+                                                            {{GetSpaceWithDecimals(serviceTypeConfig.used)}}</p>
+                                                        <div class="icon-exclamation-tri errormen" title="Ha excedido el uso máximo"
+                                                            *ngIf="!IsCorrectSpace(serviceTypeConfig.used, serviceTypeConfig.assigned, serviceTypeConfig.available) && serviceTypeConfig.used!='' && serviceTypeConfig.code === 'CAC'">
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <font class="tableth">{{'COMP_USER_LIST.TOTAL_AVAILABLE' |
+                                                        translate}}</font>
+                                                    <div class="input-group"
+                                                        *ngIf="serviceTypeConfig.code === 'CAC' && serviceTypeConfig.isActive && hiredServices.length !== 0">
+                                                        <span class="input-group-btn"
+                                                            (click)="increaseDecreaseServiceConfig(false,serviceTypeConfig.code, user.userConfigId)">
+                                                            <button type="button" class="btn btn-default btn-number"
+                                                                data-type="minus" data-field="quant[1]">
+                                                                <i class="fas fa-minus"></i>
+                                                            </button>
+                                                        </span>
+                                                        <input type="text" name="quant[1]"
+                                                            class="form-control input-number" readonly
+                                                            [(ngModel)]="serviceTypeConfig.assigned">
+                                                        <span class="input-group-btn"
+                                                            (click)="increaseDecreaseServiceConfig(true,serviceTypeConfig.code, user.userConfigId)">
+                                                            <button type="button" class="btn btn-default btn-number"
+                                                                data-type="plus" data-field="quant[1]">
+                                                                <i class="fas fa-plus"></i>
+                                                            </button>
+                                                        </span>
+                                                    </div>
+                                                    <div class="" *ngIf="serviceTypeConfig.code === 'BAK'">
+                                                        <p>{{GetSpaceWithDecimals(serviceTypeConfig.available)}}</p>
+                                                    </div>
+                                                    <div class=""
+                                                        *ngIf="serviceTypeConfig.code !== 'CAC' && serviceTypeConfig.code !== 'BAK' && serviceTypeConfig.code !== 'ACU'">
+                                                        <p>{{serviceTypeConfig.available}}</p>
+                                                    </div>
+                                                </td>
+                                            </ng-container>
+                                            </tr>
+                                            <tr *ngIf="familyUser.isCustomizable || hiredServices.length !== 0">
+                                                <th scope="row"></th>
+                                                <td>
+                                                </td>
+                                                <td>
+                                                </td>
+                                                <td>
+                                                </td>
+                                                <td>
+                                                    <button class="btn btn-primary"
+                                                        (click)="saveConfigUser(user.userConfigId)">
+                                                        <nz-spinner *ngIf="loading"></nz-spinner>
+                                                        <div *ngIf="!loading">{{'GUARDAR' |
+                                                            translate}}</div>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <p *ngIf ="hiredServices.length !== 0" class="mt-5">{{'MULTIUSER.TEXT3' | translate}}</p>
+            <div *ngIf ="hiredServices.length !== 0" class="card">
+                <div class="table-responsive">
+                    <table class="table mb-0">
+                        <thead>
+                            <tr>
+                                <th scope="col"><span>|</span>{{'COMP_USER_LIST.SERVICE' | translate}}</th>
+                                <th scope="col" class="text-center">{{'COMP_USER_LIST.TOTAL_ACQUIRED' | translate}}</th>
+                                <th scope="col" class="text-center">{{'COMP_USER_LIST.TOTAL_ASSIGNED' | translate}}</th>
+                                <th scope="col" class="text-center">{{'COMP_USER_LIST.TOTAL_AVAILABLE' | translate}}
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of hiredServices; let i = index">
+                                <th scope="row">
+                                    <p>{{item.name}}</p>
+                                </th>
+                                <td class="text-center">
+                                    <font>{{item.available + item.used}} GB</font>
+                                </td>
+                                <td class="text-center">
+                                    <font>{{item.used}} GB</font>
+                                </td>
+                                <td class="text-center">
+                                    <font>{{item.available}} GB</font>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+
+
+
+        <!--
+        <div _ngcontent-kfb-c7="" class="datauser">
+            <div _ngcontent-kfb-c7="" class="foto">
+                <span class="ribbon">{{'MULTIUSER.TEXT2' | translate}}</span>
+                <img class="foto"
+                    [src]="image != null ? sanitizer.bypassSecurityTrustUrl(image) : sanitizer.bypassSecurityTrustUrl('./assets/img/profileDefaultMenu.png')"
+                    _ngcontent-kfb-c7="" [alt]="user.name" height="60" width="60"></div>
+            <div _ngcontent-kfb-c7="" class="name">
+            </div>
+            <div class="name">
+                <h2 _ngcontent-kfb-c7="">{{user.name}} {{user.surname}}</h2>
+                <a class="editbtn" href="#/profile" data-toggle="tooltip" data-placement="right" data-html="true"
+                    title="" data-original-title="<h6>Editar administrador</h6>">
+                    <div class="myicons-edit"></div>
+                </a>
+                <p _ngcontent-kfb-c7="" class="email">{{user.email}}</p>
+            </div>
+        </div>
+            <div style="float: right;padding-top: 30px;color:#00b1ea;font-size: 14px;font-weight: 500;">
+            <ol>
+                <li class="nostyle">{{'MULTIUSER.TOTAL_USERS' | translate}}:&nbsp;{{totalUsers}}/{{maxLicense}}</li>
+                <li class="nostyle">{{'MULTIUSER.ACTIVE_USERS' | translate}}:&nbsp;{{activeUsers}}</li>
+                <li class="nostyle">{{'MULTIUSER.NON_ACTIVE_USERS' | translate}}:&nbsp;{{usersNotActivated}}</li>
+                <li class="nostyle" style="color:red">{{'MULTIUSER.PENDING_USERS' | translate}}:&nbsp;{{pendingUsers}}</li>
+            </ol>
+        </div>
+        <div class="col-lg-12">
+            <h3 class="ribbon">{{'MULTIUSER.MONITORED_USERS' | translate}} {{totalUsers}}/{{maxLicense}}</h3>
+        </div>
+        <div class="row align-items-start justify-content-center">
+            <div class="col-lg-3 col-md-6 col-sm-6 col-xs-6" onMouseOver="this.style.cursor='pointer'">
+                <div class="adduser">
+                    <a (click)="validateAddUser()">
+                        <div _ngcontent-wnb-c3="" _ngcontent-fkv-c3="" class="myicons-add-user"></div>
+                        <span _ngcontent-wnb-c3="">{{'MULTIUSER.ADD_USER_TEXT' | translate}}</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6 col-sm-6 col-xs-6" *ngFor="let item of userList; let i = index">
+                <div class="user">
+                    <div class="user-img">
+                        <div *ngIf="item.active" class="user-status active">
+                            <i title="Usuario activo" class="fas fa-circle"></i>
+                        </div>
+                        <div *ngIf="!item.active" class="user-status inactive">
+                            <i title="Usuario inactivo" class="fas fa-circle"></i>
+                        </div>
+                        <div *ngIf="!item.profileImage && item.active" _ngcontent-wnb-c3="" _ngcontent-fkv-c3=""
+                            _ngcontent-lwb-c3="" class="myicons-user"></div>
+                        <div *ngIf="!item.profileImage && !item.active" _ngcontent-wnb-c3="" _ngcontent-fkv-c3=""
+                            _ngcontent-lwb-c3="" class="myicons-user"></div>
+                        <div *ngIf="item.profileImage">
+                            <img _ngcontent-wnb-c3="" [alt]="item.name" width="60" height="60"
+                                [src]="item.profileImage" />
+                        </div>
+                    </div>
+                    <span _ngcontent-wnb-c3="">{{item.name}}</span>
+                    <div *ngIf="item.email">
+                        <span _ngcontent-wnb-c3="" class="email">{{item.email}}</span>
+                    </div>
+                    <div *ngIf="item.eid && partnerService.partner.loginType !== 4 && partnerService.partner.loginType !== 1 && partnerService.partner.loginType !== 6">
+                        <div class="form-group">
+                            <label
+                                for="" class="eid-userlist">{{'EID' | translate: { identifier: partnerService.partner.uniqueIdentifier } }}</label>
+                            <span><input style="text-align: center;" type ="text" id="eid{{i}}" name="eid{{i}}" disabled
+                                    value={{item.eid}} /></span>
+                        </div>
+                    </div>
+                    <div class="o-buttons">
+                        <a *ngIf="!item.active && item.email" href="javascript:void(0)" (click)="sendEmail(item.email)"
+                            data-toggle="tooltip" data-placement="right" data-html="true"
+                            title="Volver a enviar email de bienvenida" data-original-title="<h6>Enviar email</h6>">
+                            <div class="myicons-send-email"></div>
+                        </a>
+                        <a href="javascript:void(0)" (click)="editUser(item.userId)" data-toggle="tooltip"
+                            data-placement="right" data-html="true" title="Editar datos"
+                            data-original-title="<h6>Editar usuario</h6>">
+                            <div class="myicons-edit"></div>
+                        </a>
+                        <a href="javascript:void(0)" (click)="deletetUser(item.userId)" data-toggle="tooltip"
+                            data-placement="right" data-html="true" title="Eliminar usuario"
+                            data-original-title="<h6>Eliminar usuario</h6>">
+                            <div class="myicons-delete"></div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    -->
+        <br /><br />
+    </div>
+</section>

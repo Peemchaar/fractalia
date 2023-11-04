@@ -1,0 +1,654 @@
+<div *ngIf="loading_page">
+  <div class="app-loading">
+      <div class="logo">
+          <img src="{{partnerService.preloaderImage}}" width="100" height="100">
+      </div>
+  </div>
+</div>
+
+<section id="header">
+  <div class="container-fluid m767">
+    <ul class="navbar-nav float-left mr-auto ml-3 pl-1">
+      <li class="nav-item">
+        <small>&nbsp;</small>
+      </li>
+      <li class="nav-item">
+        <h1>{{this.userService.currentUserValue.name}} {{this.userService.currentUserValue.surname}} <div
+            [hidden]="true" class="myicons-edit"></div>
+        </h1>
+      </li>
+    </ul>
+  </div>
+</section>
+<section class="ml-3 pl-1">
+  <div class="container-fluid m767 pr-4">
+    <br/><br/><br/>
+    <!-- <a *ngIf="false"
+      class="d-flex position-absolute mt-3" href="javascript:history.back()">
+      <div class="icon-left-big-arrow mr-2"></div> {{ 'ATRAS' | translate }}
+    </a> -->
+    <br/>
+    <div class="row align-items-start">
+      <!-- <div *ngIf="this.userService.currentUserValue.passwordChanged || !this.userService.currentUserValue.active " -->
+      <div *ngIf="this.userService.currentUserValue.active; else elseActivo "
+        class='profile-card col-lg-12 col-md-12 col-sm-12 mb-3'
+        [ngStyle]="{'margin':!this.userService.currentUserValue.inJira ? '0 auto': ''}">
+        <h4 class="title-profile">{{'DATOS_PERSONALES' | translate}}</h4>
+        <div class="card">
+          <div class="container-fluid pr-4 pl-4">
+            <form (ngSubmit)="onSubmit()" class="">
+              <div class="row align-items-start">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                  <div class="picture-container">
+                    <div class="upload-wrapper">
+                      <div class="">
+                        <div class="photo">
+                          <input #profileImage name="favicon" type="file" (change)="onUploadImagen($event)"
+                            accept="image/x-png,image/jpeg,image/gif,image/x-icon" style="display:none;">
+                          <button type="button" class="btn bback" (click)="profileImage.click()">
+                            <img [src]=sanitizer.bypassSecurityTrustUrl(image) width="84" height="84" /></button>
+                        </div>
+                        <div class="text">
+                          <p class="title">{{'IMAGEN_PERFIL' | translate}}</p>
+                          <p class="subtitle">{{'CAMBIAR_IMAGEN_PERFIL_CIRCULO' | translate}}</p>
+                        </div>
+                      </div>
+                      <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel"
+                        aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title" id="modalLabel">{{'CUT_PROFILE_IMAGE_USER' | translate}}
+                              </h5>
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>
+                            <div class="modal-body">
+                              <div class="img-container">
+                                <img id="image" src="">
+                              </div>
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-default" data-dismiss="modal">{{'CANCEL' |
+                                translate}}</button>
+                              <button type="button" class="btn btn-primary" id="crop">{{'OK' | translate}}</button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <p class="label-input-text-disabled">*&nbsp;{{'CAMPOS_OBLIGATORIOS' | translate }}</p>
+                  </div>
+                </div>
+
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                  <p class="label-input-text">{{'NOMBRE' | translate }}&nbsp;*</p>
+                  <div class="form-group"
+                  [ngClass]="!partnerService.partner.hasFullProfile ? 'no-photo' : ''">
+                    <input type="text" required class="form-control new-input" name="name" [(ngModel)]="user.name" #name="ngModel"
+                      maxlength="100" placeholder="{{'NOMBRE' | translate}}">
+                  </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12" *ngIf="isShowEmail">
+                  <p class="label-input-text">{{'EMAIL' | translate }}&nbsp;*</p>
+                  <div class="form-group">
+                    <input type="email" required class="form-control new-input" name="email" [(ngModel)]="user.email"
+                      [readonly]="isReadOnlyEmail" #email="ngModel" maxlength="100"
+                      placeholder="{{'EMAIL' | translate}}">
+                  </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                  <p class="label-input-text">{{'APELLIDOS' | translate }}&nbsp;*</p>
+                  <div class="form-group"
+                  [ngClass]="!partnerService.partner.hasFullProfile ? 'no-photo' : ''">
+                    <input type="text" required class="form-control new-input" name="surname" [(ngModel)]="user.surname"
+                      #surname="ngModel" maxlength="100" placeholder="{{'APELLIDOS' | translate}}">
+                  </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12" *ngIf="isShowEid">
+                  <p class="label-input-text">{{'EID' | translate }}</p>
+                  <div class="form-group">
+                    <input type="text" required class="form-control new-input" name="eid" [(ngModel)]="user.eid" [readonly]="true"
+                      #eid="ngModel" maxlength="100"
+                      placeholder="{{'EID' | translate: { identifier: partnerService.partner.uniqueIdentifier} }}">
+                  </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12" *ngIf="partnerService.partner.languages && partnerService.partner.languages.length > 1">
+                  <p class="label-input-text">{{'COMP_PARTNERS.LANGUAGES' | translate }}&nbsp;*</p>
+                  <div class="form-group">
+                    <select required class="form-control new-input" name="language" [(ngModel)]="user.languageCode">
+                      <option *ngFor="let lan of partnerService.partner.languages" [value]="lan.code">
+                        {{lan.name}}
+                      </option>
+                    </select>
+                <!--      <select id="selectLanguage" class="form-control new-input" [formControl]="selectLanguage" (change)="changeLanguage($event.target.value, true)">
+                      <option *ngFor="let lan of partnerService.partner.languages" [value]="lan.code">{{lan.name}}</option>
+                    </select> -->
+                  </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12" *ngIf="partnerService.countries && partnerService.countries.length > 1">
+                  <p class="label-input-text">{{'PAIS' | translate }}</p>
+                  <div class="form-group">
+                    <select required class="form-control new-input" name="country" [(ngModel)]="user.countryCode">
+                      <option [value]="null" disabled [hidden]="user.countryCode"></option>
+                      <option *ngFor="let country of partnerService.countries" [value]="country.code">
+                        {{country.name}}
+                      </option>
+                    </select>
+
+                  </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12" *ngIf="partnerService.partner.hasFullProfile">
+                  <p class="label-input-text">{{'DIRECCION' | translate }}</p>
+                  <div class="form-group">
+                    <input type="text" required class="form-control new-input" name="adress" [(ngModel)]="user.adress"
+                      #adress="ngModel" maxlength="100">
+                  </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12" *ngIf="partnerService.partner.hasFullProfile">
+                  <p class="label-input-text">{{'CIUDAD' | translate }}</p>
+                  <div class="form-group">
+                    <input type="text" required class="form-control new-input" name="city" [(ngModel)]="user.city" maxlength="50">
+                  </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12" *ngIf="partnerService.partner.hasFullProfile">
+                  <p class="label-input-text">{{'CODIGO_POSTAL' | translate }}</p>
+                  <div class="form-group">
+                    <input type="text" required class="form-control new-input" name="postalcode" [(ngModel)]="user.postalcode"
+                      #postalcode="ngModel" maxlength="10" >
+                  </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12" *ngIf="partnerService.partner.hasFullProfile">
+                  <p class="label-input-text">{{'TELEFONO' | translate }}</p>
+                  <div class="form-group">
+                    <input type="text" class="form-control new-input" name="phone" [(ngModel)]="user.phone" #phone="ngModel"
+                      maxlength="20">
+                  </div>
+                </div>
+                <div *ngIf="!user.checkTermsAcceptDate">
+                  <div class="col">
+                    <div class="form-group">
+                      <div class="custom-control custom-checkbox" style="text-align: center;">
+                        <input type="checkbox" class="custom-control-input" id="terms" (change)="checkTerms($event)">
+                        <label class="custom-control-label" for="terms">{{'LEIDO_ACEPTO' | translate}} <a
+                            routerLink="/terms" (click)="saveTempProfile()">{{'TERMINOS_CONDICIONES_SERVICIO' |
+                            translate}}</a>.</label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-12 mb-4 mt-2">
+                  <div style="text-align: center; font-size: 80%; color:#dc3545;" *ngIf="updateError">
+                    <div>{{'ERROR_GUARDAR_DATOS' | translate}}</div>
+                  </div>
+                  <div class="errormen">
+                    <div *ngIf="showMessage" class="loginError d-inline-flex align-items-center">
+                      <div class="icon-exclamation-tri"></div> {{message}}
+                    </div>
+                  </div>
+                  <div class="btnform">
+                    <div class="row">
+                      <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mt-2 btn-lateral button-rigth">
+                        <button type="submit" [disabled]="loading || !terms" class="btn btn-primary">
+                          <nz-spinner *ngIf="loading"></nz-spinner>
+                          <div *ngIf="!loading">
+                            {{'GUARDAR' | translate}}</div>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <ng-template #elseActivo>
+        <div *ngIf="this.userService.currentUserValue.passwordChanged" class='profile-card col-lg-12 col-md-12 col-sm-12 mb-3'
+        [ngStyle]="{'margin':!this.userService.currentUserValue.inJira ? '0 auto': ''}">
+          <p>{{'DATOS_PERSONALES' | translate}}</p>
+          <div class="card">
+            <div class="container-fluid pr-4 pl-4">
+              <div class="row align-items-start">
+                  <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="picture-container">
+                      <div class="upload-wrapper">
+                        <div class="">
+                          <div class="photo">
+                            <input #profileImage name="favicon" type="file" (change)="onUploadImagen($event)"
+                              accept="image/x-png,image/jpeg,image/gif,image/x-icon" style="display:none;">
+                            <button type="button" class="btn bback" (click)="profileImage.click()">
+                              <img [src]=sanitizer.bypassSecurityTrustUrl(image) width="84" height="84" /></button>
+                          </div>
+                          <div class="text">
+                            <p class="title">{{'IMAGEN_PERFIL' | translate}}</p>
+                            <p class="subtitle">{{'CAMBIAR_IMAGEN_PERFIL' | translate}}</p>
+                          </div>
+                        </div>
+                        <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel"
+                          aria-hidden="true">
+                          <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h5 class="modal-title" id="modalLabel">{{'CUT_PROFILE_IMAGE_USER' | translate}}
+                                </h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                  <span aria-hidden="true">&times;</span>
+                                </button>
+                              </div>
+                              <div class="modal-body">
+                                <div class="img-container">
+                                  <img id="image" src="">
+                                </div>
+                              </div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">{{'CANCEL' |
+                                  translate}}</button>
+                                <button type="button" class="btn btn-primary" id="crop">{{'OK' | translate}}</button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                    <div class="form-group"
+                    [ngClass]="!partnerService.partner.hasFullProfile ? 'no-photo' : ''">
+                      <input type="text" required class="form-control new-input" name="name" [(ngModel)]="user.name" #name="ngModel"
+                        maxlength="100" placeholder="{{'NOMBRE' | translate}}">
+                    </div>
+                  </div>
+                  <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                    <div class="form-group"
+                    [ngClass]="!partnerService.partner.hasFullProfile ? 'no-photo' : ''">
+                      <input type="text" required class="form-control new-input" name="surname" [(ngModel)]="user.surname"
+                        #surname="ngModel" maxlength="100" placeholder="{{'APELLIDOS' | translate}}">
+                    </div>
+                  </div>
+                  <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12" *ngIf="isShowEid">
+                    <div class="form-group">
+                      <input type="text" required class="form-control new-input" name="eid" [(ngModel)]="user.eid" [readonly]="true"
+                        #eid="ngModel" maxlength="100"
+                        placeholder="{{'EID' | translate: { identifier: partnerService.partner.uniqueIdentifier} }}">
+                    </div>
+                  </div>
+                  <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12" *ngIf="isShowEmail">
+                    <div class="form-group">
+                      <input type="email" required class="form-control new-input" name="email" [(ngModel)]="user.email"
+                        [readonly]="isReadOnlyEmail" #email="ngModel" maxlength="100"
+                        placeholder="{{'EMAIL' | translate}}">
+                    </div>
+                  </div>
+                  <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                    <div class="form-group">
+                      <input type="text" class="form-control new-input" name="phone" [(ngModel)]="user.phone" #phone="ngModel"
+                        maxlength="20" placeholder="{{'TELEFONO' | translate}}">
+                    </div>
+                  </div>
+                  <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                    <div class="form-group">
+                      <input type="text" required class="form-control new-input" name="adress" [(ngModel)]="user.adress"
+                        #adress="ngModel" maxlength="100" placeholder="{{'DIRECCION' | translate}}">
+                    </div>
+                  </div>
+                  <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                    <div class="form-group">
+                      <input type="text" required class="form-control new-input" name="postalcode" [(ngModel)]="user.postalcode"
+                        #postalcode="ngModel" maxlength="10" placeholder="{{'CODIGO_POSTAL' | translate}}">
+                    </div>
+                  </div>
+                  <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                    <div class="form-group">
+                      <input type="text" required class="form-control new-input" name="city" [(ngModel)]="user.city" maxlength="50"
+                        placeholder="{{'CIUDAD' | translate}}">
+                    </div>
+                  </div>
+                  <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12" *ngIf="partnerService.countries && partnerService.countries.length > 1">
+                    <div class="form-group">
+                      <select required class="form-control new-input" name="country" [(ngModel)]="user.countryCode">
+                        <option [value]="null" disabled [hidden]="user.countryCode">{{'PAIS' | translate}}</option>
+                        <option *ngFor="let country of partnerService.countries" [value]="country.code">
+                          {{country.name}}
+                        </option>
+                      </select>
+                      
+                    </div>
+                  </div>
+                  <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12" *ngIf="partnerService.partner.languages && partnerService.partner.languages.length > 1">
+                    <div class="form-group">
+                      <select required class="form-control new-input" name="language" [(ngModel)]="user.languageCode" >
+                        <option *ngFor="let lan of partnerService.partner.languages" [value]="lan.code">
+                          {{lan.name}}
+                        </option>
+                      </select>
+                      
+                    </div>
+                  </div>
+                  <div class="col-lg-12 mb-4 mt-2">
+                    <div style="text-align: center; font-size: 80%; color:#dc3545;" *ngIf="updateError">
+                      <div>{{'ERROR_GUARDAR_DATOS' | translate}}</div>
+                    </div>
+                    <div class="errormen">
+                      <div *ngIf="showMessage" class="loginError d-inline-flex align-items-center">
+                        <div class="icon-exclamation-tri"></div> {{message}}
+                      </div>
+                    </div>
+                      <div class="row">
+                      <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mt-2 order-lg-12">
+                      </div>
+                      <div class="col-xl-8 col-lg-8 col-md-12 col-sm-12 mt-2">
+                        <button type="button" (click)="onUpdateProfile()" [disabled]="loading" class="btn btn-primary">
+                          <nz-spinner *ngIf="loading"></nz-spinner>
+                          <div *ngIf="!loading">
+                            {{'GUARDAR' | translate}}</div>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+              </div>
+              <div class="row align-items-start" *ngIf="!partnerService.partner.hasFullProfile">
+                  <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                    <div class="form-group"
+                    [ngClass]="!partnerService.partner.hasFullProfile ? 'no-photo' : ''">
+                      <input type="text" required class="form-control new-input" name="name" [(ngModel)]="user.name" #name="ngModel"
+                        maxlength="100" placeholder="{{'NOMBRE' | translate}}">
+                    </div>
+                  </div>
+                  <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                    <div class="form-group"
+                    [ngClass]="!partnerService.partner.hasFullProfile ? 'no-photo' : ''">
+                      <input type="text" required class="form-control new-input" name="surname" [(ngModel)]="user.surname"
+                        #surname="ngModel" maxlength="100" placeholder="{{'APELLIDOS' | translate}}">
+                    </div>
+                  </div>
+                  <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12" *ngIf="isShowEid">
+                    <div class="form-group">
+                      <input type="text" required class="form-control new-input" name="eid" [(ngModel)]="user.eid" [readonly]="true"
+                        #eid="ngModel" maxlength="100"
+                        placeholder="{{'EID' | translate: { identifier: partnerService.partner.uniqueIdentifier} }}">
+                    </div>
+                  </div>
+                  <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12" *ngIf="isShowEmail">
+                    <div class="form-group">
+                      <input type="email" required class="form-control new-input" name="email" [(ngModel)]="user.email"
+                        [readonly]="isReadOnlyEmail" #email="ngModel" maxlength="100"
+                        placeholder="{{'EMAIL' | translate}}">
+                    </div>
+                  </div>
+                  <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12" *ngIf="partnerService.countries && partnerService.countries.length > 1">
+                    <div class="form-group">
+                      <select required class="form-control new-input" name="country" [(ngModel)]="user.countryCode">
+                        <option [value]="null" disabled [hidden]="user.countryCode">{{'PAIS' | translate}}</option>
+                        <option *ngFor="let country of partnerService.countries" [value]="country.code">
+                          {{country.name}}
+                        </option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12" *ngIf="partnerService.partner.languages && partnerService.partner.languages.length > 1">
+                    <div class="form-group">
+                      <select required class="form-control new-input" name="language" [(ngModel)]="user.languageCode" >
+                        <option *ngFor="let lan of partnerService.partner.languages" [value]="lan.code">
+                          {{lan.name}}
+                        </option>
+                      </select>
+                      <!-- <select id="selectLanguage" class="form-control new-input" [formControl]="selectLanguage" *ngIf="partnerService.partner.languages && partnerService.partner.languages.length > 1" (change)="changeLanguage($event.target.value, true)">
+                        <option *ngFor="let lan of partnerService.partner.languages" [value]="lan.code">{{lan.name}}</option>
+                      </select> -->
+                    </div>
+                  </div>
+                  <div class="col-lg-12 mb-4 mt-2">
+                    <div style="text-align: center; font-size: 80%; color:#dc3545;" *ngIf="updateError">
+                      <div>{{'ERROR_GUARDAR_DATOS' | translate}}</div>
+                    </div>
+                    <div class="errormen">
+                      <div *ngIf="showMessage" class="loginError d-inline-flex align-items-center">
+                        <div class="icon-exclamation-tri"></div> {{message}}
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mt-2 order-lg-12">
+                      </div>
+                      <div class="col-xl-8 col-lg-8 col-md-12 col-sm-12 mt-2">
+                        <button type="button" (click)="onUpdateProfile()" [disabled]="loading" class="btn btn-primary">
+                          <nz-spinner *ngIf="loading"></nz-spinner>
+                          <div *ngIf="!loading">{{'GUARDAR' | translate}}</div>
+                        </button>
+                      </div>
+                    </div>
+
+                  </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </ng-template>
+
+      <div
+        *ngIf="this.userService.currentUserValue.active &&
+      (partnerService.partner.loginType === 1 || partnerService.partner.loginType === 4 || partnerService.partner.loginType === 5 || partnerService.partner.loginType === 6)"
+        class="profile-card col-lg-12 col-md-12 col-sm-12 mb-3"
+        [ngStyle]="{'margin':!this.userService.currentUserValue.passwordChanged ? '0 auto': ''}">
+        <h4 class="title-profile">{{'CAMBIO_CONTRASENA' | translate }}</h4>
+        <div class="card">
+          <div class="container-fluid pr-4 pl-4">
+            <br><br>
+            <p class="subtitle">{{'CAMBIO_CONTRASENA_SUBTITULO' | translate }}  <br> <br>{{'CAMBIO_CONTRASENA_SUBTITULO_2' | translate }}</p>
+            <div *ngIf="!this.userService.currentUserValue.passwordChanged">
+              <p>{{'CAMBIAR_CONTRASENA_PRIMERA_VEZ' | translate }}</p>
+            </div>
+            <br/>
+
+            <form class="restpass" (ngSubmit)="onSubmitreset()">
+              <!--<div class="row">
+
+                <div class="form-group col-lg-12">
+                  <div class="input-group">
+                    <app-password-strength (validpass)="checkpass($event)" [barLabel]="barLabel"
+                      [passwordToCheck]="key.repeatKey"></app-password-strength>
+                      <small class="text-justify font-italic">{{'CONTRASENA_MESSAGE_DETAIL' | translate}}</small>
+                  </div>
+                </div>
+
+                <div class="form-group col-xl-4 col-lg-4 col-md-12 col-sm-12">
+                  <button type="button" class="btn btn-outline-secondary" style="width: 100%; height: 48px;"
+                    (click)="generatePassword()">
+                    {{'CONTRASENA_GENERAR' | translate}}
+                  </button>
+                </div>
+                <div class="form-group col-xl-4 col-lg-4 col-md-8 col-sm-8 col-8">
+                  <div class="input-group">
+                    <input readonly class="form-control new-input" [(ngModel)]="passwordExample" name="passwordExample" id="passwordExample"
+                      maxlength="100">
+                  </div>
+                </div>
+                <div class="form-group col-xl-4 col-lg-4 col-md-4 col-sm-4 col-4">
+                  <div class="input-group">
+                    <button class="btn btn-link btn-copy" (click)="copyToClipboard($event)"><div class="icon-copy"></div> <span>{{'CONTRASENA_COPIAR' | translate}}</span></button>
+                  </div>
+                </div>
+              </div>-->
+              <p class="label-input-text-disabled">*&nbsp;{{'CAMPOS_OBLIGATORIOS' | translate }}</p>
+              <div class="row">
+                <div class="form-group col-xl-4 col-lg-4 col-md-4 col-sm-12">
+                  <label for="" class="label-input-text">{{'CONTRASENA_ACTUAL' | translate}}&nbsp;*</label>
+                  <div class="input-group">
+                    <input type="{{old}}" required class="form-control new-input" name="oldPass" [(ngModel)]="key.oldKey"
+                      [ngClass]="{ 'is-invalid': oldPass.invalid && (oldPass.dirty || oldPass.touched) }"
+                      #oldPass="ngModel" maxlength="100">
+                    <div *ngIf="!(oldPass.invalid && (oldPass.dirty || oldPass.touched))" class="input-group-prepend">
+                      <button id="viewnewpass" class="viewpassword" type="button" (click)="toogleOld()" tabindex="-1">
+                        <div class="icon-eye"></div>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group col-xl-4 col-lg-4 col-md-4 col-sm-12">
+                  <label for="" class="label-input-text">{{'CONTRASENA_NUEVA' | translate}}&nbsp;*</label>
+                  <div class="input-group">
+                    <input type="{{new}}" required class="form-control new-input" name="newPass" [(ngModel)]="key.newKey"
+                  [ngClass]="{ 'is-invalid': newPass.invalid && (newPass.dirty || newPass.touched) }"
+                  #newPass="ngModel" maxlength="100">
+                    <div *ngIf="!(newPass.invalid && (newPass.dirty || newPass.touched))" class="input-group-prepend">
+                      <button id="viewoldpass" class="viewpassword" type="button" (click)="toogleNew()" tabindex="-1">
+                        <div class="icon-eye"></div>
+                      </button>
+                    </div>
+                    <div *ngIf="key.newKey && key.oldKey==key.newKey" class="form-group col-lg-12">
+                      <p class="text-danger center">{{'WARNING_SAME_PASSWORD' | translate }}</p>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="input-group">
+                      <app-password-strength (validpass)="checkpass($event)" [barLabel]="barLabel"
+                        [passwordToCheck]="key.newKey"></app-password-strength>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group col-xl-4 col-lg-4 col-md-4 col-sm-12">
+                  <label for="" class="label-input-text">{{ 'CONTRASENA_CONFIRMAR' | translate }}&nbsp;*</label>
+                  <div class="input-group">
+                    <input type="{{repeat}}" required class="form-control new-input" name="repeatKey" [(ngModel)]="key.repeatKey"
+                      [ngClass]="{ 'is-invalid': repeatKey.invalid && (repeatKey.dirty || repeatKey.touched) }"
+                      #repeatKey="ngModel" maxlength="100">
+                    <div *ngIf="!(repeatKey.invalid && (repeatKey.dirty || repeatKey.touched))"
+                      class="input-group-prepend">
+                      <button id="viewrepeat" class="viewpassword" type="button" (click)="toogleRepeat()" tabindex="-1">
+                        <div class="icon-eye"></div>
+                      </button>
+                    </div>
+                  </div>
+                  <small *ngIf="repeatKey.value !== newPass.value && repeatKey.touched"
+                    class="text-danger">{{'RECOVER_PWD_VALIDATION1' | translate}}</small>
+                </div>
+
+                <div class="form-group col-lg-12 mb-4 mt-2">
+                  <div class="btnform">
+                    <div class="row">
+
+                      <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mt-2 button-rigth">
+                        <button type="submit" class="btn btn-primary" [disabled]="key.newKey && key.oldKey==key.newKey || repeatKey.value !== newPass.value || newPass.invalid ||
+                          oldPass.invalid || repeatKey.invalid || !successpass || loadingPassword">
+                          <nz-spinner *ngIf="loadingPassword"></nz-spinner>
+                          <div *ngIf="!loadingPassword">{{'GUARDAR' | translate}}</div>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+
+      <!--Ocultamos las notificaciones mientras solucinamos el tema de los hijos-->
+      <div
+        *ngIf="userService.currentUserValue.active && (userNotificationConfig.isUserAdmin || (!userNotificationConfig.isUserAdmin && (userNotificationConfig.showReceiveEmailAlerts) ))"
+        class="profile-card col-lg-12 col-md-12 col-sm-12 mb-3"
+        [ngStyle]="{'margin':!userService.currentUserValue.passwordChanged ? '0 auto': ''}">
+        <h4 class="title-profile">{{'GESTION_EMAILS' | translate }}</h4>
+        <div class="card">
+          <div class="container-fluid pr-4 pl-4">
+            <br/>
+            <h5 class="subtitle-profile">{{'GESTION_EMAILS_NOTIFICACIONES' | translate }}</h5>
+            <br/>
+
+            <form class="notifications" (ngSubmit)="onSubmitNotificationConfig()">
+              <div class="row">
+                <div class="form-group col-xl-6 col-lg-6 col-md-6 col-sm-6" style="margin-left: 20px;" *ngIf="userNotificationConfig.isUserAdmin || (!userNotificationConfig.isUserAdmin && userNotificationConfig.showReceiveEmailAlerts)">
+                  
+                  <div class="form-group">  <!-- *ngIf="userNotificationConfig.isUserAdmin || (!userNotificationConfig.isUserAdmin && userNotificationConfig.activeNewsletter)" -->
+                    <div class="custom-control custom-checkbox">
+                      <input type="checkbox" class="custom-control-input"
+                      id="activeNewsletter" name="activeNewsletter" [(ngModel)]="user.activeNewsletter"
+                      [checked]="user.activeNewsletter">
+                      <label class="custom-control-label" for="activeNewsletter">{{'GESTION_EMAILS_OPT5' | translate}}</label>
+                    </div>
+                  </div>
+
+                  <!-- <div class="form-group" *ngIf="userNotificationConfig.isUserAdmin">
+                    <div class="custom-control custom-checkbox">
+                      <input type="checkbox" class="custom-control-input"
+                      id="receiveChildAlerts" name="receiveChildAlerts" [(ngModel)]="userNotificationConfig.receiveChildAlerts"
+                      [checked]="userNotificationConfig.receiveChildAlerts">
+                      <label class="custom-control-label" for="receiveChildAlerts">{{'GESTION_EMAILS_OPT4' | translate}}</label>
+                    </div>
+                  </div>
+
+                  <div class="form-group" *ngIf="userNotificationConfig.isUserAdmin">
+                    <div class="custom-control custom-checkbox">
+                      <input type="checkbox" class="custom-control-input"
+                      id="sendChildEmailAlerts" name="sendChildEmailAlerts" [(ngModel)]="userNotificationConfig.sendChildEmailAlerts"
+                      [checked]="userNotificationConfig.sendChildEmailAlerts">
+                      <label class="custom-control-label" for="sendChildEmailAlerts">{{'GESTION_EMAILS_OPT2' | translate}}</label>
+                    </div>
+                  </div>
+
+                  <div class="form-group" *ngIf="!userNotificationConfig.isUserAdmin && userNotificationConfig.showReceiveEmailAlerts">
+                    <div class="custom-control custom-checkbox">
+                      <input type="checkbox" class="custom-control-input"
+                      id="receiveEmailAlerts" name="receiveEmailAlerts" [(ngModel)]="userNotificationConfig.receiveEmailAlerts"
+                      [checked]="userNotificationConfig.receiveEmailAlerts">
+                      <label class="custom-control-label" for="receiveEmailAlerts">{{'GESTION_EMAILS_OPT4' | translate}}</label>
+                    </div>
+                  </div>
+
+                  <div class="form-group" *ngIf="userNotificationConfig.showUserPost">
+                    <div class="custom-control custom-checkbox">
+                      <input type="checkbox" class="custom-control-input"
+                      id="elearningCheck" name="elearningCheck" [(ngModel)]="elearningNotification"
+                      [checked]="elearningNotification">
+                      <label class="custom-control-label" for="elearningCheck"> {{'GESTION_EMAILS_OPT6' | translate}}</label>
+                    </div>
+                  </div>-->
+                </div>
+
+                <!-- <div class="form-group col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6" *ngIf="userNotificationConfig.isUserAdmin || (!userNotificationConfig.isUserAdmin && userNotificationConfig.showReceiveNewsletter)">
+                  <p class="color21 bold">{{'GESTION_EMAILS_NEWSLETTER' | translate }}</p>
+                  <div class="form-group" *ngIf="userNotificationConfig.isUserAdmin">
+                    <div class="custom-control custom-checkbox">
+                      <input type="checkbox" class="custom-control-input"
+                        id="sendChildEmailNewsletter" name="sendChildEmailNewsletter" [(ngModel)]="userNotificationConfig.sendChildEmailNewsletter"
+                        [checked]="userNotificationConfig.sendChildEmailNewsletter">
+                      <label class="custom-control-label" for="sendChildEmailNewsletter">{{'GESTION_EMAILS_OPT3' | translate}}</label>
+                    </div>
+                  </div>
+                  <div class="form-group" *ngIf="!userNotificationConfig.isUserAdmin && userNotificationConfig.showReceiveNewsletter">
+                    <div class="custom-control custom-checkbox">
+                      <input type="checkbox" class="custom-control-input"
+                      id="receiveNewsletter" name="receiveNewsletter" [(ngModel)]="userNotificationConfig.receiveNewsletter"
+                      [checked]="userNotificationConfig.receiveNewsletter">
+                      <label class="custom-control-label" for="receiveNewsletter">{{'GESTION_EMAILS_OPT5' | translate}}</label>
+                    </div>
+                  </div>
+                </div> -->
+
+                <div class="form-group col-lg-12 mb-4 mt-2">
+                  <div class="btnform">
+                    <div class="row">
+                      <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mt-2 button-rigth">
+                        <button type="submit" class="btn btn-primary" [disabled]="loadingNotificationConfig">
+                          <nz-spinner *ngIf="loadingNotificationConfig"></nz-spinner>
+                          <div *ngIf="!loadingNotificationConfig">
+                            {{'GUARDAR' | translate}}</div>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<br/><br/><br/><br/>

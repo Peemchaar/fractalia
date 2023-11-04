@@ -1,0 +1,20 @@
+<div class="popup">
+    <div id="popup">
+        <div class="popup-header">
+            <a class="cerrar" href="javascript:void(0);" (click)="activeModal.dismiss('Cancel')">
+                <div _ngcontent-oui-c3="" class="icon-close"></div>
+            </a>
+            <h2 class="mt-4 text-left">{{'WARNING' | translate}}</h2>
+        </div>
+
+        <form id="form_navegacion_dispositivo" class="dil" action="/es/protecciones" method="post" enctype="multipart/form-data">
+            <div class="popup-body">
+                <p class="text-left mt-2">{{message}}</p>
+            </div>
+
+            <div class="popup-footer text-left">
+                <button type="submit" class="mt-2 w-25 btn btn-primary" (click)="activeModal.dismiss('OK')">{{'OK' | translate}}</button>             
+            </div>
+        </form>
+    </div>
+</div>

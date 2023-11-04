@@ -1,0 +1,305 @@
+@import "~@ng-select/ng-select/themes/default.theme.css";
+@import "~ng-zorro-antd/ng-zorro-antd.min.css";
+
+
+.m-bold {
+  font-family: 'MontserratBold' !important;
+}
+
+.r-regular {
+  font-family: 'RobotoRegular';
+}
+
+.r-bold{
+  font-family: 'RobotoBold';
+
+}
+
+.l-height-24{
+  line-height: 24px;
+}
+
+.l-height-19{
+  line-height: 19px;
+}
+
+.l-height-16{
+  line-height: 16px;
+}
+
+.l-height-14{
+  line-height: 14px;
+}
+
+.c-secondary {
+  color: #666A73;
+}
+
+.c-neutral {
+  color: #34383F !important;
+}
+
+.fs-12 {
+  font-size: 14px;
+}
+
+input.ng-invalid.ng-touched {
+  background-image: url(https://devstatic.app.onlineassist.me/suite/img/exclamation-circle.png);
+  background-size: auto;
+}
+
+input.ng-invalid.ng-touched, select.ng-invalid.ng-touched, textarea.ng-invalid.ng-touched {
+  border-color: #dc3545;
+  padding-right: calc(1.5em + 0.75rem);
+  background-repeat: no-repeat;
+  background-position: center right calc(0.375em + 0.1875rem);
+  background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+}
+
+.fs-16 {
+  font-size: 16px;
+}
+
+.fs-14 {
+  font-size: 14px;
+}
+
+.fs-18 {
+  font-size: 18px;
+}
+
+.fs-20 {
+  font-size: 14px;
+}
+
+
+.break-word{
+  word-wrap: break-word;
+}
+
+.dashboardservices {
+  background: none !important;
+}
+
+.minw-170 {
+  min-width: 170px;
+}
+
+
+.default-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+}
+
+.center-flex-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.mr-12p {
+  margin-right: 12px;
+}
+
+.mb-10p {
+  margin-bottom: 10px;
+}
+
+
+#small-img{
+  display: none;
+}
+
+#resume-wizard{
+  display: none;
+}
+
+#activation{
+  display: none;
+}
+
+
+.notif-container {
+  padding:  0px 10px;
+}
+
+
+.none-notification{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+
+.regular{
+  font-family: 'RobotoRegular';
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1rem;
+  color: #666A73;
+  margin-top: 1rem;
+}
+
+.delete-notification{
+  display: none;
+}
+
+#header {
+  padding-top: 4rem !important;
+}
+
+.form-error {
+  margin-top:4px;
+  font-family: 'RobotoRegular';
+  font-size: 12px;
+  color: #EB1919;
+}
+
+@media (max-width:767px){
+  .delete-notification{
+    display: block;
+  }
+
+  #header {
+    padding-top: 112px !important;
+  }
+}
+
+
+
+.alerta .alerta-icon [class*=icon-] {
+  border: none !important;
+}
+
+@media (max-width:767px){
+
+
+  .alerta .alerta-icon {
+    display: block !important
+  }
+
+  #small-img{
+    width: 50px;
+    height: 50px;
+    background-color: #BCC4D4;
+    border-radius: 50%;
+    margin-right: 11px;
+    display: block;
+
+  }
+}
+
+
+@media (max-width:767px){
+  #activation{
+    padding: 12px 20px;
+    border: 1px solid #36B3ED;
+    background: #36B3ED;
+    color: #FFFFFF;
+    display: block;
+    display: flex;
+    align-items: center;
+    margin-left: 5.5rem;
+  }
+}
+
+@media (max-width:767px){
+  #checkProfile{
+   display: none;
+  }
+}
+
+
+.data-date{
+  font-size: 12px;
+  font-family: 'RobotoRegular';
+  font-weight: 400;
+  line-height: 14.06px;
+  color: #666A73;
+}
+
+.data-date span{
+  margin-right: 7px;
+}
+
+.userName{
+  font-family: 'MontserratBold';
+  color: #242B59;
+  font-size: 36px;
+  line-height:43.88px;
+  letter-spacing: -0.4px;
+}
+
+@media (max-width:767px){
+  .data-date{
+    font-size: 11px;
+    line-height: 16px;
+    color: #BCC4D4;
+  }
+}
+
+@media (max-width:767px){
+  .userName{
+  font-family: 'MontserratBold';
+  font-size: 24px;
+  line-height: 30px;
+  letter-spacing: -0.4px;
+  }
+}
+
+
+.max-h-tab {
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+
+.section--icon {
+  width: 30%;
+}
+
+.section--text {
+  width: 70%;
+}
+
+.break-word {
+  word-break: break-word;
+}
+
+@media (max-width:767px) {
+  .link-content {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .section--icon {
+    width: 40%;
+  }
+
+  .section--text {
+    width: 60%;
+  }
+}
+
+
+@media (max-width:485px) {
+  .link-content {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .section--icon {
+    width: 50%;
+    span {
+      display: block !important;
+      margin-top: 6px;
+    }
+  }
+
+  .section--text {
+    width: 50%;
+  }
+}

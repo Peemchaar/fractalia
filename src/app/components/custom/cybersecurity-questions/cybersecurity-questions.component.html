@@ -1,0 +1,891 @@
+<section *ngIf="serviceCard ">
+  <div class="card-header">
+    <div class="icontext">
+      <div class="icon-formulario-ciberseguridad neutral-black"></div>
+      <h4 class="neutral-black custom-h4">{{surveyService.serviceName}}</h4>
+    </div>
+    <button class="simplebtnheader"
+      (click)="open(surveyService.serviceName, surveyService.longDesc, surveyService.serviceIcon)">
+      <div class="icon-info main-disabled"></div>
+    </button>
+  </div>
+
+  <div class="card-body pr-0 pl-0 mt-0">
+    <div class="h-100 mt-5 mb-5 row justify-content-center align-items-center" *ngIf="!showResultsDesk">
+      <div class="icon-formulario-ciberseguridad mb-2  main-primary cyber-main-icon">
+      </div>
+      <section class="minW-100">
+        <div class="col-sm-12 mb-1">
+          <h2 class="text-center neutral-black cyb-body-title">
+            {{'CYBERSECURITY.QUESTIONS.TITLE' | translate}}
+          </h2>
+        </div>
+        <div class="col-sm-12 mb-4 pr-0 pl-0 align-items-center">
+          <p class="text-center cyb-body-text">
+            {{'CYBERSECURITY.QUESTIONS.TEXT1' | translate}}
+          </p>
+        </div>
+        <div class="col-sm-12 cyb-body-button">
+          <button class="btn btn-primary text-uppercase survey-primary-btn mb-3" (click)="openSurvey()">
+            {{'CYBERSECURITY.QUESTIONS.BTNS.QUESTIONS'| translate}}
+          </button>
+        
+          <span id="openSurveyModal" class="hidden" data-toggle="modal" data-target="#surveyModal">
+          </span>
+        </div>
+      </section>
+    </div>
+
+
+    <div class="h-100 row mr-0 ml-0 pt-4 pb-4" *ngIf="showResultsDesk">
+      <div class="col-md-8 col-sm-12 col-12 pl-4 neutral-border-r">
+        <div class="col-sm-12 col-12 pl-0 pr-0 ">
+          <h3 class="text-left mb-2 fs-16 lh-20 neutral-black">{{'SURVEY.GLOBAL_RISK'| translate}}</h3>
+        </div>
+        <div class="col-sm-12 col-12 d-flex column-responsive pl-0 pr-0 pt-3">
+          <div class="col-md-7 col-sm-12 col-12 flex-column d-flex pl-0">
+            <span class="global-score fs-16 lh-45 pl-1 montserrat-b neutral-black">
+              <a class="global-value fs-48 lh-45 mr-0 pr-0 "
+                [ngClass]="{'semantic-success' : results.global == 2, 'semantic-warning' : results.global == 1 , 'semantic-danger' : results.global == 0}">{{globalScore}}</a>/100
+            </span>
+            <div class="mb-2 w-100 ">
+              <div class="progress global-score-progress"
+                [ngClass]="{'success' : results.global == 2, 'warning' : results.global == 1 , 'danger' : results.global == 0}">
+                <div role="progressbar" class="progress-bar" aria-valuemin="5" aria-valuemax="100"
+                  [style.width]="globalProgress">
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-5 col-sm-12 col-12 flex-column d-flex pr-0 no-padding-responsive">
+            <span class="neutral-black fs-12 lh-14 text-left">
+              {{'SURVEY.SCORE'| translate}}
+            </span>
+            <h3 class="fs-24 lh-29 text-left montserrat-b semantic-danger" *ngIf="results.global == 0">
+              {{'SURVEY.SCORE_HIGH'| translate}}
+            </h3>
+            <h3 class="fs-24 lh-29 text-left montserrat-b semantic-warning" *ngIf="results.global == 1">
+              {{'SURVEY.SCORE_MID'| translate}}
+            </h3>
+            <h3 class="fs-24 lh-29 text-left montserrat-b semantic-success" *ngIf="results.global == 2">
+              {{'SURVEY.SCORE_LOW'| translate}}
+            </h3>
+          </div>
+        </div>
+        <div class="col-sm-12 col-12 pl-0 pr-0 mt-3">
+          <h3 class="text-left mb-0 fs-16 lh-20 neutral-black">{{'SURVEY.AREA_RISK'| translate}}</h3>
+        </div>
+        <div class="col-sm-12 col-12 d-flex column-responsive pl-0 pr-0 pt-3">
+          <div class="col-md-7 col-sm-12 col-12 flex-column d-flex pl-0">
+            <div class="mb-2 w-100 ">
+              <div class="progress block-score-progress person">
+                <div class="d-flex p-absolute">
+                  <div class="icon-cuest-cib-personas fs-16 pl-3 mr-3 neutral-black align-self-center"></div>
+                  <span
+                    class="neutral-black fs-14 lh-16 text-uppercase roboto-b align-self-center">{{results.block1Name}}</span>
+                </div>
+                <div class="d-flex mt-2 p-absolute right">
+                  <span class="fs-16 lh-19  neutral-black">
+                    <a class="roboto-b fs-16 lh-19 mr-0 pr-0 ">{{personsScore}}</a>/100
+                  </span>
+                </div>
+                <div role="progressbar" class="progress-bar d-flex justify-content-between" aria-valuemin="5"
+                  aria-valuemax="100" [style.width]="personsProgress">
+
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-5 col-sm-12 col-12 d-flex pr-0 no-padding-responsive">
+            <h3 class="fs-14 lh-16 text-left roboto-b neutral-black align-self-center" *ngIf="results.block1 == 0">
+              {{'SURVEY.SCORE_HIGH'| translate}}
+            </h3>
+            <h3 class="fs-14 lh-16 text-left roboto-b neutral-black align-self-center" *ngIf="results.block1 == 1">
+              {{'SURVEY.SCORE_MID'| translate}}
+            </h3>
+            <h3 class="fs-14 lh-16 text-left roboto-b neutral-black align-self-center" *ngIf="results.block1 == 2">
+              {{'SURVEY.SCORE_LOW'| translate}}
+            </h3>
+          </div>
+        </div>
+
+        <div class="col-sm-12 col-12 d-flex column-responsive pl-0 pr-0 pt-3">
+          <div class="col-md-7 col-sm-12 col-12 flex-column d-flex pl-0">
+            <div class="mb-2 w-100 ">
+              <div class="progress block-score-progress process">
+                <div class="d-flex p-absolute">
+                  <div class="icon-cuest-cib-procesos fs-18 pl-3 mr-3 neutral-black align-self-center"></div>
+                  <span
+                    class="neutral-black fs-14 lh-16 text-uppercase roboto-b align-self-center">{{results.block2Name}}</span>
+                </div>
+                <div class="d-flex mt-2 p-absolute right">
+                  <span class="fs-16 lh-19  neutral-black">
+                    <a class="roboto-b fs-16 lh-19 mr-0 pr-0 ">{{processScore}}</a>/100
+                  </span>
+                </div>
+                <div role="progressbar" class="progress-bar d-flex justify-content-between" aria-valuemin="5"
+                  aria-valuemax="100" [style.width]="processProgress">
+
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-5 col-sm-12 col-12 d-flex pr-0 no-padding-responsive">
+            <h3 class="fs-14 lh-16 text-left roboto-b neutral-black align-self-center" *ngIf="results.block2 == 0">
+              {{'SURVEY.SCORE_HIGH'| translate}}
+            </h3>
+            <h3 class="fs-14 lh-16 text-left roboto-b neutral-black align-self-center" *ngIf="results.block2 == 1">
+              {{'SURVEY.SCORE_MID'| translate}}
+            </h3>
+            <h3 class="fs-14 lh-16 text-left roboto-b neutral-black align-self-center" *ngIf="results.block2 == 2">
+              {{'SURVEY.SCORE_LOW'| translate}}
+            </h3>
+          </div>
+        </div>
+
+        <div class="col-sm-12 col-12 d-flex column-responsive pl-0 pr-0 pt-3">
+          <div class="col-md-7 col-sm-12 col-12 flex-column d-flex pl-0">
+            <div class="mb-2 w-100 ">
+              <div class="progress block-score-progress tech">
+                <div class="d-flex p-absolute">
+                  <div class="icon-cuest-cib-tecnologia fs-16 pl-3 mr-3 neutral-black align-self-center"></div>
+                  <span
+                    class="neutral-black fs-14 lh-16 text-uppercase roboto-b align-self-center">{{results.block3Name}}</span>
+                </div>
+                <div class="d-flex mt-2 p-absolute right">
+                  <span class="fs-16 lh-19  neutral-black">
+                    <a class="roboto-b fs-16 lh-19 mr-0 pr-0 ">{{techScore}}</a>/100
+                  </span>
+                </div>
+                <div role="progressbar" class="progress-bar d-flex justify-content-between" aria-valuemin="5"
+                  aria-valuemax="100" [style.width]="techProgress">
+
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-5 col-sm-12 col-12 d-flex pr-0 no-padding-responsive">
+            <h3 class="fs-14 lh-16 text-left roboto-b neutral-black align-self-center" *ngIf="results.block3 == 0">
+              {{'SURVEY.SCORE_HIGH'| translate}}
+            </h3>
+            <h3 class="fs-14 lh-16 text-left roboto-b neutral-black align-self-center" *ngIf="results.block3 == 1">
+              {{'SURVEY.SCORE_MID'| translate}}
+            </h3>
+            <h3 class="fs-14 lh-16 text-left roboto-b neutral-black align-self-center" *ngIf="results.block3 == 2">
+              {{'SURVEY.SCORE_LOW'| translate}}
+            </h3>
+          </div>
+        </div>
+      </div>
+      <hr class="survey-hr">
+      <div class="col-md-4 col-sm-12 col-12 pr-4 d-flex flex-column align-items-center last-survey-div">
+        <h3 class="fs-16 lh-20 text-center montserrat-b neutral-black">
+          {{'SURVEY.LAST_SURVEY'| translate}}
+        </h3>
+        <p class="text-center fs-16 lh-19 neutral-black mb-3 mt-3">
+          {{lastSurveyDate}}
+        </p>
+        <p class="text-center fs-16 lh-19 neutral-black">
+          {{'SURVEY.LAST_SURVEY_TEXT'| translate}}
+        </p>
+
+        <button class="btn btn-primary text-uppercase survey-primary-btn mb-3" (click)="openSurvey()">
+          {{'CYBERSECURITY.QUESTIONS.BTNS.QUESTIONS'| translate}}
+        </button>
+        <span id="openSurveyModal" class="hidden" data-toggle="modal" data-target="#surveyModal">
+        </span>
+        <span id="openInfoModal" class="hidden" data-toggle="modal" data-target="#infoModal">
+        </span>
+        <button class="btn btn-outline-secondary text-uppercase roboto-b survey-info-btn" (click)="goToDetails()">
+          {{'CYBERSCORING.MORE_INFO'| translate}}
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section id="header" *ngIf="!serviceCard">
+  <app-service-header [serviceName]="surveyService.serviceName" [serviceLongDesc]="surveyService.longDesc"
+    [serviceDesc]="surveyService.serviceDesc" [serviceIcon]="surveyService.icon">
+  </app-service-header>
+</section>
+
+<section class="mr-3 ml-3 pl-1 mt-3" *ngIf="!serviceCard">
+  <div class="container-fluid">
+    <!-- RESULTS -->
+    <div class="w-100">
+      <h2 class="title text-left mb-2 neutral-black fs-24 lh-29">
+        {{'SURVEY.LAST_SURVEY'| translate}}
+      </h2>
+    </div>
+    <div class="card w-100 mb-5">
+      <div class="card-body pr-0 pl-0">
+        <div class="h-100 row mr-0 ml-0 pt-4 pb-4" *ngIf="showResultsDesk">
+          <div class="col-md-8 col-sm-12 col-12 pl-4 neutral-border-r">
+            <div class="col-sm-12 col-12 pl-0 pr-0 ">
+              <h3 class="text-left mb-2 fs-16 lh-20 neutral-black">{{'SURVEY.GLOBAL_RISK'| translate}}</h3>
+            </div>
+            <div class="col-sm-12 col-12 d-flex column-responsive pl-0 pr-0 pt-3">
+              <div class="col-md-7 col-sm-12 col-12 flex-column d-flex pl-0">
+                <span class="global-score fs-16 lh-45 pl-1 montserrat-b neutral-black">
+                  <a class="global-value fs-48 lh-45 mr-0 pr-0 "
+                    [ngClass]="{'semantic-success' : results.global == 2, 'semantic-warning' : results.global == 1 , 'semantic-danger' : results.global == 0}">{{globalScore}}</a>/100
+                </span>
+                <div class="mb-2 w-100 ">
+                  <div class="progress global-score-progress"
+                    [ngClass]="{'success' : results.global == 2, 'warning' : results.global == 1 , 'danger' : results.global == 0}">
+                    <div role="progressbar" class="progress-bar" aria-valuemin="5" aria-valuemax="100"
+                      [style.width]="globalProgress">
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-5 col-sm-12 col-12 flex-column d-flex pr-0 no-padding-responsive">
+                <span class="neutral-black fs-12 lh-14 text-left">
+                  {{'SURVEY.SCORE'| translate}}
+                </span>
+                <h3 class="fs-24 lh-29 text-left montserrat-b semantic-danger" *ngIf="results.global == 0">
+                  {{'SURVEY.SCORE_HIGH'| translate}}
+                </h3>
+                <h3 class="fs-24 lh-29 text-left montserrat-b semantic-warning" *ngIf="results.global == 1">
+                  {{'SURVEY.SCORE_MID'| translate}}
+                </h3>
+                <h3 class="fs-24 lh-29 text-left montserrat-b semantic-success" *ngIf="results.global == 2">
+                  {{'SURVEY.SCORE_LOW'| translate}}
+                </h3>
+              </div>
+            </div>
+            <div class="col-sm-12 col-12 pl-0 pr-0 mt-3">
+              <h3 class="text-left mb-0 fs-16 lh-20 neutral-black">{{'SURVEY.AREA_RISK'| translate}}</h3>
+            </div>
+            <div class="col-sm-12 col-12 d-flex column-responsive pl-0 pr-0 pt-3">
+              <div class="col-md-7 col-sm-12 col-12 flex-column d-flex pl-0">
+                <div class="mb-2 w-100 ">
+                  <div class="progress block-score-progress person">
+                    <div class="d-flex p-absolute">
+                      <div class="icon-cuest-cib-personas fs-16 pl-3 mr-3 neutral-black align-self-center"></div>
+                      <span
+                        class="neutral-black fs-14 lh-16 text-uppercase roboto-b align-self-center">{{results.block1Name}}</span>
+                    </div>
+                    <div class="d-flex mt-2 p-absolute right">
+                      <span class="fs-16 lh-19  neutral-black">
+                        <a class="roboto-b fs-16 lh-19 mr-0 pr-0 ">{{personsScore}}</a>/100
+                      </span>
+                    </div>
+                    <div role="progressbar" class="progress-bar d-flex justify-content-between" aria-valuemin="5"
+                      aria-valuemax="100" [style.width]="personsProgress">
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-5 col-sm-12 col-12 d-flex pr-0 no-padding-responsive">
+                <h3 class="fs-14 lh-16 text-left roboto-b neutral-black align-self-center" *ngIf="results.block1 == 0">
+                  {{'SURVEY.SCORE_HIGH'| translate}}
+                </h3>
+                <h3 class="fs-14 lh-16 text-left roboto-b neutral-black align-self-center" *ngIf="results.block1 == 1">
+                  {{'SURVEY.SCORE_MID'| translate}}
+                </h3>
+                <h3 class="fs-14 lh-16 text-left roboto-b neutral-black align-self-center" *ngIf="results.block1 == 2">
+                  {{'SURVEY.SCORE_LOW'| translate}}
+                </h3>
+              </div>
+            </div>
+
+            <div class="col-sm-12 col-12 d-flex column-responsive pl-0 pr-0 pt-3">
+              <div class="col-md-7 col-sm-12 col-12 flex-column d-flex pl-0">
+                <div class="mb-2 w-100 ">
+                  <div class="progress block-score-progress process">
+                    <div class="d-flex p-absolute">
+                      <div class="icon-cuest-cib-procesos fs-18 pl-3 mr-3 neutral-black align-self-center"></div>
+                      <span
+                        class="neutral-black fs-14 lh-16 text-uppercase roboto-b align-self-center">{{results.block2Name}}</span>
+                    </div>
+                    <div class="d-flex mt-2 p-absolute right">
+                      <span class="fs-16 lh-19  neutral-black">
+                        <a class="roboto-b fs-16 lh-19 mr-0 pr-0 ">{{processScore}}</a>/100
+                      </span>
+                    </div>
+                    <div role="progressbar" class="progress-bar d-flex justify-content-between" aria-valuemin="5"
+                      aria-valuemax="100" [style.width]="processProgress">
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-5 col-sm-12 col-12 d-flex pr-0 no-padding-responsive">
+                <h3 class="fs-14 lh-16 text-left roboto-b neutral-black align-self-center" *ngIf="results.block2 == 0">
+                  {{'SURVEY.SCORE_HIGH'| translate}}
+                </h3>
+                <h3 class="fs-14 lh-16 text-left roboto-b neutral-black align-self-center" *ngIf="results.block2 == 1">
+                  {{'SURVEY.SCORE_MID'| translate}}
+                </h3>
+                <h3 class="fs-14 lh-16 text-left roboto-b neutral-black align-self-center" *ngIf="results.block2 == 2">
+                  {{'SURVEY.SCORE_LOW'| translate}}
+                </h3>
+              </div>
+            </div>
+
+            <div class="col-sm-12 col-12 d-flex column-responsive pl-0 pr-0 pt-3">
+              <div class="col-md-7 col-sm-12 col-12 flex-column d-flex pl-0">
+                <div class="mb-2 w-100 ">
+                  <div class="progress block-score-progress tech">
+                    <div class="d-flex p-absolute">
+                      <div class="icon-cuest-cib-tecnologia fs-16 pl-3 mr-3 neutral-black align-self-center"></div>
+                      <span
+                        class="neutral-black fs-14 lh-16 text-uppercase roboto-b align-self-center">{{results.block3Name}}</span>
+                    </div>
+                    <div class="d-flex mt-2 p-absolute right">
+                      <span class="fs-16 lh-19  neutral-black">
+                        <a class="roboto-b fs-16 lh-19 mr-0 pr-0 ">{{techScore}}</a>/100
+                      </span>
+                    </div>
+                    <div role="progressbar" class="progress-bar d-flex justify-content-between" aria-valuemin="5"
+                      aria-valuemax="100" [style.width]="techProgress">
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-5 col-sm-12 col-12 d-flex pr-0 no-padding-responsive">
+                <h3 class="fs-14 lh-16 text-left roboto-b neutral-black align-self-center" *ngIf="results.block3 == 0">
+                  {{'SURVEY.SCORE_HIGH'| translate}}
+                </h3>
+                <h3 class="fs-14 lh-16 text-left roboto-b neutral-black align-self-center" *ngIf="results.block3 == 1">
+                  {{'SURVEY.SCORE_MID'| translate}}
+                </h3>
+                <h3 class="fs-14 lh-16 text-left roboto-b neutral-black align-self-center" *ngIf="results.block3 == 2">
+                  {{'SURVEY.SCORE_LOW'| translate}}
+                </h3>
+              </div>
+            </div>
+          </div>
+          <hr class="survey-hr">
+          <div class="col-md-4 col-sm-12 col-12 pr-4 d-flex flex-column align-items-center last-survey-div">
+            <h3 class="fs-16 lh-20 text-center montserrat-b neutral-black">
+              {{'SURVEY.LAST_SURVEY'| translate}}
+            </h3>
+            <p class="text-center fs-16 lh-19 neutral-black mb-3 mt-3">
+              {{lastSurveyDate}}
+            </p>
+            <p class="text-center fs-16 lh-19 neutral-black">
+              {{'SURVEY.LAST_SURVEY_TEXT'| translate}}
+            </p>
+
+            <button class="btn btn-primary text-uppercase survey-primary-btn mb-3" (click)="openSurvey()">
+              {{'CYBERSECURITY.QUESTIONS.BTNS.QUESTIONS'| translate}}
+            </button>
+            <span id="openSurveyModal" class="hidden" data-toggle="modal" data-target="#surveyModal">
+            </span>
+            <span id="openInfoModal" class="hidden" data-toggle="modal" data-target="#infoModal">
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RECOMENDATIONS -->
+    <div class="w-100">
+      <h2 class="title text-left mb-2 neutral-black fs-24 lh-29">
+        Recomendaciones
+      </h2>
+      <div class="survey-acordeon pl-4 pr-4 person d-flex justify-content-between" (click)="togglePerRec()">
+        <div class="d-flex">
+          <div class="icon-cuest-cib-personas fs-16 mr-3 neutral-black align-self-center"></div>
+          <span
+            class="neutral-black fs-14 lh-16 text-uppercase roboto-b align-self-center">{{results.block1Name}}</span>
+        </div>
+        <div class="d-flex">
+          <div class="risk-div d-flex justify-content-center align-self-center">
+            <h3 class="fs-14 lh-16 mb-0 text-center roboto-b semantic-danger align-self-center"
+              *ngIf="results.block1 == 0">
+              {{'SURVEY.SCORE_HIGH'| translate}}
+            </h3>
+            <h3 class="fs-14 lh-16 mb-0 text-center roboto-b semantic-warning align-self-center"
+              *ngIf="results.block1 == 1">
+              {{'SURVEY.SCORE_MID'| translate}}
+            </h3>
+            <h3 class="fs-14 lh-16 mb-0 text-center roboto-b semantic-success align-self-center"
+              *ngIf="results.block1 == 2">
+              {{'SURVEY.SCORE_LOW'| translate}}
+            </h3>
+          </div>
+          <div class="d-flex" *ngIf="rec1 == false;">
+            <span class="fas fa-chevron-down ml-5 align-self-center"></span>
+          </div>
+          <div class="d-flex" *ngIf="rec1 == true;">
+            <span class="fas fa-chevron-up ml-5 align-self-center"></span>
+          </div>
+
+        </div>
+      </div>
+      <div class="survey-recomendation flex-column pl-4 pr-4 mt-0 mb-0 d-flex justify-content-center" *ngIf="rec1"
+        [innerHTML]="block1rec">
+
+      </div>
+
+      <div class="survey-acordeon pl-4 pr-4 process d-flex justify-content-between" (click)="toggleProcRec()">
+        <div class="d-flex">
+          <div class="icon-cuest-cib-procesos fs-16 mr-3 neutral-black align-self-center"></div>
+          <span
+            class="neutral-black fs-14 lh-16 text-uppercase roboto-b align-self-center">{{results.block2Name}}</span>
+        </div>
+        <div class="d-flex">
+          <div class="risk-div d-flex justify-content-center align-self-center">
+            <h3 class="fs-14 lh-16 mb-0 text-center roboto-b semantic-danger align-self-center"
+              *ngIf="results.block2 == 0">
+              {{'SURVEY.SCORE_HIGH'| translate}}
+            </h3>
+            <h3 class="fs-14 lh-16 mb-0 text-center roboto-b semantic-warning align-self-center"
+              *ngIf="results.block2 == 1">
+              {{'SURVEY.SCORE_MID'| translate}}
+            </h3>
+            <h3 class="fs-14 lh-16 mb-0 text-center roboto-b semantic-success align-self-center"
+              *ngIf="results.block2 == 2">
+              {{'SURVEY.SCORE_LOW'| translate}}
+            </h3>
+          </div>
+          <div class="d-flex" *ngIf="rec2 == false;">
+            <span class="fas fa-chevron-down ml-5 align-self-center"></span>
+          </div>
+          <div class="d-flex" *ngIf="rec2 == true;">
+            <span class="fas fa-chevron-up ml-5 align-self-center"></span>
+          </div>
+        </div>
+      </div>
+      <div class="survey-recomendation flex-column pl-4 pr-4 mt-0 mb-0 d-flex justify-content-center" *ngIf="rec2"
+        [innerHTML]="block2rec">
+
+      </div>
+
+      <div class="survey-acordeon pl-4 pr-4 tech d-flex justify-content-between" (click)="toggleTechRec()"
+        [ngClass]="(rec3 == true)? '' :'closed'">
+        <div class="d-flex">
+          <div class="icon-cuest-cib-tecnologia fs-16 mr-3 neutral-black align-self-center"></div>
+          <span
+            class="neutral-black fs-14 lh-16 text-uppercase roboto-b align-self-center">{{results.block3Name}}</span>
+        </div>
+        <div class="d-flex">
+          <div class="risk-div d-flex justify-content-center align-self-center">
+            <h3 class="fs-14 lh-16 mb-0 text-center roboto-b semantic-danger align-self-center"
+              *ngIf="results.block3 == 0">
+              {{'SURVEY.SCORE_HIGH'| translate}}
+            </h3>
+            <h3 class="fs-14 lh-16 mb-0 text-center roboto-b semantic-warning align-self-center"
+              *ngIf="results.block3 == 1">
+              {{'SURVEY.SCORE_MID'| translate}}
+            </h3>
+            <h3 class="fs-14 lh-16 mb-0 text-center roboto-b semantic-success align-self-center"
+              *ngIf="results.block3 == 2">
+              {{'SURVEY.SCORE_LOW'| translate}}
+            </h3>
+          </div>
+          <div class="d-flex" *ngIf="rec3 == false;">
+            <span class="fas fa-chevron-down ml-5 align-self-center"></span>
+          </div>
+          <div class="d-flex" *ngIf="rec3 == true;">
+            <span class="fas fa-chevron-up ml-5 align-self-center"></span>
+          </div>
+        </div>
+      </div>
+      <div class="survey-recomendation flex-column pl-4 pr-4 mt-0 mb-0 d-flex justify-content-center" *ngIf="rec3"
+        [innerHTML]="block3rec">
+
+      </div>
+    </div>
+
+    <!-- CHART -->
+    <div class="w-100">
+      <h2 class="title text-left mb-2 mt-5 neutral-black fs-24 lh-29">
+        {{'SURVEY.HISTORIC'| translate}}
+      </h2>
+    </div>
+    <div class="card w-100 mb-5">
+      <div class="container-fluid" *ngIf="historic.length >= 2">
+        <h2 class="title text-left pt-4 mb-4 ml-4 fs-16 lh-19 neutral-black roboto-reg">{{'CYBERSCORING.SCORE' |
+          translate}}</h2>
+        <div class="d-flex flex-row w-100 pl-5 no-padding-responsive">
+          <canvas class="h-90 mb-4 mwp-90" baseChart [datasets]="chartDataset" [chartType]="chartType"
+            [labels]="chartLabels" [options]="chartOptions">
+          </canvas>
+        </div>
+        <div class="d-flex column-responsive w-100 justify-content-start pl-5 mb-4 no-padding-responsive">
+          <button
+            class="btn btn-outline-secondary text-uppercase roboto-b survey-info-btn mr-2 ml-2 mb-2 align-self-center pl-2 no-padding-responsive"
+            (click)="filterChart(1,0,0)"
+            [ngClass]="(!showPerson)? 'focus' : ''">
+            <div class="led mr-2 color-waiting">
+              <i class="fas fa-circle"></i>
+            </div>
+            {{results.block1Name}}
+          </button>
+
+          <button
+            class="btn btn-outline-secondary text-uppercase roboto-b survey-info-btn mr-2 ml-2 mb-2 align-self-center"
+            (click)="filterChart(0,1,0)"
+            [ngClass]="(!showProcess)? 'focus' : ''">
+            <div class="led mr-2 main-accent">
+              <i class="fas fa-circle"></i>
+            </div>
+            {{results.block2Name}}
+          </button>
+
+          <button
+            class="btn btn-outline-secondary text-uppercase roboto-b survey-info-btn mr-2 ml-2 mb-2 align-self-center"
+            (click)="filterChart(0,0,1)"
+            [ngClass]="(!showTech)? 'focus' : ''">
+            <div class="led mr-2 semantic-pink">
+              <i class="fas fa-circle"></i>
+            </div>
+            {{results.block3Name}}
+          </button>
+        </div>
+      </div>
+      <div class="container-fluid" *ngIf="historic.length < 2">
+        <section class="row">
+          <div class="col-sm-12 pl-0 pr-0 d-flex justify-content-center">
+            <img class="new-modal-img mw-148 mt-96" src="{{staticContentUrl+'img/no-data.png'}}">
+          </div>
+          <div class="col-sm-12 mb-3">
+            <h3 class="text-center fs-20 bold lh-24 neutral-black">
+              {{'CYBERSCORING.NO_DATA_TITLE' | translate}}
+            </h3>
+          </div>
+          <div class="col-sm-12 pr-0 pl-0 align-items-center mb-90">
+            <p class="text-center cyb-body-text mb-0">
+              {{'CYBERSCORING.NO_DATA_DESC' | translate}}
+            </p>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+<!-- MODAL -->
+<div class="modal fade" id="surveyModal" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog survey-dialog" role="document">
+    <div class="modal-content survey-modal-content" [ngClass]="(stopModal)? 'small': '' ">
+      <div class="new-modal-header row ml-4 mr-4">
+        <div class="col-sm-12 col-12 pl-0 pr-0 d-flex justify-content-between">
+          <h4 class="fs-20 lh-24 pl-0 pr-0 neutral-black montserrat-b col-11" *ngIf="!showResults && !stopModal">
+            {{surveyService.serviceName}}
+          </h4>
+          <h4 class="fs-20 lh-24 pl-0 pr-0 neutral-black montserrat-b col-11" *ngIf="showResults || stopModal">
+          </h4>
+          <button type="button" id="closeModal" class="new-close col-sm-1 col-1 pr-0 pl-0 align-self-start"
+            aria-label="Close" (click)="toggleClose()">
+            <div class="icon-close text-right"></div>
+          </button>
+          <span id="closeModalResults" class="hidden" data-dismiss="modal">
+          </span>
+        </div>
+      </div>
+
+      <section class="row mt-2 mr-4 ml-4 mb-4" *ngIf="stopModal">
+        <div class="col-sm-12 pl-0 pr-0 d-flex justify-content-center">
+          <img class="new-modal-img unplug" src="{{staticContentUrl+'img/unplug.png'}}">
+        </div>
+        <div class="col-sm-12 pl-0 pr-0 mb-2 d-flex justify-content-center">
+          <h4 class="wizard-modal-title neutral-black">{{'SURVEY.STOP_SURVEY'| translate}}</h4>
+        </div>
+        <div class="col-sm-12 pl-0 pr-0 d-flex justify-content-center">
+          <p class="wizard-modal-text neutral-black">
+            {{'SURVEY.STOP_SURVEY_TEXT'| translate}}
+          </p>
+        </div>
+        <div class="col-sm-12 pl-0 pr-0 wizard-modal-btns d-flex">
+          <button class="btn mr-3 btn-primary wizard-modal-btn" data-dismiss="modal">
+            <div class="text-uppercase">
+              {{'WIZARD.BTNS.STOP' | translate}}
+            </div>
+          </button>
+          <button class="btn btn-outline-secondary wizard-modal-btn" (click)="toggleClose()">
+            <div class="text-uppercase">
+              {{'WIZARD.BTNS.CONTINUE' | translate}}
+            </div>
+          </button>
+        </div>
+      </section>
+      <section class="row mt-2 mr-4 ml-4 mb-4 survey-loading-question" *ngIf="surveyLoading" ></section>
+      <section class="row mt-2 mr-4 ml-4 mb-4 survey-question-div animated fadeInLeft" *ngIf="!surveyLoading && !showResults && !stopModal">
+        <div class="col-sm-12 col-12 pl-0 pr-0 d-flex flex-column">
+          <label class="progress-label w-100">
+            {{actualProgress}} {{'WIZARD.PROGRESS' | translate}}
+          </label>
+
+          <div class="mb-4 w-100 ">
+            <div class="progress custom-progress large">
+              <div role="progressbar" class="progress-bar" aria-valuemin="5" aria-valuemax="100"
+                [style.width]="actualProgress">
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+
+        <div class="col-sm-12 col-12 pl-0 pr-0 d-flex justify-content-start survey-block"
+          [ngClass]="{'bg-semantic-orange-light' : question.blockName == 'Personas', 'bg-semantic-information-light' : question.blockName == 'Procesos' , 'bg-semantic-pink-light' : question.blockName == 'Tecnología'}">
+          <div class="icon-cuest-cib-personas fs-18 pl-3 neutral-black align-self-center"
+            *ngIf="question.blockName == 'Personas'"></div>
+          <div class="icon-cuest-cib-procesos fs-18 pl-3 neutral-black align-self-center"
+            *ngIf="question.blockName == 'Procesos'"></div>
+          <div class="icon-cuest-cib-tecnologia fs-18 pl-3 neutral-black align-self-center"
+            *ngIf="question.blockName == 'Tecnología'"></div>
+          <span class="fs-14 lh-16 roboto-b neutral-black ml-3 align-self-center text-uppercase">
+            {{question.blockName}}
+          </span>
+        </div>
+
+        <div class="col-sm-12 pl-0 pr-0 mb-2 mt-3 d-flex justify-content-start">
+          <h4 class="montserrat-b fs-16 lh-20 neutral-black">{{question.question}}</h4>
+        </div>
+
+        <div class="col-sm-12 pl-0 pr-0 mb-2 d-flex justify-content-between answers-div">
+
+          <div class="form-group pl-0 pr-0" [ngClass]="(!mobile)? 'col-sm-6 col-6' : 'col-sm-12 col-12'">
+            <div class="custom-control custom-checkbox mb-3" *ngFor="let answer of question.answers">
+              <input type="checkbox" class="custom-control-input" [id]="answer.answerId" [name]="answer.answerId"
+                [checked]="isCheckedId == answer.answerId" (change)="onChange(answer, $event)">
+              <label class="custom-control-label custom-control-label-activation fs-14"
+                for={{answer.answerId}}>{{answer.answer}}</label>
+            </div>
+          </div>
+          <div class="form-group col-sm-6 col-6 pl-0 pr-0 d-flex justify-content-end" *ngIf="!mobile">
+            <img class="survey-img" src="{{staticContentUrl+'img/persons.png'}}"
+              *ngIf="question.blockName == 'Personas'">
+            <img class="survey-img" src="{{staticContentUrl+'img/process.png'}}"
+              *ngIf="question.blockName == 'Procesos'">
+            <img class="survey-img" src="{{staticContentUrl+'img/tech.png'}}"
+              *ngIf="question.blockName == 'Tecnología'">
+          </div>
+        </div>
+        <div class="col-sm-12 pl-0 pr-0 justify-content-end d-flex">
+          <button class="btn btn-outline-secondary mr-3 wizard-modal-btn" data-dismiss="modal"
+            *ngIf="question.blockOrder > 1 || question.questionOrder > 1" [ngClass]="(loading)? 'focus' : ''"
+            (click)="previousQuestion()">
+            <nz-spinner *ngIf="loading"></nz-spinner>
+            <div *ngIf="!loading" class="text-uppercase d-flex justify-content-between align-content-center">
+              <div class="icon-left-big-arrow fs-10 mr-2 main-secondary"></div>
+              {{'WIZARD.BMS_MODAL.BTN_PREVIOUS' | translate}}
+            </div>
+          </button>
+          <button class="btn btn-primary wizard-modal-btn"
+          (click)="sendAnswer()"
+          [disabled]="loading || isCheckedId == '' || isCheckedId == 0 ">
+            <nz-spinner *ngIf="loading"></nz-spinner>
+            <div *ngIf="!loading" class="text-uppercase d-flex justify-content-between align-content-center">
+              {{'WIZARD.BMS_MODAL.BTN_NEXT' | translate}}
+              <div class="icon-right-big-arrow fs-10 ml-2"></div>
+            </div>
+          </button>
+        </div>
+      </section>
+
+      <section class="row mt-2 mr-4 ml-4 mb-4 animated fadeInLeft" *ngIf="!surveyLoading && showResults && !stopModal">
+        <div class="col-sm-12 col-12 pl-0 pr-0 d-flex flex-column neutral-border-b">
+          <img class="new-modal-img mw-66 mt-0" src="{{staticContentUrl+'img/check-circle-outline.png'}}">
+          <h3 class="text-center mb-2 fs-20 lh-24">{{'SURVEY.SURVEY_END'| translate}}</h3>
+          <p class="pl-5 pr-5 mb-4 text-center right-card-text neutral-black no-padding-responsive">
+            {{'SURVEY.SURVEY_END_TEXT'| translate}}
+          </p>
+        </div>
+        <div class="col-sm-12 col-12 pl-0 pr-0 pt-3">
+          <h3 class="text-left mb-2 fs-16 lh-20 neutral-black">{{'SURVEY.GLOBAL_RISK'| translate}}</h3>
+        </div>
+        <div class="col-sm-12 col-12 d-flex column-responsive pl-0 pr-0 pt-3">
+          <div class="col-md-8 col-sm-12 col-12 flex-column d-flex pl-0 no-padding-responsive mh-71">
+            <span class="global-score fs-16 lh-45 pl-1 montserrat-b neutral-black">
+              <a class="global-value fs-48 lh-45 mr-0 pr-0 "
+                [ngClass]="{'semantic-success' : results.global == 2, 'semantic-warning' : results.global == 1 , 'semantic-danger' : results.global == 0}">{{globalScore}}</a>/100
+            </span>
+            <div class="mb-2 w-100 ">
+              <div class="progress global-score-progress"
+                [ngClass]="{'success' : results.global == 2, 'warning' : results.global == 1 , 'danger' : results.global == 0}">
+                <div role="progressbar" class="progress-bar" aria-valuemin="5" aria-valuemax="100"
+                  [style.width]="globalProgress">
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-5 col-sm-12 col-12 flex-column d-flex pr-0 pl-0 no-padding-responsive mh-55">
+            <span class="neutral-black fs-12 lh-14 text-left">
+              {{'SURVEY.SCORE'| translate}}
+            </span>
+            <h3 class="fs-24 lh-29 text-left montserrat-b semantic-danger" *ngIf="results.global == 0">
+              {{'SURVEY.SCORE_HIGH'| translate}}
+            </h3>
+            <h3 class="fs-24 lh-29 text-left montserrat-b semantic-warning" *ngIf="results.global == 1">
+              {{'SURVEY.SCORE_MID'| translate}}
+            </h3>
+            <h3 class="fs-24 lh-29 text-left montserrat-b semantic-success" *ngIf="results.global == 2">
+              {{'SURVEY.SCORE_LOW'| translate}}
+            </h3>
+          </div>
+        </div>
+        <div class="col-sm-12 col-12 pl-0 pr-0 mt-3">
+          <h3 class="text-left mb-0 fs-16 lh-20 neutral-black">{{'SURVEY.AREA_RISK'| translate}}</h3>
+        </div>
+        <div class="col-sm-12 col-12 d-flex column-responsive pl-0 pr-0 pt-3">
+          <div class="col-md-7 col-sm-12 col-12 flex-column d-flex pl-0">
+            <div class="mb-2 w-100 ">
+              <div class="progress block-score-progress person">
+                <div class="d-flex p-absolute">
+                  <div class="icon-cuest-cib-personas fs-16 pl-3 mr-3 neutral-black align-self-center"></div>
+                  <span
+                    class="neutral-black fs-14 lh-16 text-uppercase roboto-b align-self-center">{{results.block1Name}}</span>
+                </div>
+                <div class="d-flex mt-2 p-absolute right">
+                  <span class="fs-16 lh-19  neutral-black">
+                    <a class="roboto-b fs-16 lh-19 mr-0 pr-0 ">{{personsScore}}</a>/100
+                  </span>
+                </div>
+                <div role="progressbar" class="progress-bar d-flex justify-content-between" aria-valuemin="5"
+                  aria-valuemax="100" [style.width]="personsProgress">
+
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-5 col-sm-12 col-12 d-flex pr-0 no-padding-responsive">
+            <h3 class="fs-14 lh-16 text-left roboto-b neutral-black align-self-center" *ngIf="results.block1 == 0">
+              {{'SURVEY.SCORE_HIGH'| translate}}
+            </h3>
+            <h3 class="fs-14 lh-16 text-left roboto-b neutral-black align-self-center" *ngIf="results.block1 == 1">
+              {{'SURVEY.SCORE_MID'| translate}}
+            </h3>
+            <h3 class="fs-14 lh-16 text-left roboto-b neutral-black align-self-center" *ngIf="results.block1 == 2">
+              {{'SURVEY.SCORE_LOW'| translate}}
+            </h3>
+          </div>
+        </div>
+
+        <div class="col-sm-12 col-12 d-flex column-responsive pl-0 pr-0 pt-3">
+          <div class="col-md-7 col-sm-12 col-12 flex-column d-flex pl-0">
+            <div class="mb-2 w-100 ">
+              <div class="progress block-score-progress process">
+                <div class="d-flex p-absolute">
+                  <div class="icon-cuest-cib-procesos fs-18 pl-3 mr-3 neutral-black align-self-center"></div>
+                  <span
+                    class="neutral-black fs-14 lh-16 text-uppercase roboto-b align-self-center">{{results.block2Name}}</span>
+                </div>
+                <div class="d-flex mt-2 p-absolute right">
+                  <span class="fs-16 lh-19  neutral-black">
+                    <a class="roboto-b fs-16 lh-19 mr-0 pr-0 ">{{processScore}}</a>/100
+                  </span>
+                </div>
+                <div role="progressbar" class="progress-bar d-flex justify-content-between" aria-valuemin="5"
+                  aria-valuemax="100" [style.width]="processProgress">
+
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-5 col-sm-12 col-12 d-flex pr-0 no-padding-responsive">
+            <h3 class="fs-14 lh-16 text-left roboto-b neutral-black align-self-center" *ngIf="results.block2 == 0">
+              {{'SURVEY.SCORE_HIGH'| translate}}
+            </h3>
+            <h3 class="fs-14 lh-16 text-left roboto-b neutral-black align-self-center" *ngIf="results.block2 == 1">
+              {{'SURVEY.SCORE_MID'| translate}}
+            </h3>
+            <h3 class="fs-14 lh-16 text-left roboto-b neutral-black align-self-center" *ngIf="results.block2 == 2">
+              {{'SURVEY.SCORE_LOW'| translate}}
+            </h3>
+          </div>
+        </div>
+
+        <div class="col-sm-12 col-12 d-flex column-responsive pl-0 pr-0 pt-3 mb-3">
+          <div class="col-md-7 col-sm-12 col-12 flex-column d-flex pl-0">
+            <div class="mb-2 w-100 ">
+              <div class="progress block-score-progress tech">
+                <div class="d-flex p-absolute">
+                  <div class="icon-cuest-cib-tecnologia fs-16 pl-3 mr-3 neutral-black align-self-center"></div>
+                  <span
+                    class="neutral-black fs-14 lh-16 text-uppercase roboto-b align-self-center">{{results.block3Name}}</span>
+                </div>
+                <div class="d-flex mt-2 p-absolute right">
+                  <span class="fs-16 lh-19  neutral-black">
+                    <a class="roboto-b fs-16 lh-19 mr-0 pr-0 ">{{techScore}}</a>/100
+                  </span>
+                </div>
+                <div role="progressbar" class="progress-bar d-flex justify-content-between" aria-valuemin="5"
+                  aria-valuemax="100" [style.width]="techProgress">
+
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-5 col-sm-12 col-12 d-flex pr-0 no-padding-responsive">
+            <h3 class="fs-14 lh-16 text-left roboto-b neutral-black align-self-center" *ngIf="results.block3 == 0">
+              {{'SURVEY.SCORE_HIGH'| translate}}
+            </h3>
+            <h3 class="fs-14 lh-16 text-left roboto-b neutral-black align-self-center" *ngIf="results.block3 == 1">
+              {{'SURVEY.SCORE_MID'| translate}}
+            </h3>
+            <h3 class="fs-14 lh-16 text-left roboto-b neutral-black align-self-center" *ngIf="results.block3 == 2">
+              {{'SURVEY.SCORE_LOW'| translate}}
+            </h3>
+          </div>
+        </div>
+        <div class="col-sm-12 pl-0 pr-0 justify-content-end d-flex">
+          <button class="btn btn-primary survey-modal-btn"
+          (click)="goToDetails()">
+            <nz-spinner *ngIf="loading"></nz-spinner>
+            <div *ngIf="!loading" class="text-uppercase d-flex justify-content-between align-content-center">
+              {{'SURVEY.RECOMENDATIONS' | translate}}
+            </div>
+          </button>
+          <span id="closeResultModal" class="hidden" data-dismiss="modal">
+          </span>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+
+<!-- INFO MODAL -->
+<div class="modal fade add-service pr-1 pl-1" tabindex="-1" role="dialog" aria-hidden="true" id="infoModal">
+  <div class="modal-dialog" role="document">
+      <div class="modal-content" style="min-height: 521px; max-width: 482px;">
+        <div class="new-modal-header row ml-4">
+          <div class="col-sm-12 col-12 d-flex justify-content-end">
+            <button type="button" id="closeModal" class="new-close col-sm-1 col-1 pr-0" aria-label="Close" data-dismiss="modal">
+              <div class="icon-close" data-dismiss="modal"></div>
+            </button>
+          </div>
+        </div>
+
+        <section class="row mt-2 mr-4 ml-4 mb-4">
+          <div class="col-sm-12 col-12 pl-0 pr-0 d-flex justify-content-center">
+            <img class="new-modal-img unplug" src="{{staticContentUrl+'img/icon_info.png'}}">
+          </div>
+          <div class="col-sm-12 col-12 pl-0 pr-0 mb-2 d-flex justify-content-center">
+            <h4 class="wizard-modal-title fs-20 lh-24 neutral-black">{{'SURVEY.INFO_TITLE' | translate}}</h4>
+          </div>
+          <div class="col-sm-12 col-12 pl-0 pr-0 d-flex justify-content-center">
+            <p class="wizard-modal-text neutral-black fs-16 lh-19">
+              {{'SURVEY.INFO_TEXT1' | translate: { nextSurveyDate: nextSurveyDate} }}
+            </p>
+          </div>
+          <div class="col-sm-12 col-12 pl-0 pr-0 d-flex justify-content-center">
+            <p class="wizard-modal-text neutral-black fs-16 lh-19">
+              {{'SURVEY.INFO_TEXT2' | translate}}
+            </p>
+          </div>
+          <div class="col-sm-12 col-12 pl-0 pr-0 wizard-modal-btns d-flex">
+            <button
+              class="btn btn-primary wizard-modal-btn"
+              data-dismiss="modal">
+              <div class="text-uppercase">
+                {{'WIZARD.BTNS.CLOSE' | translate}}
+              </div>
+            </button>
+          </div>
+        </section>
+      </div>
+  </div>
+</div>

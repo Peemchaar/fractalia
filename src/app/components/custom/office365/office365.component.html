@@ -1,0 +1,68 @@
+<section id="header">
+  <div class="container-fluid">
+    <ul class="navbar-nav float-left mr-auto ml-3 pl-1">
+      <li class="nav-item">
+        <small>&nbsp;</small>
+      </li>
+      <li class="nav-item">
+        <h4 [innerHTML]="licenseService.serviceName"></h4>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<section id="servicestitles" class="mr-3 ml-3 pl-1">
+  <div class="container-fluid">
+    <br /><br /><br />
+    <a class="bback" href="javascript:history.back()">
+      <div class="myicons-arrow"></div>{{ 'ATRAS' | translate }}
+    </a>
+    <br /><br />
+    <div class="service-title" [innerHTML]="licenseService.serviceDesc"></div>
+    <br />
+    <button class="collapse-btn" data-toggle="collapse" data-target="#description-service">
+      <div class="myicons-info"></div> {{ 'MAS_INFO_SERVICIO' | translate }}
+    </button>
+    <div id="description-service" class="collapse">
+      <div>
+        <span [innerHTML]="licenseService.longDesc"></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="dashboard-page mr-3 ml-3 pl-1 mt-3">
+  <div class="container-fluid">
+    <div class="card">
+      <div class="container-fluid">
+        <div class="row grid-divider justify-content-center">
+          <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 d-flex pt-4 justify-content-center align-items-center">
+            <div *ngIf="!activated" class="mb-4">
+              <p class="ps">{{'OFFICE365.SOLICITAR_TEXT1' | translate}}</p>
+              <button [disabled]="loading" class="btn btn-primary" (click)="activateOffice365()">
+                <nz-spinner *ngIf="loading"></nz-spinner>
+                <div *ngIf="!loading">{{'OFFICE365.SOLICITAR_BUTTON' | translate}}</div>
+              </button>
+              <br /><br />
+              <p class="ps">{{'OFFICE365.SOLICITAR_TEXT2' | translate}}</p>
+            </div>
+            <div class="justify-content-center mb-4" *ngIf="activated">
+              <div class="align-items-center">
+                <p class="ps">{{'OFFICE365.SOLICITADO_TEXT1' | translate}}</p>
+                <a style="display: table;" class="btn btn-primary" href="https://login.microsoftonline.com/"
+                  target="_blank">{{'OFFICE365.SOLICITADO_BUTTON' | translate}}</a>
+                <br /><br />
+                <p class="ps">{{'OFFICE365.SOLICITADO_TEXT2' | translate}}</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 pt-4 align-items-center">
+            <div class="text-center">
+              <img src="{{staticContentUrl+'img/art/office365.png'}}" width="200" heigth="" alt="Backup" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

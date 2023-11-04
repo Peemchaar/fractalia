@@ -1,0 +1,11 @@
+.check{
+    position: absolute;
+    top: 8px;
+    right: 120px;
+    z-index: 9;
+    color: green;
+}
+
+.custom-file-label::after{
+    content: attr(data-value) !important;
+}

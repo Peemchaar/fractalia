@@ -1,0 +1,135 @@
+<section class="header-right">
+  <div class="container-fluid" >
+    <!-- <ul class="navbar-nav mb-1 float-right" id="icons-right">
+      <li class="mr-4">
+        <button
+          id="download-pwa"
+          [hidden]="!appInstallerService.showDownloadBox || this.appInstallerService.isStandalone()"
+          class="btn btn-outline-primary"
+          >
+            <div class="icon-download-app"></div>
+            <div class="text">
+              {{ 'MEJORA_EXPERIENCIA' | translate }}<br />
+              <span
+                class="r-bold c-black"
+                [hidden]="!showDownloadText">{{ 'DESCARGA_APP_DISPOSITIVO' | translate }}<br />
+              </span>
+              <span class="r-bold c-black" [hidden]="!showChromeAdvice">{{'DOWNLOAD_PWA.CHROME_ADVICE' | translate}}</span>
+              <span class="r-bold c-black" [hidden]="!showSafariAdvice">{{'DOWNLOAD_PWA.SAFARI_TEXT1' | translate}}<img
+                  src="{{staticContentUrl+'img/share_icon.png'}}" alt="Compartir" width="20"
+                  height="20" />{{'DOWNLOAD_PWA.SAFARI_TEXT2' | translate}}</span>
+            </div>
+        </button>
+      </li>
+
+
+      <li>
+        <button class="nav-link notif" id="button-noti" (click)="toogleNotification();readNotifications() ">
+          <div *ngIf="notificationUnreaded || notificationChildsUnreaded">
+            <i class="fas fa-circle"></i>
+          </div>
+          <div class="icon-bell"></div>
+        </button>
+        <div class="navbar-collapse px-3" [hidden]="!isNotificationOpen" id="notification">
+          <app-fra-tabs>
+            <app-fra-tab label="{{'NOTIFICATIONS.MY_NOTIFICATIONS' | translate}}" [active]="true">
+              <app-own-notification [notifications]="userNotificationsGrouped"></app-own-notification>
+            </app-fra-tab>
+
+            <app-fra-tab label="{{'NOTIFICATIONS.USER_NOTIFICATIONS' | translate}}">
+              <app-user-notification  [notifications]="userNotificationsGroupedChilds"></app-user-notification>
+            </app-fra-tab>
+
+            <app-fra-tab label="Notificaciones de soporte">
+              <app-support-notification [notifications]="supportNotificationGrouped"></app-support-notification>
+            </app-fra-tab>
+
+
+          </app-fra-tabs>
+
+
+        </div>
+
+
+      </li>
+    </ul> -->
+
+    <div class="d-flex justify-content-end mt-4 mr-2"  *ngIf="this.currentUser && this.currentUser.roleId ">
+      <div class="d-flex d-flex align-items-center">
+        <button  id="download-pwa" class="btn btn-outline-primary mr-3"  [hidden]="!showDownloadButton">
+          <div class="icon-download-app"></div>
+          <div class="text">
+            {{ 'MEJORA_EXPERIENCIA' | translate }}<br />
+            <span
+              class="r-bold c-black"
+              [hidden]="!showDownloadText">
+              {{ 'DESCARGA_APP_DISPOSITIVO' | translate }}
+            </span>
+            <span class="r-bold c-black" [hidden]="!showChromeAdvice">{{'DOWNLOAD_PWA.CHROME_ADVICE' | translate}}</span>
+            <span class="r-bold c-black" [hidden]="!showSafariAdvice">{{'DOWNLOAD_PWA.SAFARI_TEXT1' | translate}}<img
+                src="{{staticContentUrl+'img/share_icon.png'}}" alt="Compartir" width="20"
+                height="20" />{{'DOWNLOAD_PWA.SAFARI_TEXT2' | translate}}</span>
+          </div>
+        </button>
+        <div class="d-flex">
+          <button class="button-notification" id="button-noti" (click)="toogleNotification();">
+            <div class="icon-bell" style="font-size: 1.4rem;color:#666A73;"></div>
+          </button>
+          <span
+            *ngIf="(this.notificationUnreaded || this.notificationChildsUnreaded || this.supportNotificationUnreaded)"
+            class="noti-bell"
+            [style.background-color]="partnerService.partner.color ? partnerService.partner.color : ''"
+          ></span>
+        </div>
+
+      </div>
+
+
+    </div>
+
+    <div class="navbar-collapse px-3" [hidden]="!isNotificationOpen" id="notification">
+      <app-fra-tabs (onTabChange)="changeTab($event)" (onDeleteAll)="deleteAllByTab($event)">
+        <app-fra-tab
+          [id]="ownNotification"
+          label="{{'NOTIFICATIONS.MY_NOTIFICATIONS' | translate}}"
+          [showNotificationAsNoReaded]="notificationUnreaded"
+          [backgroundColor]="partnerService.partner.color"
+          [showDeleteAllButton]="true">
+          <app-own-notification [notifications]="userNotificationsGrouped"></app-own-notification>
+        </app-fra-tab>
+
+        <app-fra-tab
+          *ngIf="this.currentUser && this.currentUser.isAdminUserId && this.currentUser.companyUser.maxLicense > 1"
+          [id]="anotherNotification"
+          label="{{'NOTIFICATIONS.USER_NOTIFICATIONS' | translate}}"
+          [showNotificationAsNoReaded]="notificationChildsUnreaded"
+          [backgroundColor]="partnerService.partner.color"
+          [showDeleteAllButton]="true">
+          <app-user-notification  [notifications]="userNotificationsGroupedChilds" ></app-user-notification>
+        </app-fra-tab>
+
+        <app-fra-tab
+          [id]="supportNotification"
+          label="Notificaciones de soporte"
+          [backgroundColor]="partnerService.partner.color"
+          [showNotificationAsNoReaded]="supportNotificationUnreaded"
+          [showDeleteAllButton]="false">
+          <app-support-notification [notifications]="supportNotificationGrouped"></app-support-notification>
+        </app-fra-tab>
+      </app-fra-tabs>
+    </div>
+
+
+   <div id="activation-container">
+      <button *ngIf="wizardSkiped" id="resume-wizard" class="btn btn-primary wizard-resume-btn d-flex align-items-center"
+          (click)="goToWizard()">
+          <img src="{{staticContentUrl+'img/fact_check.png'}}" width="16">
+          <div class="ml-2 text-uppercase">
+            {{'COMP_USER.SUPPORT_NOTIFICATION.CONTINUE_ACTIVATION' | translate}}
+          </div>
+        </button>
+    </div>
+  </div>
+
+
+</section>

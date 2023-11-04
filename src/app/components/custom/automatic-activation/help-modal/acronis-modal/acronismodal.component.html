@@ -1,0 +1,370 @@
+
+<div class="msp-help-modal" >
+    <div class="new-modal-header row mr-0 mt-0">
+        <div class="col-sm-12 col-12 pr-0 d-flex justify-content-end">
+            <button type="button" class="new-close col-sm-1 col-1 pr-0" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
+                <div class="icon-close"></div>
+            </button>
+        </div>
+    </div>
+
+    <section class="row ml-0 mr-0">
+        <div class="col-sm-12 col-12 pl-0 pr-0 d-flex justify-content-center">
+            <img class="new-modal-img interrogation mb-3 mt-3" src="{{staticContentUrl+'img/bms_modal/interrogation.png'}}">
+        </div>
+
+        <div class="col-sm-12 col-12 pl-0 pr-0 d-flex justify-content-center">
+            <p class="text-left neutral-black fs-16 lh-19">
+                {{'WIZARD.ACRONIS_MODAL.TEXT_1' | translate}}
+            </p>
+        </div>
+        <div class="col-sm-12 col-12 pl-0 pr-0 d-flex justify-content-between bms-modal-content flex-column">
+            <div class="row ml-0 mr-0">
+                <div class="col-md-4 col-sm-12 col-12 left-side">
+                    <p class="text-left text-uppercase neutral-black fs-14 lh-16 roboto-b">
+                        {{'WIZARD.BMS_MODAL.STEP' | translate}}{{step}}
+                    </p>
+                    <section *ngIf="step == 1">
+                        <p class="text-left neutral-black fs-16 lh-19"
+                            [innerHTML]="'WIZARD.ACRONIS_MODAL.STEP1_TEXT1' | translate" >  
+                        </p>
+                        <p class="text-left neutral-black fs-16 lh-19"
+                            [innerHTML]="'WIZARD.ACRONIS_MODAL.STEP1_TEXT2' | translate" >  
+                        </p>
+                    </section>
+                    <section *ngIf="step == 2">
+                        <h3 class="text-left neutral-black fs-16 lh-19 roboto-b mb-0">
+                            {{'WIZARD.ACRONIS_MODAL.STEP2_DESKTOP' | translate}}
+                        </h3>
+                        <p class="text-left neutral-black fs-16 lh-19"
+                            [innerHTML]="'WIZARD.ACRONIS_MODAL.STEP2_TEXT1' | translate" >  
+                        </p>
+                        <p class="text-left neutral-black fs-16 lh-19"
+                            [innerHTML]="'WIZARD.ACRONIS_MODAL.STEP2_TEXT2' | translate" >  
+                        </p>
+                        <div class="col-12 pl-0 pr-0 mb-3 gray-bg step2 d-flex justify-content-center flex-column" *ngIf="mobile">
+                            <div class="acronis-agent-container d-flex w-100 row ml-0 mr-0">
+                                <div class="agent-btn text-center">
+                                    <span class="text-uppercase roboto-b fs-14 lh-16">{{'WIZARD.ACRONIS_MODAL.WIN_AGENT' | translate}}</span>
+                                </div>
+                                <div class="agent-btn text-center">
+                                    <span class="text-uppercase roboto-b fs-14 lh-16">{{'WIZARD.ACRONIS_MODAL.MAC_AGENT' | translate}}</span>
+                                </div>
+                            </div>
+                            <div class="acronis-download-btn simple d-flex justify-content-start">
+                                <img class="app" src="{{staticContentUrl+'img/acronis_modal/logo_app.png'}}">
+                                <div class="d-flex flex-column text-wrapper align-self-center">
+                                    <h3 class="fs-12 lh-14 text-left mb-0">Acronis</h3>
+                                </div>
+                            </div>
+                        </div>
+                        <h3 class="text-left neutral-black fs-16 lh-19 roboto-b mb-0">
+                            {{'WIZARD.ACRONIS_MODAL.STEP2_MOBILE' | translate}}
+                        </h3>
+                        <p class="text-left neutral-black fs-16 lh-19"
+                            [innerHTML]="'WIZARD.ACRONIS_MODAL.STEP2_TEXT3' | translate" >  
+                        </p>
+                        <p class="text-left neutral-black fs-16 lh-19"
+                            [innerHTML]="'WIZARD.ACRONIS_MODAL.STEP2_TEXT4' | translate" >  
+                        </p>
+                        <p class="text-left neutral-black fs-16 lh-19 roboto-b"
+                            [innerHTML]="'WIZARD.ACRONIS_MODAL.STEP2_TEXT5' | translate" >  
+                        </p>
+                        <div class="col-12 pl-0 pr-0 d-flex justify-content-start bms-phone-container mt-0" *ngIf="mobile">
+                            <img src="{{staticContentUrl+'img/acronis_modal/acronis_phone.png'}}">
+                        </div>
+                        
+                    </section>
+                    <section *ngIf="step == 3">
+                        <p class="text-left neutral-black fs-16 lh-19"
+                            [innerHTML]="'WIZARD.ACRONIS_MODAL.STEP3_TEXT1' | translate" >  
+                        </p>
+                        <p class="text-left neutral-black fs-16 lh-19"
+                            [innerHTML]="'WIZARD.ACRONIS_MODAL.STEP3_TEXT2' | translate" >  
+                        </p>
+                        <p class="text-left neutral-black fs-16 lh-19"
+                            [innerHTML]="'WIZARD.ACRONIS_MODAL.STEP3_TEXT3' | translate" >  
+                        </p>
+                    </section>
+                    <section *ngIf="step == 4">
+                        <p class="text-left neutral-black fs-16 lh-19"
+                            [innerHTML]="'WIZARD.ACRONIS_MODAL.STEP4_TEXT1' | translate" >  
+                        </p>
+                        <p class="text-left neutral-black fs-16 lh-19"
+                            [innerHTML]="'WIZARD.ACRONIS_MODAL.STEP4_TEXT2' | translate" >  
+                        </p>
+                    </section>
+                    <section *ngIf="step == 5">
+                        <p class="text-left neutral-black fs-16 lh-19"
+                            [innerHTML]="'WIZARD.ACRONIS_MODAL.STEP5_TEXT1' | translate" >  
+                        </p>
+                        <p class="text-left neutral-black fs-16 lh-19"
+                            [innerHTML]="'WIZARD.ACRONIS_MODAL.STEP5_TEXT2' | translate" >  
+                        </p>
+                    </section>
+                    <section *ngIf="step == 6">
+                        <p class="text-left neutral-black fs-16 lh-19"
+                            [innerHTML]="'WIZARD.ACRONIS_MODAL.STEP6_TEXT1' | translate" >  
+                        </p>
+                        <p class="text-left neutral-black fs-16 lh-19"
+                            [innerHTML]="'WIZARD.ACRONIS_MODAL.STEP6_TEXT2' | translate" >  
+                        </p>
+                        <p class="text-left neutral-black fs-16 lh-19" >
+                            <span class="acronis-important roboto-b">{{'WIZARD.ACRONIS_MODAL.STEP6_TEXT_IMPORTANT' | translate}}</span>
+                            {{'WIZARD.ACRONIS_MODAL.STEP6_TEXT3' | translate}}
+                        </p>
+                        <p class="text-left neutral-black fs-16 lh-19 roboto-b"
+                            [innerHTML]="'WIZARD.ACRONIS_MODAL.STEP6_TEXT4' | translate" >  
+                        </p>
+                    </section>
+                    <section *ngIf="step == 7">
+                        <p class="text-left neutral-black fs-16 lh-19 roboto-b"
+                            [innerHTML]="'WIZARD.ACRO_TEXT2' | translate" >  
+                        </p>
+                        <p class="text-left neutral-black fs-16 lh-19"
+                            [innerHTML]="'WIZARD.ACRO_TEXT3_ALT1' | translate" >  
+                        </p>
+                        <p class="text-left neutral-black fs-16 lh-19"
+                            [innerHTML]="'WIZARD.ACRO_TEXT3_ALT2' | translate" >  
+                        </p>
+                    </section>
+
+                    
+                </div>
+                <div class="d-flex col-md-8 col-sm-12 col-12 right-side">
+                    <section class="w-100 row mr-0 ml-0" *ngIf="step == 1">
+                        <div class="col-4 pl-0 pr-0 acronis-column">
+                            <div class="d-flex justify-content-center help-img-container">
+                                <img class="acronis-cyber" src="{{staticContentUrl+'img/acronis_modal/acronis_cyber_logo.png'}}" >
+                            </div>
+                            <div class="acronis-device-div">
+                                <span class='fs-12 lh-14 '>
+                                    {{'COMP_USER.STATISTICS.DEVICES' | translate}}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-8 pl-0 pr-0 gray-bg d-flex justify-content-center">
+                            <div class="acronis-container d-flex flex-column justify-content-start">
+                                <p class="fs-12 lh-4 text-left mb-0">{{'WIZARD.ACRONIS_MODAL.DEVICE_ADD' | translate}}</p>
+                                <div class="acronis-download-btn d-flex justify-content-start">
+                                    <img class="desktop" src="{{staticContentUrl+'img/acronis_modal/desktop_mac.png'}}">
+                                    <div class="d-flex flex-column text-wrapper align-self-center">
+                                        <h3 class="fs-12 lh-14 text-left mb-0 roboto-b ">{{'WIZARD.ACRONIS_MODAL.WIN_MAC' | translate}}</h3>
+                                    </div>
+                                </div>
+                                <div class="acronis-download-btn alt d-flex justify-content-start">
+                                    <img class="mobile" src="{{staticContentUrl+'img/acronis_modal/mobile.png'}}">
+                                    <div class="d-flex flex-column text-wrapper align-self-center">
+                                        <h3 class="fs-12 lh-14 text-left mb-0 roboto-b">{{'WIZARD.ACRONIS_MODAL.IOS_AND' | translate}}</h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <section class="w-100 row mr-0 ml-0" *ngIf="step == 2 && !mobile">
+                        <div class="col-12 pl-0 pr-0 mt-4 gray-bg step2 d-flex justify-content-center flex-column">
+                            <div class="acronis-agent-container d-flex w-100 row ml-0 mr-0">
+                                <div class="agent-btn text-center">
+                                    <span class="text-uppercase roboto-b fs-14 lh-16">{{'WIZARD.ACRONIS_MODAL.WIN_AGENT' | translate}}</span>
+                                </div>
+                                <div class="agent-btn text-center">
+                                    <span class="text-uppercase roboto-b fs-14 lh-16">{{'WIZARD.ACRONIS_MODAL.MAC_AGENT' | translate}}</span>
+                                </div>
+                            </div>
+                            <div class="acronis-download-btn simple d-flex justify-content-start">
+                                <img class="app" src="{{staticContentUrl+'img/acronis_modal/logo_app.png'}}">
+                                <div class="d-flex flex-column text-wrapper align-self-center">
+                                    <h3 class="fs-12 lh-14 text-left mb-0">Acronis</h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 pl-0 pr-0 d-flex justify-content-start bms-phone-container mt-0">
+                            <img src="{{staticContentUrl+'img/acronis_modal/acronis_phone.png'}}">
+                        </div>
+                    </section>
+
+                    <section class="w-100 row mr-0 ml-0" *ngIf="step == 3">
+                        <div class="col-4 pl-0 pr-0 acronis-column">
+                            <div class="d-flex justify-content-start help-img-container">
+                                <img class="acronis-logo" src="{{staticContentUrl+'img/acronis_modal/acronis_logo.png'}}" >
+                            </div>
+                        </div>
+                        <div class="col-8 pl-0 pr-0 white-bg d-flex justify-content-center">
+                            <div class="acronis-container d-flex flex-column justify-content-start">
+                                
+
+                                <img class="desktop-img" src="{{staticContentUrl+'img/acronis_modal/desktop.png'}}">
+                                <div class="d-flex align-self-center green-btn">
+                                    <span class="fs-20 lh-24 text-center mb-0 ">{{'WIZARD.ACRONIS_MODAL.STEP3_REGISTER' | translate}}</span>
+                                </div>
+
+                            </div>
+                        </div>
+                    </section>
+                    <section class="w-100 row mr-0 ml-0" *ngIf="step == 4">
+                        <div class="col-4 pl-0 pr-0 acronis-column">
+                            <div class="d-flex justify-content-center help-img-container">
+                                <img class="acronis-cyber" src="{{staticContentUrl+'img/acronis_modal/acronis_cyber_logo.png'}}" >
+                            </div>
+                        </div>
+                        <div class="col-8 pl-0 pr-0 gray-bg d-flex justify-content-center">
+                            <div class="acronis-container d-flex flex-column justify-content-between">
+                                <p class="fs-12 lh-4 text-left mb-0">{{'WIZARD.ACRONIS_MODAL.STEP4_REGISTER' | translate}}</p>  
+                                <div class="d-flex align-self-start justify-content-center blue-btn">
+                                    <span class="fs-12 lh-14 text-left mb-0 roboto-b">{{'WIZARD.ACRONIS_MODAL.STEP4_CONFIRM' | translate}}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <section class="w-100 row mr-0 ml-0" *ngIf="step == 5">
+                        <div class="col-4 pl-0 pr-0 acronis-column step5">
+                            <div class="d-flex justify-content-center help-img-container">
+                                <img class="acronis-cyber" src="{{staticContentUrl+'img/acronis_modal/acronis_cyber_logo.png'}}" >
+                            </div>
+
+                            <div class="acronis-device-div">
+                                <span class='fs-12 lh-14 '>
+                                    {{'WIZARD.ACRONIS_MODAL.STEP5_ALL_DEVICES' | translate}}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-8 pl-0 pr-0 gray-bg step5 d-flex justify-content-center">
+                            <div class="acronis-container big d-flex justify-content-start">
+                                <div>
+                                    <img src="{{staticContentUrl+'img/acronis_modal/desktop_mac.png'}}">
+                                </div>
+                                <div class="d-flex flex-column justify-content-center">
+                                    <p class="fs-12 lh-4 text-left mb-2">{{'WIZARD.ACRONIS_MODAL.STEP5_YOUR_DEVICE' | translate}}</p>  
+                                    <div class="d-flex align-self-start blue-btn alt">
+                                        <span class="fs-12 lh-14 text-left mb-0 roboto-b">{{'WIZARD.ACRONIS_MODAL.STEP5_PROTECT' | translate}}</span>
+                                    </div>
+                                </div>
+                              
+                            </div>
+                        </div>
+                        <div class="col-4 pl-0 pr-0 acronis-column step5">
+                            <div class="d-flex justify-content-center help-img-container">
+                                <img class="acronis-cyber" src="{{staticContentUrl+'img/acronis_modal/acronis_cyber_logo.png'}}" >
+                            </div>
+
+                            <div class="acronis-device-div">
+                                <span class='fs-12 lh-14 '>
+                                    {{'WIZARD.ACRONIS_MODAL.STEP5_ALL_DEVICES' | translate}}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-8 pl-0 pr-0 gray-bg step5 d-flex justify-content-end">
+                            <div class="acronis-container big-end d-flex flex-column justify-content-start mt-0">
+                                <p class="fs-12 lh-4 text-left mb-2">{{'WIZARD.ACRONIS_MODAL.STEP5_YOUR_DEVICE' | translate}}</p>  
+                                <div class="d-flex flex-column justify-content-start">   
+                                    <div class="d-flex align-self-end blue-light-btn">
+                                        <span class="fs-16 lh-19 text-left mb-0 roboto-b">{{'WIZARD.ACRONIS_MODAL.STEP5_CREATE' | translate}}</span>
+                                        <i class="fas fa-chevron-down ml-2"></i>
+                                    </div>
+                                    <div class="d-flex align-self-end justify-content-center mt-2 blue-light-alt">
+                                        <span class="fs-16 lh-19 align-self-center mb-0 roboto-b">{{'WIZARD.ACRONIS_MODAL.STEP5_PROTECTION' | translate}}</span>
+                                    </div>
+                                </div>
+                              
+                            </div>
+                        </div>
+                    </section>
+                    <section class="w-100 row mr-0 ml-0" *ngIf="step == 6">
+                        <div class="col-4 pl-0 pr-0 acronis-column">
+                            <div class="d-flex justify-content-center help-img-container">
+                                <img class="acronis-cyber" src="{{staticContentUrl+'img/acronis_modal/acronis_cyber_logo.png'}}" >
+                            </div>
+                            <div class="acronis-device-div">
+                                <span class='fs-12 lh-14 '>
+                                    {{'WIZARD.ACRONIS_MODAL.STEP5_ALL_DEVICES' | translate}}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-8 pl-0 pr-0 gray-bg d-flex justify-content-end">
+                            <div class="acronis-container big-end d-flex flex-column justify-content-start mt-0">
+                                <div class="d-flex justify-content-between mb-3 alt-text">
+                                    <p class="col-8 pr-0 fs-12 lh-4 text-left mb-0">{{'WIZARD.ACRONIS_MODAL.STEP5_YOUR_DEVICE' | translate}}</p>
+                                    <div class="col-4 d-flex justify-content-center blue-btn">
+                                        <span class="fs-16 lh-19 text-center mb-0 roboto-b">{{'WIZARD.ACRONIS_MODAL.STEP6_CREATE' | translate}}</span>
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-start alt-text">
+                                    <p class="col-8 pr-0 fs-12 lh-4 text-left mb-0">{{'WIZARD.ACRONIS_MODAL.STEP6_BACKUP' | translate}}</p>
+                                    <img class="toggle" src="{{staticContentUrl+'img/acronis_modal/toggle_active.png'}}" >
+                                </div>
+                                <span class="w-100 pr-3 pl-3 fs-12 lh-4 text-left mb-2 pr-0 backup-span">
+                                    {{'WIZARD.ACRONIS_MODAL.STEP6_BACKUP_COPY' | translate}}
+                                </span>
+                                <div class="d-flex justify-content-start flex-column">
+                                    <div class="fake-select d-flex justify-content-end mb-1 pr-3">
+                                        <i class="fas fa-chevron-up justify-self-end"></i>
+                                    </div>
+                                    <div class="fake-list d-flex flex-column justify-content-start mb-1">
+                                        <span class="fake-elm fs-12 lh-14">
+                                            {{'WIZARD.ACRONIS_MODAL.STEP6_BACKUP_OPTION1' | translate}}
+                                        </span>
+                                        <span class="fake-elm fs-12 lh-14">
+                                            {{'WIZARD.ACRONIS_MODAL.STEP6_BACKUP_OPTION2' | translate}}
+                                        </span>
+                                        <span class="fake-elm selected fs-12 lh-14">
+                                            {{'WIZARD.ACRONIS_MODAL.STEP6_BACKUP_OPTION3' | translate}}
+                                        </span>
+                                        <span class="fake-elm fs-12 lh-14">
+                                            {{'WIZARD.ACRONIS_MODAL.STEP6_BACKUP_OPTION4' | translate}}
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-start alt-text mt-2">
+                                    <p class="col-8 pr-0 fs-12 lh-4 text-left mb-0">{{'WIZARD.ACRONIS_MODAL.STEP6_BACKUP_CYPHER' | translate}}</p>
+                                    <img class="toggle" src="{{staticContentUrl+'img/acronis_modal/toggle.png'}}" >
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <section class="w-100 row mr-0 ml-0" *ngIf="step == 7">
+                        <div class="col-12 pl-0 pr-0 dark-bg d-flex justify-content-center">
+                            <div class="bms-download-container d-flex flex-column justify-content-center">
+                                <img class="activation-service-central-img mb-4" src="{{staticContentUrl+'img/secure_icon.png'}}"> 
+
+                                <h3 class="fs-14 lh-16 roboto-b text-center">{{'WIZARD.ACRONIS_MODAL.STEP7_TEXT' | translate}}</h3>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+            <div class="row ml-0 mr-0">
+                <div class="col-sm-12 col-12 pl-0 pr-3 mt-3 justify-content-end d-flex">
+                    <button
+                        class="btn btn-outline-secondary wizard-modal-btn mr-3"
+                        *ngIf="step > 1"
+                        (click)="previousStep()">
+                        <div class="text-uppercase fs-14 lh-16 roboto-b">
+                            <div class="icon-left-big-arrow mr-2 fs-12" ></div>
+                            {{'WIZARD.BMS_MODAL.BTN_PREVIOUS' | translate}}
+                            
+                        </div>
+                    </button>
+                    <button
+                        class="btn btn-primary wizard-modal-btn"
+                        *ngIf="step < 7"
+                        (click)="nextStep()">
+                        <div class="text-uppercase fs-14 lh-16 roboto-b">
+                            {{'WIZARD.BMS_MODAL.BTN_NEXT' | translate}}
+                            <div class="icon-right-big-arrow ml-2 fs-12" ></div>
+                        </div>
+                    </button>
+                    <button
+                        class="btn btn-primary wizard-modal-btn"
+                        *ngIf="step == 7"
+                        (click)="activeModal.dismiss('Cross click')">
+                        <div class="text-uppercase fs-14 lh-16 roboto-b">
+                            {{'WIZARD.BTNS.COMPLETED' | translate}}
+                        </div>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+    </section>
+</div>
+

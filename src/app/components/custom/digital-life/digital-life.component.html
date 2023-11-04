@@ -1,0 +1,112 @@
+<div class="modal-header">
+  <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
+    <div class="icon-close"></div>
+  </button>
+  <h4 class="modal-title" [innerHTML]="formService.serviceName"></h4>   
+  <!--<p class="modal-subtitle">Categoría</p>-->
+  <div class="icon">
+      <div class="{{formService.serviceIcon}}"></div>
+  </div>
+</div>
+
+<!--
+<section id="servicestitles" class="mr-3 ml-3 pl-1">
+  <div class="container-fluid">
+    <br/><br/><br/><br/><br/>
+    <div class="service-title" [innerHTML]="formService.serviceDesc"></div>
+    <br/>
+    <button class="collapse-btn" data-toggle="collapse" data-target="#description-service">
+      <div class="myicons-info"></div> {{ 'MAS_INFO_SERVICIO' | translate }}
+    </button>
+    <div id="description-service" class="collapse">
+      <div>
+        <span [innerHTML]="formService.longDesc"></span>
+      </div>
+    </div>
+  </div>
+</section>
+-->
+
+<section class="mr-2 ml-2 pl-1 mt-3">
+  <div class="container-fluid">
+    <div class="sscard w-100 mb-4">
+      <div class="container-fluid">
+        <p class="requiredtext m-0 mt-2 mb-4">{{'FORMULARIO_TEXTO' | translate}}</p>
+        <div class="sscard w-100 mb-4 p-0">
+          <form (ngSubmit)="onSubmit()">
+            <p class="requiredtext">* {{'CAMPOS_OBLIGATORIOS' | translate}}</p>
+            <div class="form-row">
+              <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                <div class="form-group">
+                  <input type="text" required class="form-control" name="name" [(ngModel)]="data.name"
+                    [ngClass]="{ 'is-invalid': name.invalid && (name.dirty || name.touched) }" #name="ngModel" maxlength="200" placeholder="{{'NOMBRE_APELLIDOS' | translate}} *">
+                </div>
+              </div>
+              <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                <div class="form-group">
+                  <input type="text" required class="form-control" name="dni" [(ngModel)]="data.dni"
+                    [ngClass]="{ 'is-invalid': dni.invalid && (dni.dirty || dni.touched) }" #dni="ngModel" maxlength="50" placeholder="{{'DNI' | translate}} *">
+                </div>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                <div class="form-group">
+                  <input type="text" required class="form-control" name="phone" [(ngModel)]="data.phone"
+                    [ngClass]="{ 'is-invalid': phone.invalid && (phone.dirty || phone.touched) }" #phone="ngModel" maxlength="20" placeholder="{{'TELEFONO' | translate}} *">
+                </div>
+              </div>
+              <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                <div class="form-group">
+                  <input type="text" required class="form-control" name="email" [(ngModel)]="data.email"
+                    [ngClass]="{ 'is-invalid': email.invalid && (email.dirty || email.touched) }" #email="ngModel" maxlength="100" placeholder="{{'EMAIL' | translate}} *">
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group mb-5">
+              <label for="dniFile">{{'COPIA_DNI' | translate}} *</label>
+              <div class="custom-file">
+                <input type="file" #file class="custom-file-input filestyle" data-buttonText="Texto de prueba" id="dniFile" (change)="uploadFile(file.files)">
+                <i class="fa fa-check-circle-o check" aria-hidden="true" *ngIf="data.dniImage !== undefined"></i>
+                <label id="dniLabel" class="custom-file-label" for="dniFile">{{dniName}}</label>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <input type="text" required class="form-control" name="url" [(ngModel)]="data.url"
+                [ngClass]="{ 'is-invalid': url.invalid && (url.dirty || url.touched) }" #url="ngModel" maxlength="200" placeholder="{{'URL_CANCELAR' | translate}} *">
+            </div>
+
+            <div class="form-group">
+              <textarea class="form-control" name="comments" [(ngModel)]="data.comments" #comments="ngModel"
+                rows="3" placeholder="{{'OBSERVACIONES' | translate}}"></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="">{{'DOC_ADICIONAL' | translate}}</label>
+              <div class="custom-file">
+                <input type="file" #optional class="custom-file-input" id="aditional"
+                  (change)="uploadOptional(optional.files)">
+                <i class="fa fa-check-circle-o check" aria-hidden="true" *ngIf="data.optImage !== undefined"></i>
+                <label id="optLabel" class="custom-file-label" for="aditional">{{optName}}</label>
+              </div>
+            </div>
+            <div class="mt-3 errormen">
+              <div *ngIf="showMessage" class="loginError d-inline-flex align-items-center">
+                <div class="icon-exclamation-tri"></div> {{message}}
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary mt-3"
+              [disabled]="loading || name.invalid || dni.invalid || email.invalid || phone.invalid || url.invalid || data.dniImage === undefined">
+              <nz-spinner *ngIf="loading">loading</nz-spinner>
+              <div *ngIf="!loading">
+                {{'ENVIAR' | translate}}
+              </div>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

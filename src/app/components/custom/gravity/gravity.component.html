@@ -1,0 +1,435 @@
+<section id="header">
+    <app-service-header 
+        [serviceName] = "gravityService.serviceName"
+        [serviceLongDesc] = "gravityService.longDesc"
+        [serviceDesc] = "gravityService.serviceDesc"
+        [serviceIcon] = "gravityService.serviceIcon">
+    </app-service-header>
+</section>
+
+
+<section class="dashboard-page ml-1 pl-1">
+    <div class="container-fluid dashcards">
+        <div class="card">
+            <div class="card-body">
+                <div class="container-fluid">
+                    <div class="form-group d-block mx-auto col-xl-3 col-lg-4 col-md-4 col-sm-6 select992 mt-4">
+                        <select class="form-control" (change)="gravityEndpointchanged($event.target.value)">
+                            <option *ngFor="let endpoint of gravityService.endpoints" [value]="endpoint.id">
+                                {{endpoint.name}}</option>
+                        </select>
+                    </div>
+                    <div class="row grid-divider justify-content-center" *ngIf="gravityService.totalAlertsBlocked == 0 && gravityService.totalAlertsRevised == 0">
+                        <div class="row align-items-center justify-content-md-center">
+                            <div class="col-xl-7 col-lg-8 col-md-12 col-sm-12 col-xs-12 col-12 mb-2">
+                                <div class="row align-items-center">
+                                    <div class="icon-simple-circle-tick col-md-12 gravitytick"></div>
+                                    <h6 class="text-center col-md-12">{{'COMP_GRAVITY.ALL_OK_TITLE' | translate}}</h6>
+                                    <p class="text-center col-md-12 pb-4">{{'COMP_GRAVITY.ALL_OK_DESC' | translate}}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row grid-divider justify-content-center" *ngIf="gravityService.totalAlertsBlocked > 0 || gravityService.totalAlertsRevised > 0">
+                        <div
+                            class="d-flex justify-content-center align-items-center col-xl-6 col-lg-6 col-md-12 col-sm-12 pt-3 pb-4">
+                            <div class="row no-gutters">
+                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-4">
+                                    <span class="title text-center"
+                                        style="font-size: 12px;">{{'COMP_GRAVITY.THREATS_BLOCKED' | translate}}</span>
+                                </div>
+                                <div class="col-xl-7 col-lg-8 col-md-6 col-sm-6">
+                                    <div class="canvasservices">
+                                        <div class="numbercanvas snumbercanvas gravitycanvas">
+                                            <h3 class="text-center" style="font-size: 44px;">
+                                                {{gravityService.totalAlertsBlocked}}</h3>
+                                        </div>
+                                        <canvas baseChart [data]="gravityService.blockedDoughnutChartData"
+                                            [labels]="gravityService.blockedChartLabels"
+                                            [colors]="gravityService.blockedDoughnutColors"
+                                            [chartType]="gravityService.blockedChartType"
+                                            [options]="{cutoutPercentage: 75}"></canvas>
+                                    </div>
+                                </div>
+                                <div class="col-xl-5 col-lg-4 col-md-6 col-sm-6">
+                                    <div class="w-75 d-block mx-auto">
+                                        <span class="subtitle text-left mb-2"
+                                            style="font-size: 10px;">{{'COMP_GRAVITY.LIST_FILES'
+                                            |
+                                            translate}}</span>
+                                        <div class="mb-2">
+                                            <div class="led gray">
+                                                <i class="fas fa-circle"></i>
+                                            </div>
+                                            <span>{{'COMP_GRAVITY.MALICIOUS_WEBSITES' |
+                                                translate}}</span>
+                                            <h4 class="">{{endpointSelected.blockedWebs}}</h4>
+                                        </div>
+                                        <div class="mb-2">
+                                            <div class="led yellow">
+                                                <i class="fas fa-circle"></i>
+                                            </div>
+                                            <span>{{'COMP_GRAVITY.PHISHING_ATTACKS' |
+                                                translate}}</span>
+                                            <h4 class="">{{endpointSelected.blockedPhising}}</h4>
+                                        </div>
+                                        <div class="mb-2">
+                                            <div class="led blue">
+                                                <i class="fas fa-circle"></i>
+                                            </div>
+                                            <span>{{'COMP_GRAVITY.MALWARE_ATTACKS' | translate}}</span>
+                                            <h4 class="">{{endpointSelected.blockedMalware}}</h4>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            class="d-flex justify-content-center align-items-center col-xl-6 col-lg-6 col-md-12 col-sm-12 pt-3 pb-4">
+                            <div class="row no-gutters">
+                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-4">
+                                    <span class="title text-center"
+                                        style="font-size: 12px;">{{'COMP_GRAVITY.FILES_REVIEWED' | translate}}</span>
+                                </div>
+                                <div class="col-xl-7 col-lg-8 col-md-6 col-sm-6">
+                                    <div class="canvasservices">
+                                        <div class="numbercanvas snumbercanvas gravitycanvas">
+                                            <h3 class="text-center" style="font-size: 44px;">
+                                                {{gravityService.totalAlertsRevised}}</h3>
+                                        </div>
+                                        <canvas baseChart [data]="gravityService.revisedDoughnutChartData"
+                                            [labels]="gravityService.revisedChartLabels"
+                                            [colors]="gravityService.revisedDoughnutColors"
+                                            [chartType]="gravityService.revisedChartType"
+                                            [options]="{cutoutPercentage: 75}"></canvas>
+                                    </div>
+                                </div>
+                                <div class="col-xl-5 col-lg-4 col-md-6 col-sm-6">
+                                    <div class="w-75 d-block mx-auto">
+                                        <span class="subtitle text-left mb-2"
+                                            style="font-size: 10px;">{{'COMP_GRAVITY.LIST_FILES'
+                                            |
+                                            translate}}</span>
+                                        <div class="mb-2">
+                                            <div class="led blue">
+                                                <i class="fas fa-circle"></i>
+                                            </div>
+                                            <span>{{'COMP_GRAVITY.CLEAN' |
+                                                translate}}</span>
+                                            <h4 class="">{{endpointSelected.revisedCleaned}}</h4>
+                                        </div>
+                                        <div class="mb-2">
+                                            <div class="led gray">
+                                                <i class="fas fa-circle"></i>
+                                            </div>
+                                            <span>{{'COMP_GRAVITY.BORRADOS' |
+                                                translate}}</span>
+                                            <h4 class="">{{endpointSelected.revisedErased}}</h4>
+                                        </div>
+                                        <div class="mb-2">
+                                            <div class="led orange">
+                                                <i class="fas fa-circle"></i>
+                                            </div>
+                                            <span>{{'COMP_GRAVITY.EXCLUIDOS' | translate}}</span>
+                                            <h4 class="">{{endpointSelected.revisedExcluded}}</h4>
+                                        </div>
+                                        <div class="mb-2">
+                                            <div class="led red">
+                                                <i class="fas fa-circle"></i>
+                                            </div>
+                                            <span>{{'COMP_GRAVITY.CUARENTENA' | translate}}</span>
+                                            <h4 class="red d-flex" style="position: relative; left: 16px;">
+                                                {{endpointSelected.revisedQuarantined}}
+                                                <div class="icon-exclamation-tri"></div>
+                                            </h4>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="container-fluid dashcards m-0 p-0">
+            <div class="card w-100 pt-4 p-0">
+                <div class="card-body p-0">
+                    <div class="row grid-divider justify-content-center pb-4">
+                        <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 pt-3">
+                            <div class="w-75 d-block mx-auto">
+                                <span class="title text-center"
+                                    style="font-size: 12px;">{{'COMP_GRAVITY.LAST_ANALYSIS' | translate}}:</span>
+                                <!-- <span class="subtitle2 text-center pt-1">{{'COMP_GRAVITY.DATE' | translate}}</span> -->
+                                <span class="subtitle2 text-center pt-1">{{endpointSelected.lastAnalisys | date :
+                                    "dd-MM-yyyy"}}</span>
+                            </div>
+                            <br>
+                            <div class="w-75 d-block mx-auto"></div>
+                            <br>
+                            <div class="w-75 d-block mx-auto" *ngIf="gravityService.threats.length > 0">
+                                <span class="title text-center"
+                                    style="font-size: 12px;">{{'COMP_GRAVITY.LAST_DETECT' | translate}}:</span>
+                                <!-- <span class="subtitle2 text-center pt-1">{{'COMP_GRAVITY.DATE' | translate}}</span> -->
+                                <span class="subtitle2 text-center pt-1">{{gravityService.threats[0].detected | date :
+                                    "dd-MM-yyyy HH:mm:ss"}}</span>
+                            </div>
+                            <!-- <div class="w-50 d-block mx-auto mt-5">
+                                <button class="btn btn-secondary mb-1 mw-100 d-block mx-auto"><div class="icon-download"></div> {{'COMP_GRAVITY.DOWNLOAD_LAST' | translate}}</button>
+                                <a href="" class="btn btn-outline-secondary mb-5 mw-100 d-block mx-auto">{{'COMP_GRAVITY.VIEW_LAST' | translate}}</a>
+                            </div> -->
+                        </div>
+                        <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 pt-3 pb-4">
+                            <div class="w-75 d-block mx-auto">
+                                <span class="title text-center mb-1" style="font-size: 12px;">{{'COMP_GRAVITY.DEVICES' |
+                                    translate}}</span>
+                                <h2 class="subtitle2 text-center pt-1" style="font-size: 44px;">
+                                    {{gravityService.endpoints.length}}/{{gravityService.maxEndpoints}}</h2>
+                            </div>
+                            <div class="w-100 d-block mx-auto">
+                                <ng-container *ngFor="let endpoint of gravityService.endpoints; let m = index">
+                                    <div class="card border rounded p-2 disp-card mb-2 d-block mx-auto">
+                                        <div class="row no-gutters">
+                                            <div class="col-xl-5 col-lg-5 col-md-5 col-sm-5 col-5">
+                                                <div class="d-flex align-items-center justify-content-start">
+                                                    <div class="icon-computer-icon mr-2"></div>
+                                                    <p class="p-0 m-0">{{endpoint.name}}</p>
+                                                </div>
+                                            </div>
+                                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6">
+                                                <div class="d-flex align-items-center justify-content-start">
+                                                    <div class="icon-h-divider mr-1"></div>
+                                                    <p class="p-0 m-0">{{endpoint.operatingSystemVersion}}</p>
+                                                </div>
+                                            </div>
+                                            <div class="col-xl-1 col-lg-1 col-md-1 col-sm-1 col-1">
+                                                <button class="border-0 p-0 bg-transparent"
+                                                    onclick="$('#frmGravityRemoveEndpoint').show()"
+                                                    (click)="openDeleteModal(endpoint.id)">
+                                                    <div class="icon-trash text-right"></div>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </ng-container>
+                            </div>
+                        </div>
+                        <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 pt-3">
+                            <div class="w-75 d-block justify-content-between align-items-center text-center mx-auto gra-btn-div"
+                                *ngIf="gravityService.endpoints.length < gravityService.maxEndpoints">
+                                <span class="title mb-2 text-center"
+                                    style="font-size: 12px;">{{'COMP_GRAVITY.PROTECT_NEW_DEVICE' | translate}}</span>
+                                
+                                <a href="{{gravityService.installationLinks.installLinkWindows}}" class="gra-btn">
+                                    <button class="btn btn-primary p-0 d-flex justify-content-center"
+                                      href="agentData.download|safe: 'resourceUrl'">
+                                      <div class="icon-windows so-logo mr-2"></div>
+                                      <div class="d-flex flex-column">
+                                        <span class="small-text-btn">{{ 'WIZARD.GRA_DOWNLOAD' | translate}}</span>
+                                        <span class="big-text-btn">{{ 'WIZARD.WINDOWS' | translate}}</span>
+                                      </div>
+                                    </button>
+                                </a>
+                                <a href="{{gravityService.installationLinks.installLinkMac}}" class="gra-btn">
+                                    <button class="btn btn-primary p-0 d-flex justify-content-center"
+                                        href="agentData.download|safe: 'resourceUrl'">
+                                        <div class="icon-apple so-logo mr-2"></div>
+                                        <div class="d-flex flex-column">
+                                        <span class="small-text-btn">{{ 'WIZARD.GRA_DOWNLOAD' | translate}}</span>
+                                        <span class="big-text-btn">{{ 'WIZARD.APPLE' | translate}}</span>
+                                        </div>
+                                    </button>
+                                </a>
+                                <a href="{{gravityService.installationLinks.installLinkLinux}}" class="gra-btn">
+                                    <button class="btn btn-primary p-0 d-flex justify-content-center"
+                                        href="agentData.download|safe: 'resourceUrl'">
+                                        <div class="icon-linux so-logo mr-2"></div>
+                                        <div class="d-flex flex-column">
+                                        <span class="small-text-btn">{{ 'WIZARD.GRA_DOWNLOAD' | translate}}</span>
+                                        <span class="big-text-btn">{{ 'WIZARD.LINUX' | translate}}</span>
+                                        </div>
+                                    </button>
+                                </a>
+                            </div>
+                            <div class="w-75 d-block justify-content-center align-items-center text-center mx-auto"
+                                *ngIf="gravityService.endpoints.length >= gravityService.maxEndpoints">
+                                <span class="title mb-2 text-center"
+                                    style="font-size: 12px;">{{'COMP_GRAVITY.NO_LICENCES' | translate}}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="container-fluid dashcards m-0 p-0" *ngIf="gravityService.threats.length > 0">
+            <div class="card w-100 pt-4 p-0">
+                <div class="card-body p-0">
+                    <h1 id="header-list" class="title mb-4 text-center">{{'COMP_GRAVITY.TABLE_TITLE' | translate}}</h1>
+                    <div class="rounded shadow-none d-none d-md-inline">
+                        <table class="table table-hover m-0">
+                            <thead>
+                                <tr>
+                                    <th scope="col">{{'COMP_GRAVITY.TABLE_DISPOSITIVO' | translate}}</th>
+                                    <th scope="col">{{'COMP_GRAVITY.TABLE_TYPE' | translate}}</th>
+                                    <th scope="col">{{'COMP_GRAVITY.TABLE_STATUS' | translate}}</th>
+                                    <th scope="col">{{'COMP_GRAVITY.TABLE_FECHA' | translate}}</th>
+                                    <th scope="col">{{'COMP_GRAVITY.TABLE_NAME' | translate}}</th>
+                                    <th scope="col">{{'COMP_GRAVITY.TABLE_PATH' | translate}}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <ng-container *ngFor="let threat of gravityService.threats">
+                                    <tr>
+                                        <td class="border-right">{{threat.fqdn}}</td>
+                                        <td class="border-right" *ngIf="threat.type==1">{{'COMP_GRAVITY.TYPE_1' |
+                                            translate}}</td>
+                                        <td class="border-right" *ngIf="threat.type==3">{{'COMP_GRAVITY.TYPE_3' |
+                                            translate}}</td>
+                                        <td class="border-right" *ngIf="threat.type==12">{{'COMP_GRAVITY.TYPE_12' |
+                                            translate}}</td>
+                                        <td class="border-right" *ngIf="threat.status==0">{{'COMP_GRAVITY.STATUS_0' |
+                                            translate}}</td>
+                                        <td class="border-right" *ngIf="threat.status==1">{{'COMP_GRAVITY.STATUS_1' |
+                                            translate}}</td>
+                                        <td class="border-right" *ngIf="threat.status==2">{{'COMP_GRAVITY.STATUS_2' |
+                                            translate}}</td>
+                                        <td class="border-right" *ngIf="threat.status==3">{{'COMP_GRAVITY.STATUS_3' |
+                                            translate}}</td>
+                                        <td class="border-right" *ngIf="threat.status==4">{{'COMP_GRAVITY.STATUS_4' |
+                                            translate}}</td>
+                                        <td class="border-right" width="100">{{threat.detected | date : "dd-MM-yyyy
+                                            HH:mm:ss"}}</td>
+                                        <td class="border-right">{{threat.name}}</td>
+                                        <td class="border-right">{{threat.path}}</td>
+                                        <!-- <td width="250">
+                                        <a class="btn btn-secondary" href=""  target="_blank">
+                                            <div class="icon-download"></div> {{'COMP_GRAVITY.TABLE_DOWNLOAD' | translate}}
+                                        </a>
+                                    </td> -->
+                                    </tr>
+                                </ng-container>
+                                <!-- <tr>
+                                    <td class="border-right">iphone_marta</td>
+                                    <td class="border-right">24/11/2021 - 17:54</td>
+                                    <td class="border-right" width="80">15</td>
+                                    <td class="border-right" width="80">32</td>
+                                    <td class="border-right" width="80">4</td>
+                                    <td width="250">
+                                        <a class="btn btn-secondary" href=""  target="_blank">
+                                            <div class="icon-download"></div> {{'COMP_GRAVITY.TABLE_DOWNLOAD' | translate}}
+                                        </a>
+                                    </td>
+                                </tr> -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="d-inline-block d-md-none responsive-card-device p-3 w-100">
+                        <div class="card border rounded m-4 mb-2 d-block mx-auto">
+                            <div class="card-header p-3 border-0 d-flex align-items-center justify-content-between">
+                                <div class="d-flex align-items-center justify-content-start">
+                                    <div class="icon-computer-icon mr-2"></div>
+                                    <p class="p-0 m-0">ordenador_marta</p>
+                                </div>
+                                <p class="m-0">24/11/2021 - 17:54</p>
+                            </div>
+                            <div class="card-body p-0 pl-3 pr-3 pb-3">
+                                <div class="row no-gutters">
+                                    <div class="col-xl-8 col-lg-8 col-md-8 col-sm-8 col-8">
+                                        <div class="d-flex align-items-center justify-content-between">
+                                            <p class="m-0">{{'COMP_GRAVITY.TABLE_BLOQUEADOS' | translate}}</p>
+                                            <p class="m-0"><strong>15</strong></p>
+                                        </div>
+                                        <div class="d-flex align-items-center justify-content-between">
+                                            <p class="m-0">{{'COMP_GRAVITY.TABLE_REVISADOS' | translate}}</p>
+                                            <p class="m-0"><strong>32</strong></p>
+                                        </div>
+                                        <div class="d-flex align-items-center justify-content-between">
+                                            <p class="m-0">{{'COMP_GRAVITY.TABLE_CUARENTENA' | translate}}</p>
+                                            <p class="m-0"><strong>4</strong></p>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-4">
+                                        <a class="btn btn-secondary position-relative" href="" target="_blank">
+                                            <div class="icon-download"></div>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card border rounded m-4 mb-2 d-block mx-auto">
+                            <div class="card-header p-3 border-0 d-flex align-items-center justify-content-between">
+                                <div class="d-flex align-items-center justify-content-start">
+                                    <div class="icon-computer-icon mr-2"></div>
+                                    <p class="p-0 m-0">ordenador_marta</p>
+                                </div>
+                                <p class="m-0">24/11/2021 - 17:54</p>
+                            </div>
+                            <div class="card-body p-0 pl-3 pr-3 pb-3">
+                                <div class="row no-gutters">
+                                    <div class="col-xl-8 col-lg-8 col-md-8 col-sm-8 col-8">
+                                        <div class="d-flex align-items-center justify-content-between">
+                                            <p class="m-0">{{'COMP_GRAVITY.TABLE_BLOQUEADOS' | translate}}</p>
+                                            <p class="m-0"><strong>15</strong></p>
+                                        </div>
+                                        <div class="d-flex align-items-center justify-content-between">
+                                            <p class="m-0">{{'COMP_GRAVITY.TABLE_REVISADOS' | translate}}</p>
+                                            <p class="m-0"><strong>32</strong></p>
+                                        </div>
+                                        <div class="d-flex align-items-center justify-content-between">
+                                            <p class="m-0">{{'COMP_GRAVITY.TABLE_CUARENTENA' | translate}}</p>
+                                            <p class="m-0"><strong>4</strong></p>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-4">
+                                        <a class="btn btn-secondary position-relative" href="" target="_blank">
+                                            <div class="icon-download"></div>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="forms">
+    <div id="frmGravityRemoveEndpoint" class="popup add-service" *ngIf="showDeleteForm">
+        <div id="popup" class="">
+            <div class="popup-header sph">
+                <a id="CloseGravityDeletePopup" class="cerrar" href="javascript:void(0);"
+                    (click)="showDeleteForm = false">
+                    <div _ngcontent-oui-c3="" class="icon-close"></div>
+                </a>
+                <h2 class="text-left">{{ 'COMP_GRAVITY.REMOVE_FORM.TEXT1' | translate }}</h2>
+            </div>
+            <form (ngSubmit)="deleteGravityEndpoint()">
+                <div class="popup-body">
+                    <div class="row align-items-start">
+                        <div class="col-lg-12">
+                            <p class="text-left mb-4">{{'COMP_GRAVITY.REMOVE_FORM.SURE1' | translate}}
+                                <span>{{deleteEndpointName}}</span>? {{'COMP_GRAVITY.REMOVE_FORM.SURE2' |
+                                translate}}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="popup-footer text-left">
+                    <button type="submit" [disabled]="loadingDelete" class="btn btn-primary w-25">
+                        <nz-spinner *ngIf="loadingDelete">loading</nz-spinner>
+                        <div *ngIf="!loadingDelete"> {{'COMP_GRAVITY.REMOVE_FORM.DELETE_BUTTON' | translate}}
+                        </div>
+                    </button>
+                    <a class="btn mx-3" href="javascript:void(0)" (click)="showDeleteForm = false">{{'CANCEL' |
+                        translate}}</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+<br /><br /><br />

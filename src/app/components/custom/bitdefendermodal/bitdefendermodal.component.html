@@ -1,0 +1,137 @@
+<div class="modal-header row">
+    <div class="col-sm-12 d-flex justify-content-end">
+        <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
+            <div class="icon-close"></div>
+        </button>
+    </div>
+    <h4 class="text-center modal-title w-100 m-0">{{'COMP_BITDEFENDERPOPUP.TITLE' | translate}}</h4>
+    <!--<p class="modal-subtitle">Categoría</p>-->
+    <div class="icon">
+        <!--<div class="{{icon}}"></div>-->
+    </div>
+</div>
+
+<div class="modal-body des desesp bgwhite pt-0 pr-4 pl-4 pb-4 m-0">
+    <div class="div">
+        <div class="card bggrey p-3">
+            <form>
+                <div class="form-row align-items-center">
+                    <div class="form-group col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 m-0">
+                        <h5 class="title m-0 mb-2 mb-sm-0">{{'COMP_BITDEFENDERPOPUP.STEP1' | translate}}</h5>
+                    </div>
+                    <div class="form-group col-xl-4 col-lg-4 col-md-4 col-sm-4 col-6 m-0">
+                        <select class="form-control" id="" #selectControlDevice
+                            (change)='onChangeDevice(+selectControlDevice.value)'>
+                            <option [value]="-1" disabled selected>{{'COMP_BITDEFENDERPOPUP.DEVICE' | translate}}
+                            </option>
+                            <option [value]="1">{{'COMP_BITDEFENDERPOPUP.MOBILE' | translate}}</option>
+                            <option [value]="2">{{'COMP_BITDEFENDERPOPUP.DESKTOP' | translate}}</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-xl-4 col-lg-4 col-md-4 col-sm-4 col-6 m-0">
+                        <select class="form-control" id="" [(ngModel)]="osValue" name="os"
+                            (change)='onChangeOS()'>
+                            <option [value]="-1" disabled>{{'COMP_BITDEFENDERPOPUP.SO' | translate}} 
+                            </option>
+                            <option [value]="1" *ngIf="isMobile || +selectControlDevice.value == -1">Android</option>
+                            <option [value]="2" *ngIf="isMobile || +selectControlDevice.value == -1">iPhone</option>
+                            <option [value]="3" *ngIf="!isMobile || +selectControlDevice.value == -1">Windows</option>
+                            <option [value]="4" *ngIf="!isMobile || +selectControlDevice.value == -1">MAC</option>
+                        </select>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="card bggrey p-3" *ngIf="+osValue !== -1">
+            <h5 class="title m-0 mb-2">{{'COMP_BITDEFENDERPOPUP.STEP2' | translate}}</h5>
+            <p *ngIf="isMobile">{{'COMP_BITDEFENDERPOPUP.TEXT1' | translate}}:</p>
+            <div class="row grid-divider mt-2">
+                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                    <div class="w-75 d-block mx-auto mb-5 mb-md-2">
+                        <h5 class="title font-weight-light m-0 mb-2 text-center" *ngIf="isMobile">
+                            {{'COMP_BITDEFENDERPOPUP.TEXT2' | translate}}</h5>
+                        <h5 class="title font-weight-light m-0 mb-2 text-center" *ngIf="!isMobile">
+                            {{'COMP_BITDEFENDERPOPUP.TEXT3' | translate}}</h5>
+                        <button class="btn btn-primary mt-5 w-100"
+                            (click)="goToDownloadPage()">{{'COMP_BITDEFENDERPOPUP.DOWNLOAD' | translate}}</button>
+                    </div>
+                </div>
+                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12" *ngIf="isMobile">
+                    <div class="w-75 d-block mx-auto mb-5 mb-md-2">
+                        <h5 class="title font-weight-light m-0 mb-2 text-center">{{'COMP_BITDEFENDERPOPUP.TEXT4' |
+                            translate}}</h5>
+                        <img class="QR d-block mx-auto mt-3" src="{{qrImage}}" width="160" height="160"
+                            alt="{{qrAlt}}" />
+                    </div>
+                </div>
+            </div>
+            <div class="card p-2 mt-2">
+                <div class="row">
+                    <div class="col-xl-8 col-lg-8 col-md-8 col-sm-8 col-10 d-block mx-auto">
+                        <div class="d-flex d-sm-none mx-auto mb-3">
+                            <div class="icon-exclamation-tri red" style="font-size: 1.5rem;"></div>
+                        </div>
+                        <div class="d-flex justify-content-center align-items-center mb-5 mb-md-0">
+                            <div class="d-sm-block d-none">
+                                <div class="icon-exclamation-tri red" style="font-size: 1.5rem;"></div>
+                            </div>
+                            <div class="ml-sm-4 ml-2">
+                                <p>{{'COMP_BITDEFENDERPOPUP.STEP_INSTALL' | translate}}:</p>
+                                <ol class="pl-3 mb-0">
+                                    <li>{{'COMP_BITDEFENDERPOPUP.STEP_INSTALL1' | translate}}</li>
+                                    <li>{{'COMP_BITDEFENDERPOPUP.STEP_INSTALL2' | translate}}</li>
+                                    <li *ngIf="licenseService.globalLicence">{{'COMP_BITDEFENDERPOPUP.STEP_INSTALL3' |
+                                        translate}}</li>
+                                    <li *ngIf="!licenseService.globalLicence">
+                                        {{'COMP_BITDEFENDERPOPUP.STEP_INSTALL_EMAIL' | translate}}</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-10 d-block mx-auto">
+                        <div class="d-flex d-sm-none">
+                            <hr class="w-100">
+                        </div>
+                        <div class="mb-3 mb-md-0">
+                            <p *ngIf="!isBMS">{{'ANTIVIRUS.LICENSE' | translate}}:</p>
+                            <p *ngIf="isBMS">{{'ANTIVIRUS.EMAIL' | translate}}:</p>
+                            <div class="" *ngIf="!isBMS">
+                                <div class="d-flex text-left align-items-center mt-3">
+                                    <div class="input-group">
+                                        <input readonly type="text"
+                                            class="form-control p-0 color21 text-left border-0 bgwhite" id=""
+                                            [value]="this.licenseService.globalLicence">
+                                    </div>
+                                    <button class="btn btn-link btn-copy ml-auto p-0"
+                                        (click)="copyToClipboard(licenseService.globalLicence)">
+                                        <div class="icon-copy"></div>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="mt-3" *ngIf="isBMS">
+                                <!--
+                                <div class="input-group">
+                                    <input readonly type="text"
+                                    class="form-control p-0 color21 text-left border-0 bgwhite"
+                                    id="" [value]="this.userService.currentUserValue.email">
+                                </div>
+                                -->
+                                <div class="d-flex text-left align-items-center mt-3">
+                                    <p class="emailtext mt-2" ngbTooltip="{{userService.currentUserValue.email}}" tooltipClass="no-break">{{userService.currentUserValue.email}}</p>
+                                    <!--<div class="btn-group dropleft">
+                                        <button class="btn btn-link btn-see ml-auto p-0" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <div class="icon-eye"></div>
+                                        </button>
+                                        <div class="dropdown-menu pt-0 pb-0">
+                                            <p class="m-2 ml-2 mr-2 p-1">{{userService.currentUserValue.email}}</p>
+                                        </div>
+                                      </div>-->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

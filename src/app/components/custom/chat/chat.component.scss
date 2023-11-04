@@ -1,0 +1,25 @@
+.wiki{
+    background-color: transparent;
+    border:none;
+    border-bottom: 1px solid rgb(197, 197, 197);
+    padding: 10px;
+}
+
+.wiki:hover{
+    border-bottom-width: 2px;
+    font-weight: bold;
+}
+
+.wikiSelected{
+    border-bottom-width: 2px;
+    font-weight: bold;
+}
+
+.sub{
+    padding: 10px;
+    padding-left: 20px;
+    border: 1px solid rgb(197, 197, 197);
+    border-radius: 3px;
+    display: flex;
+    justify-content: space-between;
+}

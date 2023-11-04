@@ -1,0 +1,783 @@
+<section id="header">
+    <div class="container-fluid">
+        <ul class="navbar-nav float-left mr-auto ml-3 pl-1">
+            <li class="nav-item">
+                <small>&nbsp;</small>
+            </li>
+            <li class="nav-item">
+                <h4 [innerHTML]="fractelService.serviceName"></h4>
+            </li>
+        </ul>
+    </div>
+</section>
+
+<section id="servicestitles" class="ml-3 pl-1">
+    <div class="container-fluid">
+        <br /><br /><br />
+        <a class="bback" href="javascript:history.back()">
+            <div class="myicons-arrow"></div>{{ 'ATRAS' | translate }}
+        </a>
+        <br /><br />
+        <div class="service-title" [innerHTML]="fractelService.serviceDesc"></div>
+        <br />
+        <button class="collapse-btn" data-toggle="collapse" data-target="#description-service">
+            <div class="myicons-info"></div> {{ 'MAS_INFO_SERVICIO' | translate }}
+        </button>
+        <div id="description-service" class="collapse">
+            <div>
+                <span [innerHTML]="fractelService.longDesc"></span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="dashboard-page" *ngIf="!isReport">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="container-fluid">
+                <div class="row grid-divider justify-content-center">
+                    <div class="col-xl-8 col-lg-8 col-md-12 col-sm-12 col-xs-12" *ngIf="fractelService.totalAnalizados">
+                        <div class="row">
+                            <div class="col-xl-7 col-lg-7 col-md-6 col-sm-7 col-xs-12 mb-3">
+                                <div class="datos pt-4">
+                                    <div class="canvasservices mb-3">
+                                        <div class="numbercanvas text-center snumbercanvas" style="top: 24px;">
+                                            <h3 class="text-center mb-0">{{fractelService.totalAnalizados}}</h3>
+                                            <span class="subtitle text-center ssubtitle" style="color: #212121; font-size: 10px;">{{'CYBERSECURITY.FRACTEL.ANALYZED' | translate}}</span>
+                                        </div>
+                                        <canvas baseChart [data]="fractelService.doughnutChartData"
+                                        [labels]="fractelService.chartLabels"
+                                        [colors]="fractelService.doughnutColors"
+                                        [chartType]="fractelService.chartType"
+                                        [options]="{cutoutPercentage: 75}"></canvas>
+                                    </div>
+                                    <span class="ppal2">{{'CYBERSECURITY.FRACTEL.LAST_REPORT_PERFORMED_ON' | translate}} <font>
+                                        {{(fractelService.ultima_fecha.toString()+ 'Z').toLocaleString() | date: 'dd/MM/yyyy
+                                        HH:mm:ss'}}
+                                    </font></span>
+                                </div>
+                            </div>
+                            <div class="col-xl-5 col-lg-5 col-md-6 col-sm-4 col-xs-12 mb-3">
+                                <div class="w50 d-block mx-auto pt-4">
+                                    <h1 class="title text-left mb-4">{{'CYBERSECURITY.FRACTEL.STATUS_DEVICES' | translate}}</h1>
+                                    <div class="datos">
+                                        <div class="dg mb-2">
+                                            <div class="led red">
+                                                <i class="fas fa-circle"></i>
+                                            </div>
+                                            <span>{{'CYBERSECURITY.FRACTEL.HIGH' | translate}}</span>
+                                            <h4 class="">{{fractelService.danger}}</h4>
+                                        </div>
+                                        <div class="dg mb-2">
+                                            <div class="led orange">
+                                                <i class="fas fa-circle"></i>
+                                            </div>
+                                            <span>{{'CYBERSECURITY.FRACTEL.MEDIUM' | translate}}</span>
+                                            <h4 class="">{{fractelService.warning}}</h4>
+                                        </div>
+                                        <div class="dg mb-2">
+                                            <div class="led green">
+                                                <i class="fas fa-circle"></i>
+                                            </div>
+                                            <span>{{'CYBERSECURITY.FRACTEL.LOW' | translate}}</span>
+                                            <h4 class="">{{fractelService.low}}</h4>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 pt-3 d-flex align-items-center">
+                        <div class="scard greycard w-100 mb-4 text-center">
+                            <p class="text-center" *ngIf="!userService.currentUserValue.licenseFractel">{{'CYBERSECURITY.FRACTEL.TEXT2' |
+                                translate}}.</p>
+                            <button *ngIf="!userService.currentUserValue.licenseFractel" class="btn btn-primary"
+                                (click)="requestFractelService()" [disabled]="loading">
+                                <nz-spinner *ngIf="loading"></nz-spinner>
+                                <div *ngIf="!loading">{{'CYBERSECURITY.FRACTEL.REQUEST_LICENSE' |
+                                    translate}}</div>
+                            </button>
+                            <p class="text-center" *ngIf="userService.currentUserValue.licenseFractel">{{'CYBERSECURITY.FRACTEL.NUM_LICENSE' |
+                                translate}}</p>
+                            <h6 class="text-center" *ngIf="userService.currentUserValue.licenseFractel">
+                                {{userService.currentUserValue.licenseFractel}}</h6>
+                            <br />
+                            <a href="{{appEndpoint}}" *ngIf="userService.currentUserValue.licenseFractel"
+                                class="btn btn-primary d-block mx-auto">
+                                <div class="icon-download"></div> {{'CYBERSECURITY.FRACTEL.DOWNLOAD_APP' |
+                                translate}}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <br />
+        <hr *ngIf="fractelService.totalAnalizados">
+        <h1 id ="report-list-header" *ngIf="fractelService.totalAnalizados" class="title mb-4">{{'CYBERSECURITY.FRACTEL.DEVICES' | translate}}</h1>
+        <div class="devices-list" >
+            <div class="row">
+                <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 col-xs-12"
+                    *ngFor="let item of fractelService.FractelDatas | keyvalue; index as i">
+                    <div class="card">
+                        <!--div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mb-4"-->
+                        <div class="card-header">
+                            <div class="myicons-computer"></div>
+                            <h2>{{item.value.computerName}}</h2>
+                            <div class="so">
+                                <div class="myicons-windows"></div>
+                                <h3>{{item.value.os}}</h3>
+                            </div>
+                            <div class="led green"
+                                *ngIf="(!fractelService.devicesHigh[i] && !fractelService.devicesMedium[i])">
+                                <i class="fas fa-circle"></i>
+                            </div>
+                            <div class="led red" *ngIf="fractelService.devicesHigh[i]">
+                                <i class="fas fa-circle"></i>
+                            </div>
+                            <div class="led orange"
+                                *ngIf="fractelService.devicesMedium[i] && !fractelService.devicesHigh[i]">
+                                <i class="fas fa-circle"></i>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <!--<div class="myicons-user"></div>-->
+                            <h2>{{item.value.userNames}}</h2>
+                            <p>{{'CYBERSECURITY.FRACTEL.LAST_REPORT_PERFORMED_ON' | translate}} <font>
+                                    {{(item.value.createDate.toString()+ 'Z').toLocaleString() | date: 'dd/MM/yyyy
+                                    HH:mm:ss'}}
+                                </font>
+                            </p>
+                        </div>
+                        <div class="card-footer">
+                            <a class="" data-toggle="collapse" href="#collapse{{i}}" role="button" aria-expanded="false"
+                                aria-controls="collapseExample">
+                                <div class="myicons-arrow-down"></div>
+                            </a>
+                            <div class="collapse" id="collapse{{i}}">
+                                <div class="row no-gutters">
+                                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-4">
+                                        <h3>{{'CYBERSECURITY.FRACTEL.PERFORMANCE' | translate}}</h3>
+                                        <div class="card card-body h-100">
+                                            <div class="char">
+                                                <div class="head">
+                                                    <div class="myicons-procesador"></div>
+                                                    <h4>{{'CYBERSECURITY.FRACTEL.MICRO' | translate}}</h4>
+                                                    <div class="led green">
+                                                        <i class="fas fa-circle"></i>
+                                                    </div>
+                                                </div>
+
+                                                <p>{{item.value.cpu}}</p>
+                                            </div>
+                                            <hr>
+                                            <div class="char">
+                                                <div class="head">
+                                                    <div class="myicons-ram"></div>
+                                                    <h4>{{'CYBERSECURITY.FRACTEL.RAM' | translate}}</h4>
+                                                    <div class="led orange"
+                                                        *ngIf="item.value.memoryUsedPercent>70 && item.value.memoryUsedPercent<90">
+                                                        <i class="fas fa-circle"></i>
+                                                    </div>
+                                                    <div class="led red" *ngIf="item.value.memoryUsedPercent>90">
+                                                        <i class="fas fa-circle"></i>
+                                                    </div>
+                                                    <div class="led green" *ngIf="item.value.memoryUsedPercent<71">
+                                                        <i class="fas fa-circle"></i>
+                                                    </div>
+                                                </div>
+
+                                                <p>{{'CYBERSECURITY.FRACTEL.CAPACITY' | translate}}:
+                                                    <b>{{item.value.memory}} GB</b>
+                                                </p>
+                                                <p>{{'CYBERSECURITY.FRACTEL.USE' | translate}}:
+                                                    <b>{{item.value.memoryUsedPercent}}%</b>
+                                                </p>
+                                                <p>&nbsp;</p>
+                                            </div>
+                                            <hr>
+                                            <div class="char">
+                                                <div class="head">
+                                                    <div class="myicons-hdd"></div>
+                                                    <h4>{{'CYBERSECURITY.FRACTEL.HDD' | translate}}</h4>
+                                                    <div class="led orange"
+                                                        *ngIf="item.value.hDiskUsedPercent>70 && item.value.hDiskUsedPercent<90">
+                                                        <i class="fas fa-circle"></i>
+                                                    </div>
+                                                    <div class="led red" *ngIf="item.value.hDiskUsedPercent>90">
+                                                        <i class="fas fa-circle"></i>
+                                                    </div>
+                                                    <div class="led green" *ngIf="item.value.hDiskUsedPercent<71">
+                                                        <i class="fas fa-circle"></i>
+                                                    </div>
+                                                </div>
+
+                                                <p>{{'CYBERSECURITY.FRACTEL.CAPACITY' | translate}}:
+                                                    <b>{{item.value.hDisk}} GB</b>
+                                                </p>
+                                                <p>{{'CYBERSECURITY.FRACTEL.OCCUPATION' | translate}}:
+                                                    <b>{{item.value.hDiskUsedPercent}}%</b>
+                                                </p>
+                                                <p>&nbsp;</p>
+                                            </div>
+                                            <hr>
+                                            <div class="char">
+                                                <div class="head">
+                                                    <div class="myicons-lector"></div>
+                                                    <h4>{{'CYBERSECURITY.FRACTEL.READER' | translate}}</h4>
+                                                    <div class="led green">
+                                                        <i class="fas fa-circle"></i>
+                                                    </div>
+                                                </div>
+
+                                                <p>{{'CYBERSECURITY.FRACTEL.READ' | translate}}:
+                                                    <b>{{item.value.hDiskReadingSpeed}} Mb/sec</b>
+                                                </p>
+                                                <p>{{'CYBERSECURITY.FRACTEL.WRITE' | translate}}:
+                                                    <b>{{item.value.hDiskWritingSpeed}} Mb/sec</b>
+                                                </p>
+                                                <p>&nbsp;</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-4">
+                                        <h3>{{'CYBERSECURITY.FRACTEL.CONNECTIVITY' | translate}}</h3>
+                                        <div class="card card-body h-100">
+                                            <div class="char">
+                                                <div class="head">
+                                                    <div class="myicons-tarjeta-red"></div>
+                                                    <h4>{{'CYBERSECURITY.FRACTEL.NETWORK_CARD' | translate}}</h4>
+                                                    <div class="led green">
+                                                        <i class="fas fa-circle"></i>
+                                                    </div>
+                                                </div>
+
+                                                <p><b>1</b></p>
+                                                <p>&nbsp;</p>
+                                                <p>&nbsp;</p>
+                                                <!--p>Velocidad máxima: <b>{{item.value.downloadSpeed}} Mbps</b></p-->
+                                            </div>
+                                            <hr>
+                                            <div class="char">
+                                                <div class="head">
+                                                    <div class="myicons-dispositivos"></div>
+                                                    <h4>{{'CYBERSECURITY.FRACTEL.CONNECTED_DEVICES' | translate}}</h4>
+                                                    <div class="led green">
+                                                        <i class="fas fa-circle"></i>
+                                                    </div>
+                                                </div>
+
+                                                <p><b>{{item.value.networkComputersDetected}}</b></p>
+                                                <p>&nbsp;</p>
+                                                <p>&nbsp;</p>
+                                            </div>
+                                            <hr>
+                                            <div class="char">
+                                                <div class="head">
+                                                    <div class="myicons-velocidad-descarga"></div>
+                                                    <h4>{{'CYBERSECURITY.FRACTEL.DOWNLOAD_SPEED' | translate}}</h4>
+                                                    <div class="led green">
+                                                        <i class="fas fa-circle"></i>
+                                                    </div>
+                                                </div>
+
+                                                <p><b>{{item.value.downloadSpeed}} Mbps</b></p>
+                                                <p>&nbsp;</p>
+                                                <p>&nbsp;</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button class="btn-dwl"
+                                    (click)="requestFractelReport(item.value.uuid)">{{'CYBERSECURITY.FRACTEL.DOWNLOAD_FULL_REPORT'
+                                    | translate}}</button>
+                            </div>
+                        </div>
+                        <!--/div-->
+                    </div>
+                </div>
+            </div>
+            <div class="table-responsive">
+
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="informe" *ngIf="isReport">
+    <div class="container-fluid">
+        <h2 class="title-page-informe mb-3">
+            <a class="close-btn" style="cursor:pointer" (click)="closeReport()">
+                <div class="myicons-close"></div>{{'CYBERSECURITY.FRACTEL.CLOSE_REPORT' | translate}}
+            </a>
+
+            <!--img src="./assets/img/art/circle-danger.svg" class="page-status" alt="Status"
+                    *ngIf="report_danger > 0">
+
+                <img src="./assets/img/art/circle-warning.svg" class="page-status" alt="Status"
+                    *ngIf="report_danger < 1 && report_warning > 0 ">
+
+                <img src="./assets/img/art/circle-ok.svg" class="page-status" alt="Status"
+                    *ngIf="report_danger < 0 && report_warning < 0 "-->
+
+        </h2>
+
+        <br />
+
+        <div class="card">
+            <div class="card-header">
+                <h2>
+                    <div class="myicons-computer"></div> {{reportData.computeR_NAME}}
+                </h2>
+            </div>
+            <div class="card-body">
+                <h5>
+                    <div class="myicons-windows"></div> {{reportData.os}}
+                </h5>
+                <h5>
+                    <div class="myicons-user"></div> {{reportData.useR_NAME}}
+                </h5>
+            </div>
+        </div>
+
+        <br />
+        <hr>
+        <br />
+
+        <div class="resumen-analisis">
+            <h3>{{'CYBERSECURITY.FRACTEL.SUMMARY' | translate}}</h3>
+
+            <span class="status-feedback alert alert-warning d-inline-block" role="alert"
+                *ngIf="report_danger > 0">{{'CYBERSECURITY.FRACTEL.WARNING_USER' | translate}}</span>
+
+            <span class="status-feedback alert alert-warning d-inline-block" role="alert"
+                *ngIf="report_danger < 1 && report_warning > 0 ">{{'CYBERSECURITY.FRACTEL.WARNING_USER' |
+                translate}}</span>
+
+            <div class="row">
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                    <h6>{{'CYBERSECURITY.FRACTEL.PERFORMANCE' | translate}}</h6>
+                    <ul>
+                        <li *ngIf="reportData.memorY_USED_PERCENT > 80 && reportData.memorY_USED_PERCENT < 91">
+                            {{'CYBERSECURITY.FRACTEL.RAM_WARNING' | translate}} ({{reportData.memorY_USED_PERCENT}}%)
+                        </li>
+
+                        <li *ngIf="reportData.memorY_USED_PERCENT > 90">{{'CYBERSECURITY.FRACTEL.RAM_WARNING' |
+                            translate}}({{reportData.memorY_USED_PERCENT}}%)</li>
+
+                        <li *ngIf="reportData.memorY_USED_PERCENT < 81">{{'CYBERSECURITY.FRACTEL.RAM_OK' | translate}}
+                        </li>
+
+                        <li>{{'CYBERSECURITY.FRACTEL.CPU_OK' | translate}}</li>
+
+                        <li *ngIf="reportData.hD_USED_PERCENT > 80 && reportData.hD_USED_PERCENT < 91">
+                            {{'CYBERSECURITY.FRACTEL.PARTITION_WARNING' | translate}} ({{reportData.hD_USED_PERCENT}}%)
+                        </li>
+
+                        <li *ngIf="reportData.hD_USED_PERCENT > 90">{{'CYBERSECURITY.FRACTEL.PARTITION_WARNING' |
+                            translate}} ({{reportData.hD_USED_PERCENT}}%)</li>
+
+                        <li *ngIf="reportData.hD_USED_PERCENT < 81">{{'CYBERSECURITY.FRACTEL.PARTITION_OK' | translate}}
+                        </li>
+                    </ul>
+                    <!--div class="row">
+                            <div class="col-6 text-center" *ngIf="report_danger > 0" >
+                                <span class="d-block legend-number"></span>
+                                <img src="./assets/img/art/circle-danger.svg" alt="Status"
+                                    class="d-block mx-auto" width="8">
+                                <span class="d-block legend-name">{{'CYBERSECURITY.FRACTEL.GENERAL_HIGH' | translate}}</span>
+                            </div>
+                            <div class="col-6 text-center" *ngIf="report_warning > 0 && report_danger == 0">
+                                <span class="d-block legend-number"></span>
+                                <img src="./assets/img/art/circle-warning.svg" alt="Status"
+                                    class="d-block mx-auto" width="8">
+                                <span class="d-block legend-name">{{'CYBERSECURITY.FRACTEL.GENERAL_MEDIUM' | translate}}</span>
+                            </div>
+                            <div class="col-6 text-center" *ngIf="report_warning == 0 && report_danger == 0">
+                                <span class="d-block legend-number"></span>
+                                <img src="./assets/img/art/circle-ok.svg" alt="Status"
+                                    class="d-block mx-auto" width="8">
+                                <span class="d-block legend-name">{{'CYBERSECURITY.FRACTEL.GENERAL_LOW' | translate}}</span>
+                            </div>
+                        </div-->
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                    <h6>{{'CYBERSECURITY.FRACTEL.CONNECTIVITY' | translate}}</h6>
+                    <ul>
+                        <li>{{'CYBERSECURITY.FRACTEL.NETWORK_TEXT1' | translate}}</li>
+                        <li>{{'CYBERSECURITY.FRACTEL.NETWORK_TEXT2' | translate}}
+                            {{reportData.wirelesS_NUMBER_CONNECTIONS}} {{'CYBERSECURITY.FRACTEL.NETWORK_TEXT3' |
+                            translate}}</li>
+                        <li>{{'CYBERSECURITY.FRACTEL.NETWORK_TEXT4' | translate}} {{reportData.neT_DOWNLOAD_MAXSPEED}}
+                            Mbps.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <br />
+        <hr>
+        <br />
+        <!-- INFORME PANEL -->
+        <h3>{{'CYBERSECURITY.FRACTEL.DEVICE' | translate}}</h3>
+
+        <ul>
+
+            <li>{{'CYBERSECURITY.FRACTEL.DEVICE_NAME' | translate}}: <strong>{{reportData.computeR_NAME}}</strong></li>
+
+            <li>{{'CYBERSECURITY.FRACTEL.DEVICE_SO' | translate}}: <strong>{{reportData.os}}</strong></li>
+
+            <li>{{'CYBERSECURITY.FRACTEL.MICRO' | translate}}: <strong>{{reportData.cpu}}</strong></li>
+
+            <li>{{'CYBERSECURITY.FRACTEL.RAM' | translate}}: <strong>{{reportData.raM_TEXT}}</strong></li>
+
+            <li>{{'CYBERSECURITY.FRACTEL.DEVICE_HDD_PART' | translate}}: <strong>{{reportData.hdisk}}</strong></li>
+
+            <li>SWAP: <strong>{{reportData.swap}}</strong></li>
+
+            <li>{{'CYBERSECURITY.FRACTEL.DEVICE_USER' | translate}}: <strong>{{reportData.useR_NAME}}</strong></li>
+
+        </ul>
+        <br />
+        <hr>
+        <br />
+
+        <!-- INFORME PANEL -->
+        <h3>{{'CYBERSECURITY.FRACTEL.SECURITY' | translate}}</h3>
+
+        <h5>{{'CYBERSECURITY.FRACTEL.WINDOWS_FIREWALL' | translate}}:
+            <strong>{{reportData.firewalL_STATE_TEXT_Translated}}</strong>
+        </h5>
+
+        <ul>
+
+            <li>{{'CYBERSECURITY.FRACTEL.NAME' | translate}}: <strong>{{reportData.avirus.name}}</strong></li>
+
+            <li>{{'CYBERSECURITY.FRACTEL.EXE' | translate}}: <strong>{{reportData.avirus.exe}}</strong></li>
+
+            <li>{{'CYBERSECURITY.FRACTEL.NOTIFIER' | translate}}: <strong>{{reportData.avirus.statE_CODE}}</strong></li>
+
+            <li>{{'CYBERSECURITY.FRACTEL.STATUS' | translate}}: <strong>{{reportData.avirus.statE_TEXT_Translated}} ({{reportData.avirus.statE_CODE}})</strong></li>
+
+        </ul>
+
+        <br />
+        <hr>
+        <br />
+
+        <!-- INFORME RED -->
+        <h3>{{'CYBERSECURITY.FRACTEL.NETWORK' | translate}}</h3>
+        <h6>{{'CYBERSECURITY.FRACTEL.ACTIVATED_INTERFACES' | translate}}:</h6>
+
+        <div class="table-responsive">
+            <table class="table table-hover table-bordered">
+                <tbody>
+                    <tr>
+                        <td>{{'CYBERSECURITY.FRACTEL.INDEX' | translate}}</td>
+                        <td>{{reportData.interfaces[0].index}}</td>
+                    </tr>
+                    <tr>
+                        <td class="tdnombre info">{{'CYBERSECURITY.FRACTEL.INTERFACE_NAME' | translate}}:</td>
+                        <td>{{reportData.interfaces[0].name}}</td>
+                    </tr>
+                    <tr>
+                        <td>MAC:</td>
+                        <td>{{reportData.interfaces[0].mac}}</td>
+                    </tr>
+                    <tr>
+                        <td>IP:</td>
+                        <td>{{reportData.interfaces[0].ip}}</td>
+                    </tr>
+                    <tr>
+                        <td>{{'CYBERSECURITY.FRACTEL.NETWORK_MASK' | translate}}:</td>
+                        <td>{{reportData.interfaces[0].subnet}}</td>
+                    </tr>
+                    <tr>
+                        <td>DNS:</td>
+                        <td>{{reportData.interfaces[0].dns}}</td>
+                    </tr>
+                    <tr>
+                        <td>{{'CYBERSECURITY.FRACTEL.GATEWAY' | translate}}:</td>
+                        <td>{{reportData.interfaces[0].gw}}</td>
+                    </tr>
+                    <tr>
+                        <td>MTU:</td>
+                        <td>{{reportData.interfaces[0].mtu}}</td>
+                    </tr>
+                    <tr>
+                        <td>{{'CYBERSECURITY.FRACTEL.SPEED' | translate}}:</td>
+                        <td>{{reportData.interfaces[0].speed}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <br /><br />
+
+        <h6>{{'CYBERSECURITY.FRACTEL.IPS_DETECTED' | translate}}:</h6>
+
+        <div class="table-responsive">
+            <table class="table table-hover table-bordered" id="table_net_detected_ip">
+                <thead>
+                    <tr>
+                        <th>IP</th>
+                        <th>{{'CYBERSECURITY.FRACTEL.NAME' | translate}}</th>
+                        <th>MAC</th>
+                        <th>{{'CYBERSECURITY.FRACTEL.PRODUCER' | translate}}</th>
+                    </tr>
+                    <tr *ngFor="let item of reportData.detectedipS_IP | keyvalue; index as i">
+                        <td>{{reportData.detectedipS_IP[i]}}</td>
+                        <td>{{reportData.detectedipS_NOMBRE[i]}}</td>
+                        <td>{{reportData.detectedipS_MAC[i]}}</td>
+                        <td>{{reportData.detectedipS_FABRICANTE[i]}}</td>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+
+        <br /><br />
+
+        <!-- </div> *ngif="!reportData.wirelesS_CONNECTED_NAME"-->
+        <h6>{{'CYBERSECURITY.FRACTEL.NETWORK_DETECTED' | translate}}:</h6>
+
+        <span class="text-helper">{{'CYBERSECURITY.FRACTEL.GATEWAY_USED' | translate}}:
+            {{reportData.wirelesS_CONNECTED_NAME}}</span>
+
+        <div class="table-responsive">
+            <table class="table table-hover table-bordered" id="table_net_wireless_detected">
+                <thead>
+                    <tr>
+                        <th>SSID</th>
+                        <th>{{'CYBERSECURITY.FRACTEL.SIGNAL' | translate}}</th>
+                        <th>{{'CYBERSECURITY.FRACTEL.SECURITY' | translate}}</th>
+                        <th>{{'CYBERSECURITY.FRACTEL.AVAILABLE' | translate}}</th>
+                        <th>{{'CYBERSECURITY.FRACTEL.AUTHENTICATION' | translate}}</th>
+                        <th>{{'CYBERSECURITY.FRACTEL.ENCRYPTION' | translate}}</th>
+                        <th>{{'CYBERSECURITY.FRACTEL.PHY_TYPE' | translate}}</th>
+                        <th>MAC</th>
+                        <th>RSSI(*)</th>
+                        <th>{{'CYBERSECURITY.FRACTEL.CHANNEL' | translate}}</th>
+                        <th>{{'CYBERSECURITY.FRACTEL.MAX_SPEED' | translate}}</th>
+                    </tr>
+
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of reportData.ssidS_SSID | keyvalue; index as i">
+                        <td>{{reportData.ssidS_SSID[i]}}</td>
+                        <td>{{reportData.ssidS_SIGNAL[i]}}</td>
+                        <td>{{reportData.ssidS_SECURITY[i]}}</td>
+                        <td>{{reportData.ssidS_AVAILABLE[i]}}</td>
+                        <td>{{reportData.ssidS_ATHENTICATION[i]}}</td>
+                        <td>{{reportData.ssidS_ENCRIPTION[i]}}</td>
+                        <td>{{reportData.ssidS_PHY[i]}}</td>
+                        <td>{{reportData.ssidS_MAC[i]}}</td>
+                        <td>{{reportData.ssidS_RSSI[i]}}</td>
+                        <td>{{reportData.ssidS_CHANNEL[i]}}</td>
+                        <td>{{reportData.ssidS_SPEED[i]}}</td>
+
+
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <span class="text-muted">{{'CYBERSECURITY.FRACTEL.REMINDER_WIRELESS' | translate}}</span>
+
+        <br /><br />
+
+        <h6>Pings:</h6>
+
+        <div class="table-responsive">
+            <table class="table table-hover table-bordered" id="table_net_pings">
+                <thead>
+                    <tr>
+                        <th>{{'CYBERSECURITY.FRACTEL.DESCRIPTION' | translate}}</th>
+                        <th>IP</th>
+                        <th>{{'CYBERSECURITY.FRACTEL.TIME' | translate}}</th>
+                        <th>TTL</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of reportData.pingS_DESCRIPTION | keyvalue; index as i">
+                        <td>{{reportData.pingS_DESCRIPTION[i]}}</td>
+                        <td>{{reportData.pingS_IP[i]}}</td>
+                        <td>{{reportData.pingS_TIME[i]}}</td>
+                        <td>{{reportData.pingS_TTL[i]}}</td>
+                </tbody>
+            </table>
+        </div>
+
+        <br /><br />
+
+        <h6>{{'CYBERSECURITY.FRACTEL.TRACERT_TEXT1' | translate}}:</h6>
+        <p>{{'CYBERSECURITY.FRACTEL.TRACERT_TEXT2' | translate}}:</p>
+
+        <div class="table-responsive">
+            <table class="table table-hover table-bordered" id="table_net_traceroute">
+                <tbody>
+                    <tr *ngFor="let item of reportData.trouteS_DATA1 | keyvalue; index as i">
+                        <td>{{reportData.trouteS_DATA1[i]}}</td>
+                        <td>{{reportData.trouteS_DATA2[i]}}</td>
+                        <td>{{reportData.trouteS_DATA3[i]}}</td>
+                </tbody>
+            </table>
+        </div>
+
+        <p>{{reportData.neT_TRACEROUTE_TEXT_Translated}}</p>
+
+        <br /><br />
+
+        <h6 class="mt-3 mb-4">{{'CYBERSECURITY.FRACTEL.TRACERT_TEXT3' | translate}}:</h6>
+        <p class="text-helper">{{'CYBERSECURITY.FRACTEL.TRACERT_TEXT4' | translate}}
+            {{reportData.neT_DISCOVER_RANGE_IP}}, {{'CYBERSECURITY.FRACTEL.TRACERT_TEXT5' | translate}}
+            {{reportData.neT_DISCOVER_PORTS}}</p>
+        <p>{{reportData.neT_DISCOVER_TIMECOST_Translated}}</p>
+
+        <div class="table-responsive">
+            <table class="table table-hover table-bordered" id="table_net_ping_ports">
+                <thead>
+                    <tr>
+                        <th>IP</th>
+                        <th>{{'CYBERSECURITY.FRACTEL.NAME' | translate}}</th>
+                        <th>MAC</th>
+                        <th>{{'CYBERSECURITY.FRACTEL.PORTS_OPENED' | translate}}</th>
+                        <th>Ping(ms)</th>
+                        <th>Ping(TTL)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of reportData.pingportS_IP | keyvalue; index as i">
+                        <td>{{reportData.pingportS_IP[i]}}</td>
+                        <td>{{reportData.pingportS_NAME[i]}}</td>
+                        <td>{{reportData.pingportS_MAC[i]}}</td>
+                        <td>{{reportData.pingportS_PORT[i]}}</td>
+                        <td>{{reportData.pingportS_PING_MS[i]}}</td>
+                        <td>{{reportData.pingportS_PING_TTL[i]}}</td>
+                </tbody>
+            </table>
+        </div>
+
+        <br />
+        <hr>
+        <br />
+
+        <!-- INFORME RENDIMIENTO -->
+        <h3>{{'CYBERSECURITY.FRACTEL.PERFORMANCE' | translate}}</h3>
+        <h6>{{'CYBERSECURITY.FRACTEL.HDD_SPEED' | translate}}:</h6>
+
+        <div class="table-responsive">
+            <table class="table table-hover table-bordered" id="table_harddisk_speed">
+                <thead>
+                    <tr>
+                        <th>8 MB File</th>
+                        <th>1</th>
+                        <th>2</th>
+                        <th>3</th>
+                        <th>4</th>
+                        <th>5</th>
+                    </tr>
+
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of reportData.hardiskS1_DATA1 | keyvalue; index as i">
+                        <td>{{reportData.hardiskS1_DATA1[i]}}</td>
+                        <td>{{reportData.hardiskS1_DATA2[i]}}</td>
+                        <td>{{reportData.hardiskS1_DATA3[i]}}</td>
+                        <td>{{reportData.hardiskS1_DATA4[i]}}</td>
+                        <td>{{reportData.hardiskS1_DATA5[i]}}</td>
+                        <td>{{reportData.hardiskS1_DATA6[i]}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <br /><br />
+
+        <div class="table-responsive">
+            <table class="table table-hover table-bordered" id="table_harddisk_speed_1k">
+                <thead>
+                    <tr>
+                        <th>1 KB Blocks File MB &gt;</th>
+                        <th>2</th>
+                        <th>4</th>
+                        <th>8</th>
+                        <th>16</th>
+                        <th>32</th>
+                        <th>64</th>
+                        <th>128</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of reportData.hardiskS2_DATA1 | keyvalue; index as i">
+                        <td>{{reportData.hardiskS2_DATA1[i]}}</td>
+                        <td>{{reportData.hardiskS2_DATA2[i]}}</td>
+                        <td>{{reportData.hardiskS2_DATA3[i]}}</td>
+                        <td>{{reportData.hardiskS2_DATA4[i]}}</td>
+                        <td>{{reportData.hardiskS2_DATA5[i]}}</td>
+                        <td>{{reportData.hardiskS2_DATA6[i]}}</td>
+                        <td>{{reportData.hardiskS2_DATA7[i]}}</td>
+                        <td>{{reportData.hardiskS2_DATA8[i]}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <br /><br />
+
+        <div class="table-responsive">
+            <table class="table table-hover table-bordered" id="table_harddisk_500files">
+                <thead>
+                    <tr>
+                        <th>500 Files</th>
+                        <th>Write MB/sec</th>
+                        <th>Write ms/File</th>
+                        <th>Read MB/sec</th>
+                        <th>Read ms/File</th>
+                        <th>Delete Seconds</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of reportData.hardiskS3_DATA1 | keyvalue; index as i">
+                        <td>{{reportData.hardiskS3_DATA1[i]}}</td>
+                        <td>{{reportData.hardiskS3_DATA2[i]}}</td>
+                        <td>{{reportData.hardiskS3_DATA3[i]}}</td>
+                        <td>{{reportData.hardiskS3_DATA4[i]}}</td>
+                        <td>{{reportData.hardiskS3_DATA5[i]}}</td>
+                        <td>{{reportData.hardiskS3_DATA6[i]}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <br /><br />
+
+        <h6 class="mt-3 mb-3">{{'CYBERSECURITY.FRACTEL.INTERNET_SPEED' | translate}}:</h6>
+        <p>{{'CYBERSECURITY.FRACTEL.INTERNET_MAX_SPEED' | translate}} {{reportData.neT_DOWNLOAD_MAXSPEED}} Mbps.</p>
+
+        <div class="table-responsive">
+            <table class="table table-hover table-bordered" id="table_net_download_speed">
+                <thead>
+                    <tr>
+                        <th>{{'CYBERSECURITY.FRACTEL.SECONDS' | translate}}</th>
+                        <th>KB/s</th>
+                        <th>MB/s</th>
+                        <th>Mbps</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of reportData.downloadS_SECONDS | keyvalue; index as i">
+                        <td>{{reportData.downloadS_SECONDS[i]}}</td>
+                        <td>{{reportData.downloadS_KB[i]}}</td>
+                        <td>{{reportData.downloadS_MB[i]}}</td>
+                        <td>{{reportData.downloadS_MBPS[i]}}</td>
+                </tbody>
+            </table>
+        </div>
+        <!---------------------------------------------------------------------->
+
+
+    </div>
+</section>

@@ -1,0 +1,75 @@
+<header class="topbar">
+  <nav class="frac-navbar">
+    <div class="d-flex justify-content-between align-items-center">
+      <div class="d-flex align-items-center">
+          <div class="icon-menu cursor mr-4" data-target="#navbarToggleExternalContent" data-toggle="collapse"></div>
+          <a routerLink='/services' [attr.disabled]="this.userService.currentUserValue && !this.userService.currentUserValue.checkTermsAcceptDate?'true':null">
+            <img src="{{partnerService.partner.logotipo}}" alt="homepage" class="light-logo" />
+          </a>
+      </div>
+      <div class="d-flex" *ngIf="!hideButtons">
+        <div class="pwa-icon">
+          <div class="icon-download-app"></div>
+        </div>
+        <div class="d-flex">
+          <div class="noti-icon-mobile" id="noti-icon-mobile"  (click)="toogleNotificacion()">
+            <div [ngClass]="notificationService.isOpen ? 'icon-close' : 'icon-bell'" ></div>
+
+          </div>
+
+          <span class="noti-bell-header" *ngIf="notificationService.showBell"  [style.background-color]="partnerService.partner.color ? partnerService.partner.color : ''"></span>
+        </div>
+
+      </div>
+    </div>
+  </nav>
+</header>
+
+<aside class="left-sidebar collapse navbar-collapse" id="navbarToggleExternalContent">
+
+  <!-- Sidebar scroll-->
+  <div class="scroll-sidebar">
+      <!-- Sidebar navigation-->
+      <nav class="sidebar-nav">
+
+          <!-- <ul id="sidebarnav" *ngIf="this.userService.companyUser != null"> -->
+          <ul id="sidebarnav">
+            <li
+              class="sidebar-item-user sidebar-item mb-4"
+              id="profile"
+              *ngIf="this.userService && this.userService.currentUserValue && this.userService.currentUserValue.passwordChanged && showBasicUserItems && this.userService.currentUserValue.inJira"
+              routerLink="/profile">
+              <button class="sidebar-link" type="button">
+                <div class="foto">
+                  <img src="{{userService.menuPhoto}}" width="40" height="40" alt="{{this.userService.currentUserValue.name}}" />
+                </div>
+                <span class="username">{{this.userService.currentUserValue.name}}</span>
+              </button>
+            </li>
+            <li class="sidebar-item" id="suite{{suite.id}}" *ngFor="let suite of suiteService.suites; let i = index" routerLink="/services">
+              <a class="sidebar-link"
+                *ngIf="this.userService.currentUserValue.passwordChanged && showBasicUserItems && this.userService.currentUserValue.inJira"
+                href="javascript:void(0)">
+                <div _ngcontent-fkv-c3="" class="icon-home"></div>
+                <span class="hide-menu">{{'HOME' | translate}}</span>
+              </a>
+            </li>
+            <li class="sidebar-item" id="users" *ngIf="this.currentUser && this.currentUser.isAdminUserId && this.currentUser.companyUser.maxLicense > 1" routerLink="/user-list">
+              <a class="sidebar-link" *ngIf="this.userService.currentUserValue.passwordChanged && showBasicUserItems && this.userService.currentUserValue.inJira" href="javascript:void(0)">
+                <div _ngcontent-fkv-c3="" class="icon-users"></div>
+                <span class="hide-menu">{{'CONFIGURATION' | translate}}</span>
+              </a>
+            </li>
+
+            <li class="sidebar-item bottom">
+                <input type="hidden" name="" value="">
+                <button type="submit" class="sidebar-link logout-button" (click)="logout()"><div class="icon-logout" ></div><span>{{'CERRAR_SESION' | translate}}</span></button>
+            </li>
+          </ul>
+      </nav>
+      <!-- End Sidebar navigation -->
+  </div>
+  <!-- End Sidebar scroll-->
+</aside>
+
+

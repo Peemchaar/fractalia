@@ -1,0 +1,7 @@
+<ul class="justify-content-start nav nav-tabs">
+  <ng-container *ngFor="let item of items">
+    <li class="nav-item"  (click)="onTabSelected(item)">
+      <a href="javascript:void(0)"  class="nav-link " [ngClass]="{'active': item.active}">{{ item.name }}</a>
+    </li>
+  </ng-container>
+</ul>

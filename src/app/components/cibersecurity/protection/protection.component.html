@@ -1,0 +1,419 @@
+<section id="header">
+    <div class="container-fluid">
+        <ul class="navbar-nav float-left mr-auto ml-3 pl-1">
+            <li class="nav-item">
+                <small>&nbsp;</small>
+            </li>
+            <li class="nav-item">
+                <h4>{{'CYBERSECURITY.PROTECTION.NAME' | translate}}
+                    <!--<div class="myicons-seguridad-antivirus"></div>-->
+                </h4>
+            </li>
+        </ul>
+    </div>
+</section>
+
+<section id="servicestitles" class="ml-3 pl-1">
+    <div class="container-fluid">
+        <br /><br /><br />
+        <a class="bback" href="javascript:history.back()">
+            <div class="myicons-arrow"></div>{{ 'ATRAS' | translate }}
+        </a>
+        <br /><br />
+        <div class="service-title" [innerHTML]="protectionService.serviceDesc"></div>
+        <br />
+        <button class="collapse-btn" data-toggle="collapse" data-target="#description-service">
+            <div class="myicons-info"></div> {{ 'MAS_INFO_SERVICIO' | translate }}
+        </button>
+        <div id="description-service" class="collapse">
+            <div>
+                <span [innerHTML]="protectionService.longDesc"></span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="dashboard-page ml-3 pl-1">
+    <div class="container-fluid">
+        <hr>
+        <br />
+        <div class="card">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 pt-4 pb-4 text-center">
+                        <h1 class="title mb-4 text-center">1. {{'ANTIVIRUS.DOWNLOAD' | translate}}</h1>
+                        <a href="https://download.bitdefender.com/windows/installer/es-es/bitdefender_tsecurity.exe"
+                            target="_blank">
+                            <button class="btn btn-outline-primary mr-2 mb-4" href="agentData.download|safe: 'resourceUrl'">
+                                <span>
+                                    <div class="myicons-windowsos"></div>
+                                </span>
+                                <div class="hidden-box">Windows</div>
+                            </button>
+                        </a>
+                        <a href="https://download.bitdefender.com/mac/av/es/bitdefender_antivirus_for_mac.dmg" target="_blank">
+                            <button class="btn btn-outline-primary mr-2 mb-4" href="agentData.download|safe: 'resourceUrl'">
+                                <span>
+                                    <div class="myicons-macos"></div>
+                                </span>
+                                <div class="hidden-box">MAC</div>
+                            </button>
+                        </a>
+                        <br/>
+                        <a href="https://play.google.com/store/apps/details?id=com.bitdefender.security" target="_blank">
+                            <button class="btn btn-outline-primary mr-2 mb-4" href="agentData.download|safe: 'resourceUrl'">
+                                <span>
+                                    <div class="myicons-androidos"></div>
+                                </span>
+                                <div class="hidden-box">Android</div>
+                            </button>
+
+                        </a>
+                        <a href="https://apps.apple.com/es/app/bitdefender-mobile-security/id1255893012" target="_blank">
+                            <button class="btn btn-outline-primary mr-2 mb-4" href="agentData.download|safe: 'resourceUrl'">
+                                <span>
+                                    <div class="myicons-ios"></div>
+                                </span>
+                                <div class="hidden-box">iPhone</div>
+                            </button>
+
+                        </a>
+                    </div>
+                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 pt-4 pb-4">
+                        <div class="text-center" *ngIf="licence === ''">
+                            <h1 class="title mb-4 text-center">2. {{'ANTIVIRUS.SOLICITAR' | translate}}</h1>
+                            <img src="{{staticContentUrl+'img/art/bitdefender-logo.png'}}" width="150" heigth="" alt="Bitdefender" />
+                            <div class="scard greycard">
+                                <br/>
+                                <button [disabled]="loading"
+                                        class="btn btn-primary"
+                                        (click)="setUserLicence()">
+                                    <nz-spinner *ngIf="loading"></nz-spinner>
+                                    <div *ngIf="!loading">{{'ANTIVIRUS.SOLICITAR_BUTTON' | translate}}</div>
+                                </button>
+                                <br/><br/>
+                            </div>
+                        </div>
+                        <div class="text-center" *ngIf="licence !== ''">
+                            <h1 class="title mb-4 text-center">2. {{'ANTIVIRUS.SOLICITAR_TEXT1' | translate}}</h1>
+                            <img src="{{staticContentUrl+'img/art/bitdefender-logo.png'}}" width="150" heigth="" alt="Bitdefender" />
+                        </div>
+                        <div class="text-center" *ngIf="licence !== ''" class="scard greycard">
+                            <p class="text-center">{{'ANTIVIRUS.LICENSE' | translate}}</p>
+                            <div class="input-group">
+                                <input readonly type="text" class="form-control" id="" [value]="licence">
+                            </div>
+                        </div>
+
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<hr>
+
+<section class="dashboard-page">
+    <div class="container-fluid">
+        <div class="card text-center" *ngIf="protectionService.status == 2">
+            <div class="card-header">
+
+            </div>
+            <div class="card-body text-center">
+                <p class="orangetext">{{ 'CYBERSECURITY.PROTECTION.STATE2' | translate }}</p>
+                <p class="orangetext">{{ 'CYBERSECURITY.PROTECTION.STATE3' | translate }}</p>
+                <p class="orangetext">{{ 'CYBERSECURITY.PROTECTION.STATE4' | translate }}</p>
+            </div>
+            <div class="card-footer text-center">
+
+            </div>
+        </div>
+        <div class="card">
+            <div class="container-fluid">
+                <div *ngIf="protectionService.data.scanned > 0" class="row grid-divider">
+                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12">
+                        <div class=" mb-4">
+                            <div class="card-header">
+                                <h1 class="title mb-4 text-center">{{'CYBERSECURITY.PROTECTION.PROTECTED_DEVICES' | translate}}</h1>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-12 col-xl-7 col-lg-7 col-md-8 col-sm-6 col-xs-12 mb-4 d-flex flex-column justify-content-center">
+                                        <div class="canvasservices">
+                                            <div class="numbercanvas text-center">
+                                                <h3 class="text-center mb-0">{{protectionService.data.scanned}}</h3>
+                                                <span class="subtitle text-center">{{'CYBERSECURITY.PROTECTION.TOTAL_PROTECTED_DEVICES' | translate}}</span>
+                                            </div>
+                                            <div class="doughnut">
+                                                <canvas baseChart [data]="protectionService.doughnutChartData"
+                                                [labels]="protectionService.chartLabels" [colors]="protectionService.doughnutColors"
+                                                [chartType]="protectionService.chartType"
+                                                [options]="{cutoutPercentage: 75}"></canvas>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-xl-5 col-lg-5 col-md-4 col-sm-6 col-xs-12 mb-4 d-flex flex-column justify-content-center">
+                                        <div class="datos w-75 d-block mx-auto">
+                                            <h1 class="title mb-4 text-left">{{'CYBERSECURITY.PROTECTION.RISK' | translate}}</h1>
+                                            <div class="dg mb-2">
+                                                <div class="led red">
+                                                    <i class="fas fa-circle"></i>
+                                                </div>
+                                                <span>{{'CYBERSECURITY.PROTECTION.TALL_RISK' | translate}}</span>
+                                                <h4 class="">{{protectionService.data.unresolved}}</h4>
+                                            </div>
+                                            <div class="dg mb-2">
+                                                <div class="led green">
+                                                    <i class="fas fa-circle"></i>
+                                                </div>
+                                                <span>{{'CYBERSECURITY.PROTECTION.LOW_RISK' | translate}}</span>
+                                                <h4 class="">{{protectionService.data.resolved}}</h4>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12">
+                        <div class=" mb-4">
+                            <div class="card-header">
+                                <h1 class="title mb-4 text-center">{{'CYBERSECURITY.PROTECTION.DAYS_WITHOUT_ANALYZING' | translate}}</h1>
+                            </div>
+                            <canvas baseChart [datasets]="protectionService.barChartData"
+                                [labels]="protectionService.barChartLabels"
+                                [options]="protectionService.barChartOptions"
+                                [legend]="protectionService.barChartLegend"
+                                [chartType]="protectionService.barChartType">
+                            </canvas>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="protectionService.data.scanned > 0" class="row">
+                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 mb-4">
+                        <hr class="mt-0">
+                    </div>
+                    <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12 col-xs-12 mb-4">
+
+                    </div>
+                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 mb-4">
+                        <div class="">
+                            <h1 class="title mb-4 text-center">{{'CYBERSECURITY.PROTECTION.VULNERABILITY_SCAN' | translate}}</h1>
+                            <div class="datos d-block w-75 mx-auto">
+                                <div class="dg mb-2">
+                                    <div class="led red">
+                                        <i class="fas fa-circle"></i>
+                                    </div>
+                                    <span>{{'CYBERSECURITY.PROTECTION.DEVICES_ANALYZED' | translate}}</span>
+                                    <h4 class="">{{protectionService.data.analyzedDevices}}</h4>
+                                </div>
+                                <div class="dg mb-2">
+                                    <div class="led orange">
+                                        <i class="fas fa-circle"></i>
+                                    </div>
+                                    <span>{{'CYBERSECURITY.PROTECTION.FILES_AT_RISK' | translate}}</span>
+                                    <h4 class="">{{protectionService.data.filesRisk}}</h4>
+                                </div>
+                                <div class="dg mb-2">
+                                    <div class="led green">
+                                        <i class="fas fa-circle"></i>
+                                    </div>
+                                    <span>{{'CYBERSECURITY.PROTECTION.VULNERABILITIES' | translate}}</span>
+                                    <h4 class="">{{protectionService.data.vulnerabilities}}</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12 col-xs-12 mb-4">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div *ngIf="protectionService.data.scanned > 0" class="devices-list">
+            <br />
+            <hr>
+            <h4 class="title">{{'CYBERSECURITY.PROTECTION.DEVICES' | translate}}</h4>
+            <div class="row">
+                <div *ngFor="let device of protectionService.mobileDevices; let i = index"
+                    class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <div *ngIf="device.osName == 'android' || device.osName == 'ios'" class="myicons-phone">
+                            </div>
+                            <h2>{{device.name}}</h2>
+                            <div class="so">
+                                <div *ngIf="device.osName == 'android'" class="myicons-android"></div>
+                                <div *ngIf="device.osName == 'ios'" class="myicons-apple"></div>
+                                <h3>{{device.osName}}</h3>
+                            </div>
+                            <div *ngIf="device.unresolved === 0 && device.date !== null && device.hour !== null"
+                                class="led green">
+                                <i class="fas fa-circle"></i>
+                            </div>
+                            <div *ngIf="device.unresolved !== 0" class="led red">
+                                <i class="fas fa-circle"></i>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="myicons-user"></div>
+                            <h2>{{device.name}}</h2>
+                            <p *ngIf="device.date !== null && device.hour !== null">
+                                {{'CYBERSECURITY.PROTECTION.LAST_ANALYSIS_PERFORMED_ON' | translate}} <font>
+                                    {{(device.date.toString()+ 'Z').toLocaleString() | date: 'dd/MM/yyyy HH:mm:ss'}}</font>
+                            </p>
+                            <p *ngIf="device.date == null && device.hour == null">
+                                {{'CYBERSECURITY.PROTECTION.ANALYSIS_NOT_PERMORMED_ON' | translate}}<br><br></p>
+                        </div>
+                        <div class="card-footer">
+                            <a class="" data-toggle="collapse" [href]="'#collapse'+i" role="button"
+                                aria-expanded="false" aria-controls="collapseExample">
+                                <div class="myicons-arrow-down"></div>
+                            </a>
+                            <div class="collapse" [id]="'collapse'+i">
+                                <h4 class="title">{{'CYBERSECURITY.PROTECTION.DETAILS' | translate}}</h4>
+                                <div class="row no-gutters datos">
+                                    <div class="col-4 col-lg-4 col-md-4 col-sm-4 col-xs-4 mb-4">
+                                        <h4 class="">{{device.scanned}}</h4>
+                                        <div class="led purple">
+                                            <i class="fas fa-circle"></i>
+                                        </div>
+                                        <span>{{'CYBERSECURITY.PROTECTION.ANALYZED' | translate}}</span>
+                                    </div>
+                                    <div class="col-4 col-lg-4 col-md-4 col-sm-4 col-xs-4 mb-4">
+                                        <h4 class="">{{device.resolved}}</h4>
+                                        <div class="led green">
+                                            <i class="fas fa-circle"></i>
+                                        </div>
+                                        <span>{{'CYBERSECURITY.PROTECTION.RESOLVED' | translate}}</span>
+                                    </div>
+                                    <div class="col-4 col-lg-4 col-md-4 col-sm-4 col-xs-4 mb-4">
+                                        <h4 class="">{{device.unresolved}}</h4>
+                                        <div class="led red">
+                                            <i class="fas fa-circle"></i>
+                                        </div>
+                                        <span>{{'CYBERSECURITY.PROTECTION.NOT_RESOLVED' | translate}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div *ngFor="let device of protectionService.desktopDevices; let j = index"
+                    class="col-xl-4 col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <div *ngIf="device.osName == 'windows' || device.osName == 'osx'" class="myicons-computer">
+                            </div>
+                            <h2> {{device.name}}</h2>
+                            <div class="so">
+                                <div *ngIf="device.osName == 'windows'" class="myicons-computer"></div>
+                                <div *ngIf="device.osName == 'ios'" class="myicons-apple"></div>
+                                <h3> {{device.osName}}</h3>
+                            </div>
+                            <div *ngIf="device.unresolved === 0 && device.date !== null && device.hour !== null"
+                                class="led green">
+                                <i class="fas fa-circle"></i>
+                            </div>
+                            <div *ngIf="device.unresolved !== 0 || (device.date === null && device.hour === null)"
+                                class="led red">
+                                <i class="fas fa-circle"></i>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="myicons-user"></div>
+                            <h2> {{device.name}}</h2>
+                            <p *ngIf="device.date !== null && device.hour !== null">
+                                {{'CYBERSECURITY.PROTECTION.LAST_ANALYSIS_PERFORMED_ON' | translate}} <font>
+                                    {{(device.date.toString()+ 'Z').toLocaleString() | date: 'dd/MM/yyyy HH:mm:ss'}}</font>
+                            </p>
+                            <p *ngIf="device.date == null && device.hour == null">
+                                {{'CYBERSECURITY.PROTECTION.ANALYSIS_NOT_PERMORMED_ON' | translate}}<br><br></p>
+                        </div>
+                        <div class="card-footer">
+                            <a class="" data-toggle="collapse" [href]="'#collapse2'+j" role="button"
+                                aria-expanded="false" aria-controls="collapseExample">
+                                <div class="myicons-arrow-down"></div>
+                            </a>
+                            <div class="collapse" [id]="'collapse2'+j">
+                                <h4 class="title">{{'CYBERSECURITY.PROTECTION.DETAILS' | translate}}</h4>
+                                <div class="row no-gutters datos">
+                                    <div class="col-4 col-xl-4 col-lg-4 col-md-4 col-sm-4 col-xs-4 mb-4">
+                                        <h4 class="">{{device.scanned}}</h4>
+                                        <div class="led purple">
+                                            <i class="fas fa-circle"></i>
+                                        </div>
+                                        <span>{{'CYBERSECURITY.PROTECTION.ANALYZED' | translate}}</span>
+                                    </div>
+                                    <div class="col-4 col-xl-4 col-lg-4 col-md-4 col-sm-4 col-xs-4 mb-4">
+                                        <h4 class="">{{device.resolved}}</h4>
+                                        <div class="led green">
+                                            <i class="fas fa-circle"></i>
+                                        </div>
+                                        <span>{{'CYBERSECURITY.PROTECTION.RESOLVED' | translate}}</span>
+                                    </div>
+                                    <div class="col-4 col-xl-4 col-lg-4 col-md-4 col-sm-4 col-xs-4 mb-4">
+                                        <h4 class="">{{device.unresolved}}</h4>
+                                        <div class="led red">
+                                            <i class="fas fa-circle"></i>
+                                        </div>
+                                        <span>{{'CYBERSECURITY.PROTECTION.NOT_RESOLVED' | translate}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="table-responsive">
+
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<div id="divPopupLicence" class="popup add-service" style="display: none;">
+    <div id="popup">
+        <div class="popup-header sph">
+            <a id="divPopupLicence" class="cerrar" href="javascript:void(0);" onclick="$('#divPopupLicence').hide()">
+                <div _ngcontent-oui-c3="" class="icon-close"></div>
+            </a>
+            <h2 class="text-left"><span [innerHtml]="protectionService.serviceName"></span> {{'COMP_LICENCE.POP.ACTIVATED' | translate}}</h2>
+        </div>
+        <div class="popup-body">
+            <div class="greyback mb-3">
+                <h6 class="text-center">{{'COMP_LICENCE.POP.SUBTITLE' | translate}}</h6>
+                <p class="text-center orangetext">{{'COMP_LICENCE.POP.DOWNLOAD_APP_TEXT1' | translate}} {{'COMP_LICENCE.POP.DOWNLOAD_APP_TEXT2' |
+                    translate}}.</p>
+                <div class="form-group continput">
+                    <p class="text-center mb-0">{{'ANTIVIRUS.LICENSE' | translate}}</p>
+                    <div class="input-group code">
+                        <input readonly type="text" class="form-control" id="" [value]="licence">
+                    </div>
+                </div>
+                <br />
+                <div *ngIf="protectionService.services != null  && protectionService.services.length > 0">
+                    <p>{{'COMP_LICENCE.POP.TEXT2' | translate}}</p>
+                    <div class="row more">
+                        <div class="col-lg-6 col-md-6 col-sm-12" *ngFor="let item of protectionService.services">
+                            <div class="{{item.icon}}"></div>
+                            <h4>{{item.service}}</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <h5 class="text-left">{{'COMP_LICENCE.POP.TEXT1' | translate}}</h5>
+            <p class="text-left">{{'COMP_LICENCE.POP.TEXT3' | translate}}</p>
+        </div>
+        <div class="popup-footer text-left">
+            <button class="btn btn-primary w-25" onclick="$('#divPopupLicence').hide()">{{'COMP_LICENCE.POP.BUTTON_ACEPT' |
+                translate}}</button>
+        </div>
+    </div>
+</div>
